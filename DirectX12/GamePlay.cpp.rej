@@ -1,0 +1,10 @@
+diff a/DirectX12_MyEngine/DirectX12/GamePlay.cpp b/DirectX12_MyEngine/DirectX12/GamePlay.cpp	(rejected hunks)
+@@ -21,7 +21,7 @@
+ {
+ 	gManager->RemoveAll();
+ 	camera->Initialize(1280, 720, 90, 80, { 0,80,-100 }, { 0,0,0 }, { 0,1,0 });
+-	map->CreateMap(0); //�}�b�v����
++	//map->CreateMap(0); //�}�b�v����
+ 	gManager->AddObject(new Player({ 50,0,50 }, gManager,camera));
+ 	gManager->AddObject(new Block({ 0,0,0 }, camera));
+ 	obj = new Object("Yukidaruma");

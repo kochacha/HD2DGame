@@ -1,0 +1,451 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <FxCompile Include="BasicPixelShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="BasicVertexShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="TextureVertexShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="TexturePixelShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="BasicGeometryShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="PMDVertexShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="PMDPixelShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="FBXVertexShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="FBXPixelShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="PeraVertexShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="PeraPixelShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="VignetteShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="BloomShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="GameBoyShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="ChromaticAberrationShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="ToonShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="GrayScaleShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="MosaicShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="GaussianBlurShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Application.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Dx12_Blob.cpp">
+      <Filter>Source\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Dx12_Descriptor.cpp">
+      <Filter>Source\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Dx12_Object.cpp">
+      <Filter>Source\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Dx12_Pipeline.cpp">
+      <Filter>Source\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Dx12_RootSignature.cpp">
+      <Filter>Source\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Dx12_Texture.cpp">
+      <Filter>Source\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Dx12_Wrapper.cpp">
+      <Filter>Source\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Figure2D.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectManager.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture2D.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture3D.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Ending.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOver.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePlay.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="StageSelect.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Title.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Source\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitter.cpp">
+      <Filter>Source\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleManager.cpp">
+      <Filter>Source\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Util.cpp">
+      <Filter>Source\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>Source\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="CSVReader.cpp">
+      <Filter>Source\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Quaternion.cpp">
+      <Filter>Source\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio.cpp">
+      <Filter>Source\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Number.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="PMDModel.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="PMDLoader.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_dx12.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_win32.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_tables.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_widgets.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="FBXLoader.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="FBXModel.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="FBXObject.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector3.cpp">
+      <Filter>Source\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="PostEffect.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector2.cpp">
+      <Filter>Source\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector4.cpp">
+      <Filter>Source\Util</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BasicShaderHeader.hlsli">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="TextureShaderHeader.hlsli">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="PMDShaderHeader.hlsli">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="FBXHeader.hlsli">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="PeraShaderHeader.hlsli">
+      <Filter>Shader</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{f8be1c2c-48bf-4309-8839-0e263b9ec819}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{1ce01ded-544f-4e83-b7e9-5d59e835c569}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Object">
+      <UniqueIdentifier>{fb047db9-c10c-42d0-a51d-d29f716ca07c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\DirectX12">
+      <UniqueIdentifier>{90bbd4d7-3484-4f38-b90d-e49e548017be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene">
+      <UniqueIdentifier>{f5520d71-1443-44ff-9636-09919b31ae80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Device">
+      <UniqueIdentifier>{4af43905-577a-43cc-a568-da46963f32e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Particle">
+      <UniqueIdentifier>{29a86d3b-7587-43ea-a187-e619d35bbce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Util">
+      <UniqueIdentifier>{38289f09-ed24-4514-ab6e-06c4b10b3c0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{9c703aab-5908-4f82-bf9c-822db0fc8afe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header">
+      <UniqueIdentifier>{04ff5842-6da4-45dc-a3b1-4508806e86d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Device">
+      <UniqueIdentifier>{5b563239-1c0a-4151-b8c9-da426975abed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\DirectX12">
+      <UniqueIdentifier>{ea28e832-f2a4-46ad-9d56-5fbc0b492a0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Object">
+      <UniqueIdentifier>{6376a34b-4616-4688-89ac-13559ee8921a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Particle">
+      <UniqueIdentifier>{ca540e90-7379-4091-932a-d2f7a9c0f7f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Scene">
+      <UniqueIdentifier>{d88c2242-c79f-4cf9-a1d3-c4d9339f877c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Util">
+      <UniqueIdentifier>{4cd17bb3-087d-4054-b607-ca0321180a9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\UI">
+      <UniqueIdentifier>{c932fed0-b827-4846-8b61-66d3d7b06352}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI">
+      <UniqueIdentifier>{05958280-d496-45f3-a048-e0f08d37d814}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Application.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>Header\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Dx12_Wrapper.h">
+      <Filter>Header\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Dx12_Blob.h">
+      <Filter>Header\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Dx12_Descriptor.h">
+      <Filter>Header\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Dx12_Object.h">
+      <Filter>Header\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Dx12_Pipeline.h">
+      <Filter>Header\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Dx12_RootSignature.h">
+      <Filter>Header\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Dx12_Texture.h">
+      <Filter>Header\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio.h">
+      <Filter>Header\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Header\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Header\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="CSVReader.h">
+      <Filter>Header\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Header\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Quaternion.h">
+      <Filter>Header\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Ending.h">
+      <Filter>Header\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOver.h">
+      <Filter>Header\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePlay.h">
+      <Filter>Header\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Title.h">
+      <Filter>Header\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="StageSelect.h">
+      <Filter>Header\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Header\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleParam.h">
+      <Filter>Header\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleManager.h">
+      <Filter>Header\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitter.h">
+      <Filter>Header\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Header\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Figure2D.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2D.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture3D.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Number.h">
+      <Filter>Header\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="XMFLOATHelper.h">
+      <Filter>Header\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="PMDModel.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="PMDLoader.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imconfig.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_dx12.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_win32.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_rectpack.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_textedit.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_truetype.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="FBXLoader.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="FBXModel.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="FBXObject.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>Header\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="PostEffect.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2.h">
+      <Filter>Header\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector4.h">
+      <Filter>Header\Util</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
