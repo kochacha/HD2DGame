@@ -29,6 +29,10 @@ void KochaEngine::Scene::ObjDraw()
 {
 }
 
+void KochaEngine::Scene::DrawGUI()
+{
+}
+
 bool KochaEngine::Scene::IsEndFlag()
 {
 	return isEnd;

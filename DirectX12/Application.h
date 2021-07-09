@@ -27,6 +27,7 @@ namespace KochaEngine
 	class Camera;
 	class FBXObject;
 	class FBXModel;
+	class EffectManager;
 
 	class Application
 	{
@@ -44,15 +45,16 @@ namespace KochaEngine
 		SceneManager* sceneManager;
 		Camera* camera;
 
-		Texture2D* texture;
+		Texture2D* texture[1];
 		Object* obj[OBJ_COUNT];
-		PMDModel* model;
 
 		FBXModel* fbxModel = nullptr;
 		FBXObject* fbxObject[FBX_COUNT];
 
 		PostEffect* peraBloom;
 		PostEffect* peraEffect;
+
+		EffectManager* effectManager;
 
 		ShaderType peraEffectType;
 		bool isBloom;
@@ -70,6 +72,7 @@ namespace KochaEngine
 		void Load();
 		void LoadScene();
 		void InitFPS();
+		void DrawGUI();
 		bool UpdateFPS();
 
 		const double MIN_FRAME_TIME = 1.000000f / 60.000000f;

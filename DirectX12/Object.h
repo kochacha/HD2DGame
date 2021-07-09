@@ -7,7 +7,7 @@
 #include <wrl.h>
 #include <vector>
 #include "Camera.h"
-#include "Vector3.h"
+#include "DirectionalLight.h"
 #include "Vector4.h"
 
 using namespace Microsoft::WRL;
@@ -79,6 +79,7 @@ namespace KochaEngine
 		~Object();
 
 		void Draw(Camera* camera);
+		void Draw(Camera* camera, const DirectionalLight& arg_light);
 		void Draw(Camera* camera, Vector3 position, Vector3 scale, Vector3 rotate);
 
 		void SetPosition(const Vector3 position);

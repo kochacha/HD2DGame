@@ -15,6 +15,7 @@ namespace KochaEngine
 		void Update();
 		void SpriteDraw();
 		void ObjDraw();
+		void DrawGUI();
 		void Terminate();
 	private:
 		std::map<Scenes, Scene*> scenes;

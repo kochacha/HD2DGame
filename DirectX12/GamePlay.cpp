@@ -61,6 +61,11 @@ void KochaEngine::GamePlay::ObjDraw()
 	pManager->Draw(camera);
 }
 
+void KochaEngine::GamePlay::DrawGUI()
+{
+	ImGui::Text("GamePlay");
+}
+
 void KochaEngine::GamePlay::Load()
 {
 }

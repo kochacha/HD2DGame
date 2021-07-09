@@ -66,6 +66,11 @@ void KochaEngine::Title::ObjDraw()
 {
 }
 
+void KochaEngine::Title::DrawGUI()
+{
+	ImGui::Text("Title");
+}
+
 void KochaEngine::Title::Load()
 {
 	

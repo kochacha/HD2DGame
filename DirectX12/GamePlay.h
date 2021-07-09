@@ -33,6 +33,7 @@ namespace KochaEngine
 		void Update() override;
 		void SpriteDraw() override;
 		void ObjDraw() override;
+		void DrawGUI() override;
 		void Load() override;
 		Scenes Next() override;
 		void CountTime();

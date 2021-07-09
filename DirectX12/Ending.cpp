@@ -58,6 +58,11 @@ void KochaEngine::Ending::ObjDraw()
 {
 }
 
+void KochaEngine::Ending::DrawGUI()
+{
+	ImGui::Text("Ending");
+}
+
 void KochaEngine::Ending::Load()
 {
 }

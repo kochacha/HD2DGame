@@ -18,17 +18,18 @@
 #include "Object.h"
 #include "Camera.h"
 #include "Util.h"
-//#include "PMDLoader.h"
-//#include "PMDModel.h"
 #include "FBXModel.h"
 #include "FBXObject.h"
 #include "FBXLoader.h"
+#include "CustomGui.h"
+#include "EffectManager.h"
 
 #include <sstream>
 #include <mmsystem.h>
 #include <omp.h>
 
 #pragma comment(lib,"winmm.lib")
+
 
 using namespace DirectX;
 
@@ -68,8 +69,38 @@ void KochaEngine::Application::Run()
 		////↓毎フレーム処理↓//
 		Input::Update();
 
-		//sceneManager->Update();
+		if (Input::CheckKey(DIK_A))
+		{
+			camera->MoveEye(Vector3(-1, 0, 0));
+		}
+		if (Input::CheckKey(DIK_D))
+		{
+			camera->MoveEye(Vector3(1, 0, 0));
+		}
+		if (Input::CheckKey(DIK_W))
+		{
+			camera->MoveEye(Vector3(0, 1, 0));
+		}
+		if (Input::CheckKey(DIK_S))
+		{
+			camera->MoveEye(Vector3(0, -1, 0));
+		}
+		if (Input::CheckKey(DIK_Q))
+		{
+			camera->MoveTarget(Vector3(-1, 0, 0));
+		}
+		if (Input::CheckKey(DIK_E))
+		{
+			camera->MoveTarget(Vector3(1, 0, 0));
+		}
 
+		if (Input::CheckKey(DIK_RETURN))
+		{
+			effectManager->Play();
+		}
+
+		sceneManager->Update();
+		camera->Update();
 
 		for (int i = 0; i < OBJ_COUNT; ++i)
 		{
@@ -86,27 +117,16 @@ void KochaEngine::Application::Run()
 			Object::BeginDraw(dx12->GetCmdList().Get());
 			//↓ObjDraw↓//
 
-			//sceneManager->ObjDraw();
+			sceneManager->ObjDraw();
 			for (int i = 0; i < OBJ_COUNT; ++i)
 			{
-				obj[i]->Draw(camera);
+				//obj[i]->Draw(camera);
 			}
 
 			//↑ObjDraw↑//
 			Object::EndDraw();
 
-			//PMDModel::BeginDraw(dx12->GetCmdList().Get());
-
-			////model->Draw(camera);
-
-			//PMDModel::EndDraw();
-
-
-			//for (int i = 0; i < FBX_COUNT; i++)
-			//{
-			//	//fbxObject[i]->MoveRotate({ 2,2,2 });
-			//	fbxObject[i]->Draw(dx12->GetCmdList().Get());
-			//}
+			effectManager->Update();
 
 			peraBloom->PostDrawScene(dx12->GetCmdList().Get());
 		}
@@ -135,90 +155,12 @@ void KochaEngine::Application::Run()
 			//↓SpriteDraw↓//
 
 			sceneManager->SpriteDraw();
-			texture->Draw();
+			texture[0]->Draw();
 
 			//↑SpriteDraw↑//
 			Texture2D::EndDraw();
 
-			ImGui::Begin("Sample");
-			//ImGui::SetWindowSize(ImVec2(400, 500), ImGuiCond_::ImGuiCond_FirstUseEver);
-			ImGui::Text("FPS:%f", fps);
-			ImGui::Text("ClearColor");
-			ImGui::ColorPicker4(" Color", clearColor);
-			ImGui::End();
-
-			ImGui::Begin("PostEffect");
-			ImGui::Checkbox("isBloom", &isBloom);
-
-			int _effectType = peraEffectType;
-			ImGui::RadioButton("None", &_effectType, ShaderType::PERA_SHADER);
-			ImGui::RadioButton("Vignette", &_effectType, ShaderType::VIGNETTE_SHADER);
-			ImGui::RadioButton("GameBoy", &_effectType, ShaderType::GAME_BOY_SHADER);
-			ImGui::RadioButton("ChromaticAberration", &_effectType, ShaderType::CHROMATIC_ABERRATION_SHADER);
-			ImGui::RadioButton("Toon", &_effectType, ShaderType::TOON_SHADER);
-			ImGui::RadioButton("GrayScale", &_effectType, ShaderType::GRAY_SCALE_SHADER);
-			ImGui::RadioButton("Mosaic", &_effectType, ShaderType::MOSAIC_SHADER);
-			ImGui::RadioButton("GaussianBlur", &_effectType, ShaderType::GAUSSIAN_BLUR_SHADER);
-
-			if (_effectType == ShaderType::PERA_SHADER)
-			{
-				peraEffectType = ShaderType::PERA_SHADER;
-			}
-			else if (_effectType == ShaderType::VIGNETTE_SHADER)
-			{
-				ImGui::Text("VignetteScale");
-				ImGui::SliderFloat(" ", &vignetteScale, 0.0f, 5.0f);
-				peraEffectType = ShaderType::VIGNETTE_SHADER;
-				peraEffect->SetValue(vignetteScale);
-			}
-			else if (_effectType == ShaderType::GAME_BOY_SHADER)
-			{
-				ImGui::Text("PixelSize");
-				ImGui::SliderFloat(" ", &gBoyPixelSize, 1.0f, 50.0f);
-				peraEffectType = ShaderType::GAME_BOY_SHADER;
-				peraEffect->SetValue(gBoyPixelSize);
-			}
-			else if (_effectType == ShaderType::CHROMATIC_ABERRATION_SHADER)
-			{
-				ImGui::Text("Misalignment");
-				ImGui::SliderFloat(" ", &cAbeScale, 0.0f, 1.0f);
-				peraEffectType = ShaderType::CHROMATIC_ABERRATION_SHADER;
-				peraEffect->SetValue(cAbeScale);
-			}
-			else if (_effectType == ShaderType::TOON_SHADER)
-			{
-				peraEffectType = ShaderType::TOON_SHADER;
-			}
-			else if (_effectType == ShaderType::GRAY_SCALE_SHADER)
-			{
-				ImGui::Text("SepiaScale");
-				ImGui::SliderFloat(" ", &sepiaScale, 0.0f, 1.0f);
-				peraEffectType = ShaderType::GRAY_SCALE_SHADER;
-				peraEffect->SetValue(sepiaScale);
-			}
-			else if (_effectType == ShaderType::MOSAIC_SHADER)
-			{
-				ImGui::Text("PixelSize");
-				ImGui::SliderFloat(" ", &mosaicSize, 1.0f, 50.0f);
-				peraEffectType = ShaderType::MOSAIC_SHADER;
-				peraEffect->SetValue(mosaicSize);
-			}
-			else if (_effectType == ShaderType::GAUSSIAN_BLUR_SHADER)
-			{
-				ImGui::Text("BlurScale");
-				ImGui::SliderFloat(" ", &blurScale, 0.0f, 5.0f);
-				peraEffectType = ShaderType::GAUSSIAN_BLUR_SHADER;
-				peraEffect->SetValue(blurScale);
-			}
-
-			ImGui::Text("ShaderColor");
-			ImGui::ColorPicker4(" Color", color);
-			shaderColor.x = color[0];
-			shaderColor.y = color[1];
-			shaderColor.z = color[2];
-			peraEffect->SetColor(shaderColor);
-
-			ImGui::End();
+			DrawGUI();
 
 			dx12->EndDraw();
 		}
@@ -239,6 +181,7 @@ void KochaEngine::Application::Load()
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "Yukidaruma");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "box");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "LowTree");
+	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "plane");
 
 	//.pmdのロード *日本語！ダメ！絶対！*
 	//PMDLoader::LoadModel(dx12->GetDevice().Get(), "Resources/Model/miku/miku.pmd");
@@ -262,6 +205,97 @@ void KochaEngine::Application::InitFPS()
 {
 	QueryPerformanceFrequency(&timeFreq);
 	QueryPerformanceCounter(&timeStart);
+}
+
+void KochaEngine::Application::DrawGUI()
+{
+	ImGui::ShowDemoWindow();
+
+	//シーン情報
+	ImGui::Begin("Scene");
+	sceneManager->DrawGUI();
+	ImGui::End();
+
+	//共通設定
+	ImGui::Begin("App");
+	//ImGui::SetWindowSize(ImVec2(400, 500), ImGuiCond_::ImGuiCond_FirstUseEver);
+	ImGui::Text("FPS:%f", fps);
+	ImGui::Text("ClearColor");
+	ImGui::ColorPicker4(" Color", clearColor);
+	ImGui::End();
+
+	//画面効果切り替え
+	ImGui::Begin("PostEffect");
+	ImGui::Checkbox("isBloom", &isBloom);
+	int _effectType = peraEffectType;
+	ImGui::RadioButton("None", &_effectType, ShaderType::PERA_SHADER);
+	ImGui::RadioButton("Vignette", &_effectType, ShaderType::VIGNETTE_SHADER);
+	ImGui::RadioButton("GameBoy", &_effectType, ShaderType::GAME_BOY_SHADER);
+	ImGui::RadioButton("ChromaticAberration", &_effectType, ShaderType::CHROMATIC_ABERRATION_SHADER);
+	ImGui::RadioButton("Toon", &_effectType, ShaderType::TOON_SHADER);
+	ImGui::RadioButton("GrayScale", &_effectType, ShaderType::GRAY_SCALE_SHADER);
+	ImGui::RadioButton("Mosaic", &_effectType, ShaderType::MOSAIC_SHADER);
+	ImGui::RadioButton("GaussianBlur", &_effectType, ShaderType::GAUSSIAN_BLUR_SHADER);
+
+	if (_effectType == ShaderType::PERA_SHADER)
+	{
+		peraEffectType = ShaderType::PERA_SHADER;
+	}
+	else if (_effectType == ShaderType::VIGNETTE_SHADER)
+	{
+		ImGui::Text("VignetteScale");
+		ImGui::SliderFloat(" ", &vignetteScale, 0.0f, 5.0f);
+		peraEffectType = ShaderType::VIGNETTE_SHADER;
+		peraEffect->SetValue(vignetteScale);
+	}
+	else if (_effectType == ShaderType::GAME_BOY_SHADER)
+	{
+		ImGui::Text("PixelSize");
+		ImGui::SliderFloat(" ", &gBoyPixelSize, 1.0f, 50.0f);
+		peraEffectType = ShaderType::GAME_BOY_SHADER;
+		peraEffect->SetValue(gBoyPixelSize);
+	}
+	else if (_effectType == ShaderType::CHROMATIC_ABERRATION_SHADER)
+	{
+		ImGui::Text("Misalignment");
+		ImGui::SliderFloat(" ", &cAbeScale, 0.0f, 1.0f);
+		peraEffectType = ShaderType::CHROMATIC_ABERRATION_SHADER;
+		peraEffect->SetValue(cAbeScale);
+	}
+	else if (_effectType == ShaderType::TOON_SHADER)
+	{
+		peraEffectType = ShaderType::TOON_SHADER;
+	}
+	else if (_effectType == ShaderType::GRAY_SCALE_SHADER)
+	{
+		ImGui::Text("SepiaScale");
+		ImGui::SliderFloat(" ", &sepiaScale, 0.0f, 1.0f);
+		peraEffectType = ShaderType::GRAY_SCALE_SHADER;
+		peraEffect->SetValue(sepiaScale);
+	}
+	else if (_effectType == ShaderType::MOSAIC_SHADER)
+	{
+		ImGui::Text("PixelSize");
+		ImGui::SliderFloat(" ", &mosaicSize, 1.0f, 50.0f);
+		peraEffectType = ShaderType::MOSAIC_SHADER;
+		peraEffect->SetValue(mosaicSize);
+	}
+	else if (_effectType == ShaderType::GAUSSIAN_BLUR_SHADER)
+	{
+		ImGui::Text("BlurScale");
+		ImGui::SliderFloat(" ", &blurScale, 0.0f, 5.0f);
+		peraEffectType = ShaderType::GAUSSIAN_BLUR_SHADER;
+		peraEffect->SetValue(blurScale);
+	}
+
+	ImGui::Text("ShaderColor");
+	ImGui::ColorPicker4(" Color", color);
+	shaderColor.x = color[0];
+	shaderColor.y = color[1];
+	shaderColor.z = color[2];
+	peraEffect->SetColor(shaderColor);
+
+	ImGui::End();
 }
 
 bool KochaEngine::Application::UpdateFPS()
@@ -305,12 +339,11 @@ bool KochaEngine::Application::Initialize()
 	pipeline = new Dx12_Pipeline(*dx12, *blob);
 
 	camera = new Camera();
-	camera->Initialize(dx12->GetWinSize().cx, dx12->GetWinSize().cy, 90, 100, { 0,30,-80 }, { 0,5,0 }, { 0,1,0 });
+	camera->Initialize(dx12->GetWinSize().cx, dx12->GetWinSize().cy, 90, 100, { 0,50,-150 }, { 0,0,0 }, { 0,1,0 });
 
 	Texture2D::StaticInit(dx12->GetDevice().Get(), dx12->GetWinSize());
 	PostEffect::StaticInit(dx12->GetDevice().Get(), dx12->GetCmdList().Get(), dx12->GetWinSize());
 	Object::StaticInit(dx12->GetDevice().Get(), dx12->GetWinSize());
-	//PMDModel::StaticInit(dx12->GetDevice().Get(), dx12->GetWinSize());
 	FBXLoader::GetInstance()->Initialize(dx12->GetDevice().Get());
 	FBXObject::SetDevice(dx12->GetDevice().Get());
 	FBXObject::SetCamera(camera);
@@ -323,22 +356,22 @@ bool KochaEngine::Application::Initialize()
 	sceneManager->AddScene(GAMEPLAY, new GamePlay());
 	sceneManager->AddScene(ENDING, new Ending());
 	sceneManager->AddScene(GAMEOVER, new GameOver());
-	sceneManager->ChangeScene(TITLE);
+	//sceneManager->ChangeScene(TITLE);
 
 	LoadScene();
 
-	texture = new Texture2D("Resources/PIEN.png", Vector2(0, 0), Vector2(100, 100), 0);
+	CustomGui::DefaultCustom();
+
+	texture[0] = new Texture2D("Resources/PIEN.png", Vector2(0, 0), Vector2(100, 100), 0);
 	for (int i = 0; i < OBJ_COUNT; ++i)
 	{
-		obj[i] = new Object("Yukidaruma");
-		obj[i]->SetRotate({ 0,180,0 });
-		obj[i]->SetScale({ 6, 6, 6 });
+		obj[i] = new Object("plane");
+		obj[i]->SetRotate({ 90,180,0 });
+		obj[i]->SetScale({ 0.01, 0.01, 0.01 });
 		obj[i]->SetPosition({ (float)Util::GetIntRand(0,100) - 50.0f,0,(float)Util::GetIntRand(0,100) - 50.0f });
-		obj[i]->MoveRotate({ 0,(float)Util::GetIntRand(0,360),0 });
+		//obj[i]->MoveRotate({ 0,(float)Util::GetIntRand(0,360),0 });
+		obj[i]->SetTexture("Resources/PIEN.png");
 	}
-	//model = new PMDModel("Resources/Model/kirama/kirama.pmd");
-	////model->SetScale({ 1.5f,1.5f,1.5f });
-	//model->SetPosition({ 0,-10,0 });
 
 	fbxModel = FBXLoader::GetInstance()->LoadModelFromFile("boneTest");
 
@@ -356,6 +389,9 @@ bool KochaEngine::Application::Initialize()
 	peraEffectType = ShaderType::PERA_SHADER;
 	isBloom = true;
 
+	effectManager = new EffectManager(*dx12);
+	effectManager->LoadEffect();
+
 	vignetteScale = 0.25f;
 	gBoyPixelSize = 4.0f;
 	mosaicSize = 4.0f;
@@ -372,7 +408,7 @@ void KochaEngine::Application::Terminate()
 {
 	sceneManager->Terminate();
 	delete sceneManager;
-	delete texture;
+	delete texture[0];
 	delete blob;
 	delete descriptor;
 	delete rootSignature;
@@ -383,7 +419,6 @@ void KochaEngine::Application::Terminate()
 	{
 		delete obj[i];
 	}
-	delete model;
 	delete camera;
 	delete fbxModel;
 	for (int i = 0; i < FBX_COUNT; i++)
@@ -392,6 +427,7 @@ void KochaEngine::Application::Terminate()
 	}
 	delete peraBloom;
 	delete peraEffect;
+	delete effectManager;
 
 	Input::Terminate();
 	FBXLoader::GetInstance()->Finalize();

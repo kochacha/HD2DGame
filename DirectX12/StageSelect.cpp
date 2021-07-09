@@ -42,6 +42,8 @@ void KochaEngine::StageSelect::Update()
 	gManager->Update();
 	pManager->Update();
 	camera->Update();
+
+	
 }
 
 void KochaEngine::StageSelect::SpriteDraw()
@@ -53,6 +55,11 @@ void KochaEngine::StageSelect::ObjDraw()
 {	
 	gManager->ObjDraw(camera);
 	pManager->Draw(camera);
+}
+
+void KochaEngine::StageSelect::DrawGUI()
+{
+	ImGui::Text("StageSelect");
 }
 
 void KochaEngine::StageSelect::Load()

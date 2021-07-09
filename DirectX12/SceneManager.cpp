@@ -52,6 +52,11 @@ void KochaEngine::SceneManager::ObjDraw()
 	currentScene->ObjDraw();
 }
 
+void KochaEngine::SceneManager::DrawGUI()
+{
+	currentScene->DrawGUI();
+}
+
 void KochaEngine::SceneManager::Terminate()
 {
 	auto end = scenes.end();

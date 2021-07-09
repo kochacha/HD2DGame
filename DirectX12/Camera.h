@@ -34,6 +34,11 @@ namespace KochaEngine
 		XMMATRIX matProjection;
 		XMMATRIX matView;
 
+		// ビルボード行列
+		XMMATRIX matBillboard;
+		// Y軸回りビルボード行列
+		XMMATRIX matBillboardY;
+
 	public:
 		Camera();
 		~Camera();
@@ -41,12 +46,15 @@ namespace KochaEngine
 		void Initialize(float WIN_WIDTH, float WIN_HEIGHT, float angle, float distance, Vector3 eye, Vector3 target, Vector3 up);
 		void Update();
 		void ViewUpdate();
+		void Billboard();
+		void DebugCamera();
 
-		void SetEye(Vector3 eye);
-		void SetTarget(Vector3 target);
-		void SetUp(Vector3 up);
+		void SetEye(const Vector3& eye);
+		void SetTarget(const Vector3& target);
+		void SetUp(const Vector3& up);
 		void SetAngle(float angle);
-		void MoveEye(Vector3 vel);
+		void MoveEye(const Vector3& vel);
+		void MoveTarget(const Vector3& vel);
 
 		void UpCamera();
 		void RightCamera();
@@ -57,6 +65,8 @@ namespace KochaEngine
 		Vector3 GetVelocity();
 		XMMATRIX GetMatProjection() { return matProjection; }
 		XMMATRIX GetMatView() { return matView; }
+		XMMATRIX GetBillboardMatrix() { return matBillboard; }
+		XMMATRIX GetBillboardYMatrix() { return matBillboardY; }
 		float Getangle();
 
 		float GetCameraSpeed();

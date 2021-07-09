@@ -1,4 +1,7 @@
 #pragma once
+#include "imgui/imgui.h"
+
+using namespace ImGui;
 
 namespace KochaEngine
 {
@@ -27,6 +30,7 @@ namespace KochaEngine
 		virtual void Update();
 		virtual void SpriteDraw();
 		virtual void ObjDraw();
+		virtual void DrawGUI();
 		virtual void Initialize();
 		virtual void Load();
 		virtual bool IsEndFlag();

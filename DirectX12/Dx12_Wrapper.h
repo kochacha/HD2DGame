@@ -95,6 +95,7 @@ namespace KochaEngine
 		ComPtr < ID3D12Device> GetDevice();//デバイス
 		ComPtr < ID3D12GraphicsCommandList> GetCmdList();//コマンドリスト
 		ComPtr < IDXGISwapChain4> GetSwapchain();//スワップチェイン
+		ComPtr < ID3D12CommandQueue> GetQue();
 		ComPtr < ID3D12DescriptorHeap> GetHeapForImgui();
 		SIZE GetWinSize();
 

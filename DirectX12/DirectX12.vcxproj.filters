@@ -213,6 +213,13 @@
     <ClCompile Include="Vector4.cpp">
       <Filter>Source\Util</Filter>
     </ClCompile>
+    <ClCompile Include="CustomGui.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalLight.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShaderHeader.hlsli">
@@ -447,5 +454,12 @@
     <ClInclude Include="Vector4.h">
       <Filter>Header\Util</Filter>
     </ClInclude>
+    <ClInclude Include="CustomGui.h">
+      <Filter>Header\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectManager.h" />
   </ItemGroup>
 </Project>

@@ -556,6 +556,11 @@ ComPtr < IDXGISwapChain4> KochaEngine::Dx12_Wrapper::GetSwapchain()
 	return _swapchain;
 }
 
+ComPtr<ID3D12CommandQueue> KochaEngine::Dx12_Wrapper::GetQue()
+{
+	return _cmdQueue;
+}
+
 ComPtr<ID3D12DescriptorHeap> KochaEngine::Dx12_Wrapper::GetHeapForImgui()
 {
 	return _heapForImgui;
