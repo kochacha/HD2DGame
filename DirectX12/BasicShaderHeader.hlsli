@@ -6,6 +6,14 @@ cbuffer cbuff0 : register(b0)
     float3 light;
 };
 
+cbuffer cbuff1 : register(b1)
+{
+    float3 m_ambient : packoffset(c0);
+    float3 m_diffuse : packoffset(c1);
+    float3 m_specular : packoffset(c2);
+    float m_alpha : packoffset(c2.w);
+};
+
 struct VSOutput
 {
     float4 svpos : SV_POSITION;

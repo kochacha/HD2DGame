@@ -24,9 +24,9 @@ void KochaEngine::EffectManager::LoadEffect()
 {
 	_effect = Effekseer::Effect::Create(
 		_efkManager,
-		(const EFK_CHAR*)L"Resources/Effect/10/SimpleLaser.efk",
+		(const EFK_CHAR*)L"Resources/Effect/11/hit.efk",
 		1.0f,
-		(const EFK_CHAR*)L"Resources/Effect/10/Textures");
+		(const EFK_CHAR*)L"Resources/Effect/11");
 }
 
 void KochaEngine::EffectManager::Play()
@@ -57,12 +57,12 @@ void KochaEngine::EffectManager::Initialize()
 		2,
 		&format,
 		1,
-		DXGI_FORMAT_UNKNOWN,
+		DXGI_FORMAT_D32_FLOAT,
 		false,
-		5000);
+		10000);
 
 	//最大インスタンス数
-	_efkManager = Effekseer::Manager::Create(5000);
+	_efkManager = Effekseer::Manager::Create(10000);
 
 	//座標系を左手系にする
 	_efkManager->SetCoordinateSystem(Effekseer::CoordinateSystem::LH);
@@ -84,12 +84,10 @@ void KochaEngine::EffectManager::Initialize()
 
 	auto g_position = Effekseer::Vector3D(10.0f, 5.0f, 20.0f);
 
-	// Specify a projection matrix
 	// 投影行列を設定
 	_efkRenderer->SetProjectionMatrix(
 		Effekseer::Matrix44().PerspectiveFovRH(90.0f / 180.0f * 3.14f, (float)dx12.GetWinSize().cx / (float)dx12.GetWinSize().cy, 1.0f, 500.0f));
 
-	// Specify a camera matrix
 	// カメラ行列を設定
 	_efkRenderer->SetCameraMatrix(
 		Effekseer::Matrix44().LookAtRH(g_position, Effekseer::Vector3D(0.0f, 0.0f, 0.0f), Effekseer::Vector3D(0.0f, 1.0f, 0.0f)));

@@ -23,6 +23,7 @@ namespace KochaEngine
 			DirectX::XMMATRIX mat;	// ÇRÇcïœä∑çsóÒ
 			DirectX::XMMATRIX mat2;
 			Vector3 light;
+			float pad1;
 		};
 
 		struct ConstBufferDataB1
@@ -79,7 +80,7 @@ namespace KochaEngine
 		~Object();
 
 		void Draw(Camera* camera);
-		void Draw(Camera* camera, const DirectionalLight& arg_light);
+		void Draw(Camera* camera, DirectionalLight& arg_light);
 		void Draw(Camera* camera, Vector3 position, Vector3 scale, Vector3 rotate);
 
 		void SetPosition(const Vector3 position);

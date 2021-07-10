@@ -5,6 +5,7 @@
 #include "Dx12_RootSignature.h"
 #include "Dx12_Descriptor.h"
 #include "Dx12_Pipeline.h"
+#include "DirectionalLight.h"
 #include <codecvt>
 
 #pragma comment(lib, "d3dcompiler.lib")
@@ -170,7 +171,7 @@ void KochaEngine::Object::Draw(Camera* camera)
 	cmdList->DrawIndexedInstanced((UINT)KochaEngine::Dx12_Object::GetIndices(objName).size(), 1, 0, 0, 0);
 }
 
-void KochaEngine::Object::Draw(Camera* camera, const DirectionalLight& arg_light)
+void KochaEngine::Object::Draw(Camera* camera, DirectionalLight& arg_light)
 {
 	if (camera == nullptr)	return;
 
@@ -205,7 +206,7 @@ void KochaEngine::Object::Draw(Camera* camera, const DirectionalLight& arg_light
 	constMap0->color = color;
 	constMap0->mat = matWorld * matView * matProjection;
 	constMap0->mat2 = matWorld;
-	constMap0->light = { 1,-1,1 }; //‰E‰º‰œ
+	constMap0->light = arg_light.GetDirection();
 	constBuffB0->Unmap(0, nullptr);
 
 	result = constBuffB1->Map(0, nullptr, (void**)&constMap1);
