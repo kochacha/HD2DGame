@@ -216,10 +216,12 @@
     <ClCompile Include="CustomGui.cpp">
       <Filter>Source\UI</Filter>
     </ClCompile>
-    <ClCompile Include="DirectionalLight.cpp">
+    <ClCompile Include="EffectManager.cpp">
+      <Filter>Source\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="LightManager.cpp">
       <Filter>Source\Object</Filter>
     </ClCompile>
-    <ClCompile Include="EffectManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShaderHeader.hlsli">
@@ -460,6 +462,14 @@
     <ClInclude Include="DirectionalLight.h">
       <Filter>Header\Object</Filter>
     </ClInclude>
-    <ClInclude Include="EffectManager.h" />
+    <ClInclude Include="EffectManager.h">
+      <Filter>Header\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="LightManager.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

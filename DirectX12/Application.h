@@ -28,6 +28,7 @@ namespace KochaEngine
 	class FBXObject;
 	class FBXModel;
 	class EffectManager;
+	class LightManager;
 
 	class Application
 	{
@@ -47,6 +48,8 @@ namespace KochaEngine
 
 		Texture2D* texture[1];
 		Object* obj[OBJ_COUNT];
+		Object* floor;
+		Object* taimatu;
 
 		FBXModel* fbxModel = nullptr;
 		FBXObject* fbxObject[FBX_COUNT];
@@ -55,6 +58,7 @@ namespace KochaEngine
 		PostEffect* peraEffect;
 
 		EffectManager* effectManager;
+		LightManager* lightManager;
 
 		ShaderType peraEffectType;
 		bool isBloom;
@@ -68,6 +72,12 @@ namespace KochaEngine
 
 		float color[4];
 		Vector4 shaderColor;
+
+		Vector3 dirLightDirection;
+		Vector3 dirLightColor;
+		Vector3 pointLightPosition;
+		Vector3 pointLightColor;
+		Vector3 pointLightAtten;
 
 		void Load();
 		void LoadScene();

@@ -24,9 +24,11 @@ void KochaEngine::EffectManager::LoadEffect()
 {
 	_effect = Effekseer::Effect::Create(
 		_efkManager,
-		(const EFK_CHAR*)L"Resources/Effect/11/hit.efk",
+		(const EFK_CHAR*)L"Resources/Effect/11/light.efk",
 		1.0f,
 		(const EFK_CHAR*)L"Resources/Effect/11");
+
+	int a = 0;
 }
 
 void KochaEngine::EffectManager::Play()
@@ -59,10 +61,10 @@ void KochaEngine::EffectManager::Initialize()
 		1,
 		DXGI_FORMAT_D32_FLOAT,
 		false,
-		10000);
+		3000);
 
 	//最大インスタンス数
-	_efkManager = Effekseer::Manager::Create(10000);
+	_efkManager = Effekseer::Manager::Create(3000);
 
 	//座標系を左手系にする
 	_efkManager->SetCoordinateSystem(Effekseer::CoordinateSystem::LH);

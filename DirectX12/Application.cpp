@@ -23,6 +23,7 @@
 #include "FBXLoader.h"
 #include "CustomGui.h"
 #include "EffectManager.h"
+#include "LightManager.h"
 
 #include <sstream>
 #include <mmsystem.h>
@@ -101,10 +102,15 @@ void KochaEngine::Application::Run()
 
 		sceneManager->Update();
 		camera->Update();
+		lightManager->SetDirectionalLightColor(0, dirLightColor);
+		lightManager->SetDirectionalLightDirection(0, dirLightDirection);
+		lightManager->SetPointLightPos(0, pointLightPosition);
+		taimatu->SetPosition(Vector3(pointLightPosition.x, pointLightPosition.y - 10, pointLightPosition.z));
+		lightManager->Update();
 
 		for (int i = 0; i < OBJ_COUNT; ++i)
 		{
-			obj[i]->MoveRotate({ 0,0.2f,0 });
+			//obj[i]->MoveRotate({ 0,0.2f,0 });
 		}
 
 
@@ -120,8 +126,10 @@ void KochaEngine::Application::Run()
 			sceneManager->ObjDraw();
 			for (int i = 0; i < OBJ_COUNT; ++i)
 			{
-				//obj[i]->Draw(camera);
+				obj[i]->Draw(camera);
 			}
+			floor->Draw(camera);
+			taimatu->Draw(camera);
 
 			//↑ObjDraw↑//
 			Object::EndDraw();
@@ -182,6 +190,7 @@ void KochaEngine::Application::Load()
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "box");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "LowTree");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "plane");
+	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "taimatu");
 
 	//.pmdのロード *日本語！ダメ！絶対！*
 	//PMDLoader::LoadModel(dx12->GetDevice().Get(), "Resources/Model/miku/miku.pmd");
@@ -223,6 +232,24 @@ void KochaEngine::Application::DrawGUI()
 	ImGui::Text("ClearColor");
 	ImGui::ColorPicker4(" Color", clearColor);
 	ImGui::End();
+
+	//DirectionalLight
+	ImGui::Begin("DirLight");
+	ImGui::Text("Direction:");
+	ImGui::SameLine();
+	ImGui::DragFloat3(" ", &dirLightDirection.z, 0.1f, -1.0f, 1.0f);
+	//ImGui::SliderFloat("X", &dirLightDirection.x, -1.0f, 1.0f);
+	//ImGui::SliderFloat("Y", &dirLightDirection.y, -1.0f, 1.0f);
+	//ImGui::SliderFloat("Z", &dirLightDirection.z, -1.0f, 1.0f);
+	ImGui::End();
+
+	ImGui::Begin("PointLight");
+	ImGui::Text("Position:");
+	ImGui::SameLine();
+	ImGui::DragFloat3(" ", &pointLightPosition.x);
+	ImGui::End();
+
+
 
 	//画面効果切り替え
 	ImGui::Begin("PostEffect");
@@ -345,6 +372,7 @@ bool KochaEngine::Application::Initialize()
 	PostEffect::StaticInit(dx12->GetDevice().Get(), dx12->GetCmdList().Get(), dx12->GetWinSize());
 	Object::StaticInit(dx12->GetDevice().Get(), dx12->GetWinSize());
 	FBXLoader::GetInstance()->Initialize(dx12->GetDevice().Get());
+	LightManager::StaticInitialize(dx12->GetDevice().Get());
 	FBXObject::SetDevice(dx12->GetDevice().Get());
 	FBXObject::SetCamera(camera);
 
@@ -362,16 +390,32 @@ bool KochaEngine::Application::Initialize()
 
 	CustomGui::DefaultCustom();
 
+	dirLightDirection = Vector3(-1, 1, -1);
+	dirLightColor = Vector3(1, 1, 1);
+	pointLightPosition = Vector3(0, 0, 0);
+	pointLightColor = Vector3(1, 0.7, 0);
+	pointLightAtten = Vector3(0.001f, 0.001f, 0.001f);
+
 	texture[0] = new Texture2D("Resources/PIEN.png", Vector2(0, 0), Vector2(100, 100), 0);
 	for (int i = 0; i < OBJ_COUNT; ++i)
 	{
-		obj[i] = new Object("plane");
-		obj[i]->SetRotate({ 90,180,0 });
-		obj[i]->SetScale({ 0.01, 0.01, 0.01 });
+		obj[i] = new Object("LowTree");
+		//obj[i]->SetRotate({ 90,180,0 });
+		obj[i]->SetRotate({ 0,180,0 });
+		//obj[i]->SetScale({ 0.01, 0.01, 0.01 });
+		obj[i]->SetScale({ 1.0, 1.0, 1.0 });
 		obj[i]->SetPosition({ (float)Util::GetIntRand(0,100) - 50.0f,0,(float)Util::GetIntRand(0,100) - 50.0f });
 		//obj[i]->MoveRotate({ 0,(float)Util::GetIntRand(0,360),0 });
-		obj[i]->SetTexture("Resources/PIEN.png");
+		//obj[i]->SetTexture("Resources/PIEN.png");
 	}
+
+	floor = new Object("plane");
+	floor->SetScale(Vector3(50, 1, 50));
+	floor->SetPosition(Vector3(0, -1, 0));
+	
+	taimatu = new Object("taimatu");
+	taimatu->SetScale(Vector3(10, 10, 10));
+	taimatu->SetPosition(Vector3(pointLightPosition.x, pointLightPosition.y - 10, pointLightPosition.z));
 
 	fbxModel = FBXLoader::GetInstance()->LoadModelFromFile("boneTest");
 
@@ -387,10 +431,17 @@ bool KochaEngine::Application::Initialize()
 	peraBloom = new PostEffect();
 	peraEffect = new PostEffect();
 	peraEffectType = ShaderType::PERA_SHADER;
-	isBloom = true;
+	isBloom = false;
 
 	effectManager = new EffectManager(*dx12);
 	effectManager->LoadEffect();
+
+	lightManager = LightManager::Create();
+	Object::SetLightManager(lightManager);
+
+
+	lightManager->SetPointLightColor(0, pointLightColor);
+	lightManager->SetPointLightAtten(0, pointLightAtten);
 
 	vignetteScale = 0.25f;
 	gBoyPixelSize = 4.0f;
@@ -398,6 +449,8 @@ bool KochaEngine::Application::Initialize()
 	sepiaScale = 0.2f;
 	blurScale = 2.0f;
 	cAbeScale = 0.4f;
+
+
 
 	shaderColor = Vector4(1, 1, 1, 1);
 
@@ -419,6 +472,8 @@ void KochaEngine::Application::Terminate()
 	{
 		delete obj[i];
 	}
+	delete floor;
+	delete taimatu;
 	delete camera;
 	delete fbxModel;
 	for (int i = 0; i < FBX_COUNT; i++)
@@ -428,6 +483,7 @@ void KochaEngine::Application::Terminate()
 	delete peraBloom;
 	delete peraEffect;
 	delete effectManager;
+	delete lightManager;
 
 	Input::Terminate();
 	FBXLoader::GetInstance()->Finalize();

@@ -7,13 +7,13 @@
 #include <wrl.h>
 #include <vector>
 #include "Camera.h"
-#include "DirectionalLight.h"
 #include "Vector4.h"
 
 using namespace Microsoft::WRL;
 
 namespace KochaEngine
 {
+	class LightManager;
 	class Object
 	{
 		// 定数バッファ用データ構造体B0
@@ -21,8 +21,8 @@ namespace KochaEngine
 		{
 			Vector4 color;	// 色 (RGBA)
 			DirectX::XMMATRIX mat;	// ３Ｄ変換行列
-			DirectX::XMMATRIX mat2;
-			Vector3 light;
+			DirectX::XMMATRIX world;
+			Vector3 cameraPos;
 			float pad1;
 		};
 
@@ -71,6 +71,7 @@ namespace KochaEngine
 		void CreateBufferView();
 		void CreateDepthStencilView();
 
+		static LightManager* lightManager;
 		static ID3D12Device* device;
 		static ID3D12GraphicsCommandList* cmdList;
 		static SIZE winSize;
@@ -80,7 +81,6 @@ namespace KochaEngine
 		~Object();
 
 		void Draw(Camera* camera);
-		void Draw(Camera* camera, DirectionalLight& arg_light);
 		void Draw(Camera* camera, Vector3 position, Vector3 scale, Vector3 rotate);
 
 		void SetPosition(const Vector3 position);
@@ -96,6 +96,7 @@ namespace KochaEngine
 
 		Vector3 GetScale() { return scale; }
 
+		static void SetLightManager(LightManager* arg_lightManager);
 		static void StaticInit(ID3D12Device* device, SIZE winSize);
 		static void BeginDraw(ID3D12GraphicsCommandList* cmdList);
 		static void EndDraw();

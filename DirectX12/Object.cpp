@@ -5,11 +5,12 @@
 #include "Dx12_RootSignature.h"
 #include "Dx12_Descriptor.h"
 #include "Dx12_Pipeline.h"
-#include "DirectionalLight.h"
+#include "LightManager.h"
 #include <codecvt>
 
 #pragma comment(lib, "d3dcompiler.lib")
 
+KochaEngine::LightManager* KochaEngine::Object::lightManager{};
 ID3D12Device* KochaEngine::Object::device{};
 ID3D12GraphicsCommandList* KochaEngine::Object::cmdList{};
 SIZE KochaEngine::Object::winSize{};
@@ -31,6 +32,12 @@ KochaEngine::Object::Object(std::string objName) : objName(objName)
 
 KochaEngine::Object::~Object()
 {
+}
+
+void KochaEngine::Object::SetLightManager(LightManager* arg_lightManager)
+{
+	if (arg_lightManager == nullptr) return;
+	Object::lightManager = arg_lightManager;
 }
 
 void KochaEngine::Object::StaticInit(ID3D12Device* device, SIZE winSize)
@@ -141,8 +148,8 @@ void KochaEngine::Object::Draw(Camera* camera)
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
 	constMap0->color = color;
 	constMap0->mat = matWorld * matView * matProjection;
-	constMap0->mat2 = matWorld;
-	constMap0->light = { 1,-1,1 }; //右下奥
+	constMap0->world = matWorld;
+	constMap0->cameraPos = camera->GetEye();
 	constBuffB0->Unmap(0, nullptr);
 
 	result = constBuffB1->Map(0, nullptr, (void**)&constMap1);
@@ -164,76 +171,11 @@ void KochaEngine::Object::Draw(Camera* camera)
 
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 	cmdList->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
-
 	cmdList->SetGraphicsRootDescriptorTable(2, gpuDescHandleSRV);
+	lightManager->Draw(cmdList, 3);
 
 	// 描画コマンド
 	cmdList->DrawIndexedInstanced((UINT)KochaEngine::Dx12_Object::GetIndices(objName).size(), 1, 0, 0, 0);
-}
-
-void KochaEngine::Object::Draw(Camera* camera, DirectionalLight& arg_light)
-{
-	if (camera == nullptr)	return;
-
-	HRESULT result;
-	DirectX::XMMATRIX matScale, matRot, matTrans;
-
-	// スケール、回転、平行移動行列の計算
-	matScale = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
-	matRot = DirectX::XMMatrixIdentity();
-	matRot *= DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(rotate.z));
-	matRot *= DirectX::XMMatrixRotationX(DirectX::XMConvertToRadians(rotate.x));
-	matRot *= DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(rotate.y));
-	matTrans = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
-
-	// ワールド行列の合成
-	matWorld = DirectX::XMMatrixIdentity(); // 変形をリセット
-	//matWorld *= camera->GetBillboardMatrix(); //ワールド行列にビルボードを反映
-	matWorld *= matScale; // ワールド行列にスケーリングを反映
-	matWorld *= matRot; // ワールド行列に回転を反映
-	matWorld *= matTrans; // ワールド行列に平行移動を反映
-
-	matView = camera->GetMatView();
-	matProjection = camera->GetMatProjection();
-
-	// 親オブジェクトがあれば
-	if (parent != nullptr) {
-		// 親オブジェクトのワールド行列を掛ける
-		matWorld *= parent->matWorld;
-	}
-
-	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
-	constMap0->color = color;
-	constMap0->mat = matWorld * matView * matProjection;
-	constMap0->mat2 = matWorld;
-	constMap0->light = arg_light.GetDirection();
-	constBuffB0->Unmap(0, nullptr);
-
-	result = constBuffB1->Map(0, nullptr, (void**)&constMap1);
-	auto material = KochaEngine::Dx12_Object::GetMaterial(objName);
-	constMap1->ambient = material.ambient;
-	constMap1->diffuse = material.diffuse;
-	constMap1->specular = material.specular;
-	constMap1->alpha = material.alpha;
-	constBuffB1->Unmap(0, nullptr);
-
-	auto vbView = KochaEngine::Dx12_Object::GetVBView(objName);
-	auto ibView = KochaEngine::Dx12_Object::GetIBView(objName);
-	cmdList->IASetVertexBuffers(0, 1, &vbView);
-	cmdList->IASetIndexBuffer(&ibView);
-
-	// デスクリプタヒープの配列
-	ID3D12DescriptorHeap* ppHeaps[] = { Dx12_Descriptor::GetHeap().Get() };
-	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
-	cmdList->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
-
-	cmdList->SetGraphicsRootDescriptorTable(2, gpuDescHandleSRV);
-
-	// 描画コマンド
-	cmdList->DrawIndexedInstanced((UINT)KochaEngine::Dx12_Object::GetIndices(objName).size(), 1, 0, 0, 0);
-
 }
 
 void KochaEngine::Object::Draw(Camera* camera, Vector3 position, Vector3 scale, Vector3 rotate)
@@ -269,7 +211,8 @@ void KochaEngine::Object::Draw(Camera* camera, Vector3 position, Vector3 scale, 
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
 	constMap0->color = color;
 	constMap0->mat = matWorld * matView * matProjection;
-	constMap0->light = { 1,-1,1 }; //右下奥
+	constMap0->world = matWorld;
+	constMap0->cameraPos = camera->GetEye();
 	constBuffB0->Unmap(0, nullptr);
 
 	result = constBuffB1->Map(0, nullptr, (void**)&constMap1);
@@ -294,6 +237,8 @@ void KochaEngine::Object::Draw(Camera* camera, Vector3 position, Vector3 scale, 
 	cmdList->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
 
 	cmdList->SetGraphicsRootDescriptorTable(2, gpuDescHandleSRV);
+
+	lightManager->Draw(cmdList, 3);
 
 	// 描画コマンド
 	cmdList->DrawIndexedInstanced((UINT)KochaEngine::Dx12_Object::GetIndices(objName).size(), 1, 0, 0, 0);

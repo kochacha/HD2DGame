@@ -10,6 +10,7 @@ void GSmain(
 	{
 		GSOutput element;
 		element.svpos = input[i].svpos;
+		element.worldpos = input[i].worldpos;
         element.normal = input[i].normal;
         element.uv = input[i].uv;
 		output.Append(element);

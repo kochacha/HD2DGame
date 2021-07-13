@@ -168,7 +168,6 @@
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CSVReader.cpp" />
     <ClCompile Include="CustomGui.cpp" />
-    <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="Dx12_Blob.cpp" />
     <ClCompile Include="Dx12_Descriptor.cpp" />
     <ClCompile Include="Dx12_Object.cpp" />
@@ -194,6 +193,7 @@
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Number.cpp" />
     <ClCompile Include="Object.cpp" />
@@ -465,6 +465,7 @@
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="LightManager.h" />
     <ClInclude Include="Number.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Particle.h" />
@@ -473,6 +474,7 @@
     <ClInclude Include="ParticleParam.h" />
     <ClInclude Include="PMDLoader.h" />
     <ClInclude Include="PMDModel.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="PostEffect.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Scene.h" />
