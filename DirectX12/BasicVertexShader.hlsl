@@ -7,7 +7,7 @@ VSOutput VSmain(float4 pos : POSITION, float3 normal : NORMAL, float2 uv : TEXCO
 
     VSOutput output;
     output.svpos = mul(mat, pos);
-    output.worldpos = mul(world, pos);
+    output.worldpos = wpos;
     output.normal = wnormal.xyz;
     output.uv = uv;
     return output;

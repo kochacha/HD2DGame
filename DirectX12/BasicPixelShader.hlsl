@@ -29,7 +29,7 @@ PSOutput PSmain(GSOutput input)/* : SV_TARGET*/
 	// 頂点から視点への方向ベクトル
 	float3 eyedir = normalize(cameraPos - input.worldpos.xyz);
 	// 環境反射光
-	float3 ambient = m_ambient;
+	float3 ambient = 0.1f;
 	// シェーディングによる色
 	float4 shaderColor = float4(ambientColor * ambient, m_alpha);
 
@@ -68,7 +68,7 @@ PSOutput PSmain(GSOutput input)/* : SV_TARGET*/
 
 	//高輝度出力(ブルーム用)
 	float y = dot(float3(0.299f, 0.587f, 0.114f), shaderColor * texColor);
-    output.target1 = y > 0.1f ? shaderColor * texColor : 0.0f;
+    output.target1 = y > 0.8f ? shaderColor * texColor : 0.0f;
 
 	output.target2 = float4(1, 0, 0, 1); //shaderColor * texColor;
 

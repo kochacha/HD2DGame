@@ -104,13 +104,15 @@ void KochaEngine::Application::Run()
 		camera->Update();
 		lightManager->SetDirectionalLightColor(0, dirLightColor);
 		lightManager->SetDirectionalLightDirection(0, dirLightDirection);
+		lightManager->SetDirectionalLightIsActive(0, isActiveDirLight);
 		lightManager->SetPointLightPos(0, pointLightPosition);
-		taimatu->SetPosition(Vector3(pointLightPosition.x, pointLightPosition.y - 10, pointLightPosition.z));
+		lightManager->SetPointLightAtten(0, pointLightAtten);
+		taimatu->SetPosition(Vector3(pointLightPosition.x, pointLightPosition.y - 13, pointLightPosition.z + 3));
 		lightManager->Update();
 
 		for (int i = 0; i < OBJ_COUNT; ++i)
 		{
-			//obj[i]->MoveRotate({ 0,0.2f,0 });
+			obj[i]->MoveRotate({ 0,0.4f,0 });
 		}
 
 
@@ -235,9 +237,10 @@ void KochaEngine::Application::DrawGUI()
 
 	//DirectionalLight
 	ImGui::Begin("DirLight");
+	ImGui::Checkbox("isActive", &isActiveDirLight);
 	ImGui::Text("Direction:");
 	ImGui::SameLine();
-	ImGui::DragFloat3(" ", &dirLightDirection.z, 0.1f, -1.0f, 1.0f);
+	ImGui::DragFloat3(" ", &dirLightDirection.x, 0.1f, -1.0f, 1.0f);
 	//ImGui::SliderFloat("X", &dirLightDirection.x, -1.0f, 1.0f);
 	//ImGui::SliderFloat("Y", &dirLightDirection.y, -1.0f, 1.0f);
 	//ImGui::SliderFloat("Z", &dirLightDirection.z, -1.0f, 1.0f);
@@ -246,7 +249,10 @@ void KochaEngine::Application::DrawGUI()
 	ImGui::Begin("PointLight");
 	ImGui::Text("Position:");
 	ImGui::SameLine();
-	ImGui::DragFloat3(" ", &pointLightPosition.x);
+	ImGui::DragFloat3("##0", &pointLightPosition.x);
+	ImGui::Text("   Atten:");
+	ImGui::SameLine();
+	ImGui::DragFloat3("##1", &pointLightAtten.x, 0.010f, 0.001f, 1.0f);
 	ImGui::End();
 
 
@@ -390,20 +396,21 @@ bool KochaEngine::Application::Initialize()
 
 	CustomGui::DefaultCustom();
 
-	dirLightDirection = Vector3(-1, 1, -1);
-	dirLightColor = Vector3(1, 1, 1);
-	pointLightPosition = Vector3(0, 0, 0);
+	dirLightDirection = Vector3(1, 1, -1);
+	dirLightColor = Vector3(1, 0.2f, 0);
+	pointLightPosition = Vector3(0, 12, 0);
 	pointLightColor = Vector3(1, 0.7, 0);
-	pointLightAtten = Vector3(0.001f, 0.001f, 0.001f);
+	pointLightAtten = Vector3(1.000f, 0.050f, 0.001f);
+	isActiveDirLight = true;
 
 	texture[0] = new Texture2D("Resources/PIEN.png", Vector2(0, 0), Vector2(100, 100), 0);
 	for (int i = 0; i < OBJ_COUNT; ++i)
 	{
-		obj[i] = new Object("LowTree");
+		obj[i] = new Object("Yukidaruma");
 		//obj[i]->SetRotate({ 90,180,0 });
 		obj[i]->SetRotate({ 0,180,0 });
 		//obj[i]->SetScale({ 0.01, 0.01, 0.01 });
-		obj[i]->SetScale({ 1.0, 1.0, 1.0 });
+		obj[i]->SetScale({ 8.0, 8.0, 8.0 });
 		obj[i]->SetPosition({ (float)Util::GetIntRand(0,100) - 50.0f,0,(float)Util::GetIntRand(0,100) - 50.0f });
 		//obj[i]->MoveRotate({ 0,(float)Util::GetIntRand(0,360),0 });
 		//obj[i]->SetTexture("Resources/PIEN.png");
@@ -415,7 +422,7 @@ bool KochaEngine::Application::Initialize()
 	
 	taimatu = new Object("taimatu");
 	taimatu->SetScale(Vector3(10, 10, 10));
-	taimatu->SetPosition(Vector3(pointLightPosition.x, pointLightPosition.y - 10, pointLightPosition.z));
+	taimatu->SetPosition(Vector3(pointLightPosition.x, pointLightPosition.y - 13, pointLightPosition.z + 3));
 
 	fbxModel = FBXLoader::GetInstance()->LoadModelFromFile("boneTest");
 

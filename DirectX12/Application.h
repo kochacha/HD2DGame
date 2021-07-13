@@ -73,6 +73,7 @@ namespace KochaEngine
 		float color[4];
 		Vector4 shaderColor;
 
+		bool isActiveDirLight;
 		Vector3 dirLightDirection;
 		Vector3 dirLightColor;
 		Vector3 pointLightPosition;
