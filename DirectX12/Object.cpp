@@ -28,6 +28,7 @@ KochaEngine::Object::Object(std::string objName) : objName(objName)
 	std::string filepath = directoryPath + filename;
 
 	CreateBufferView();
+	CreateDepthStencilView();
 }
 
 KochaEngine::Object::~Object()
@@ -111,6 +112,31 @@ void KochaEngine::Object::CreateBufferView()
 
 void KochaEngine::Object::CreateDepthStencilView()
 {
+	D3D12_RESOURCE_DESC depthResDesc = {};
+	depthResDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	depthResDesc.Width = winSize.cx;
+	depthResDesc.Height = winSize.cy;
+	depthResDesc.DepthOrArraySize = 1;
+	depthResDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthResDesc.SampleDesc.Count = 1;
+	depthResDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+
+	D3D12_HEAP_PROPERTIES depthHeapProp = {};
+	depthHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
+	depthHeapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	depthHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+
+	D3D12_CLEAR_VALUE depthClearValue = {};
+	depthClearValue.DepthStencil.Depth = 1.0f;
+	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT;
+	
+	auto result = device->CreateCommittedResource(
+		&depthHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&depthResDesc,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,
+		&depthClearValue,
+		IID_PPV_ARGS(&depthBuff));
 
 }
 
@@ -266,6 +292,9 @@ void KochaEngine::Object::SetColor(const Vector4 color)
 
 void KochaEngine::Object::SetTexture(const std::string textureName)
 {
+	cpuDescHandleSRV = CD3DX12_CPU_DESCRIPTOR_HANDLE(Dx12_Descriptor::GetHeap().Get()->GetCPUDescriptorHandleForHeapStart(), Dx12_Texture::GetTexNum(textureName), descriptorHandleIncrementSize);
+	gpuDescHandleSRV = CD3DX12_GPU_DESCRIPTOR_HANDLE(Dx12_Descriptor::GetHeap().Get()->GetGPUDescriptorHandleForHeapStart(), Dx12_Texture::GetTexNum(textureName), descriptorHandleIncrementSize);
+
 	srvDesc.Format = Dx12_Texture::GetTexResDesc(textureName).Format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;

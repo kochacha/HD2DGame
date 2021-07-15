@@ -41,6 +41,7 @@ namespace KochaEngine
 
 		ComPtr<ID3D12Resource> constBuffB0;
 		ComPtr<ID3D12Resource> constBuffB1;
+		ComPtr<ID3D12Resource> depthBuff;
 
 		std::string objName;
 		std::string texName;

@@ -84,11 +84,12 @@ namespace KochaEngine
 		void LoadScene();
 		void InitFPS();
 		void DrawGUI();
+		void MeraMera();
 		bool UpdateFPS();
 
 		const double MIN_FRAME_TIME = 1.000000f / 60.000000f;
-		double frameTime = 0.0f;
-		double fps = 0.0f;
+		double frameTime = 0.000000f;
+		double fps = 0.000000f;
 		LARGE_INTEGER timeStart;
 		LARGE_INTEGER timeEnd;
 		LARGE_INTEGER timeFreq;

@@ -102,6 +102,8 @@ void KochaEngine::Application::Run()
 
 		sceneManager->Update();
 		camera->Update();
+		MeraMera();
+
 		lightManager->SetDirectionalLightColor(0, dirLightColor);
 		lightManager->SetDirectionalLightDirection(0, dirLightDirection);
 		lightManager->SetDirectionalLightIsActive(0, isActiveDirLight);
@@ -112,7 +114,7 @@ void KochaEngine::Application::Run()
 
 		for (int i = 0; i < OBJ_COUNT; ++i)
 		{
-			obj[i]->MoveRotate({ 0,0.4f,0 });
+			//obj[i]->MoveRotate({ 0,0.4f,0 });
 		}
 
 
@@ -188,9 +190,9 @@ void KochaEngine::Application::Load()
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/number.png");
 
 	//.objのロード
+	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "LowTree");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "Yukidaruma");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "box");
-	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "LowTree");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "plane");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "taimatu");
 
@@ -231,30 +233,31 @@ void KochaEngine::Application::DrawGUI()
 	ImGui::Begin("App");
 	//ImGui::SetWindowSize(ImVec2(400, 500), ImGuiCond_::ImGuiCond_FirstUseEver);
 	ImGui::Text("FPS:%f", fps);
-	ImGui::Text("ClearColor");
-	ImGui::ColorPicker4(" Color", clearColor);
+	if (ImGui::CollapsingHeader("ClearColor"))
+	{
+		ImGui::ColorPicker4(" Color", clearColor);
+	}
 	ImGui::End();
 
 	//DirectionalLight
-	ImGui::Begin("DirLight");
-	ImGui::Checkbox("isActive", &isActiveDirLight);
-	ImGui::Text("Direction:");
-	ImGui::SameLine();
-	ImGui::DragFloat3(" ", &dirLightDirection.x, 0.1f, -1.0f, 1.0f);
-	//ImGui::SliderFloat("X", &dirLightDirection.x, -1.0f, 1.0f);
-	//ImGui::SliderFloat("Y", &dirLightDirection.y, -1.0f, 1.0f);
-	//ImGui::SliderFloat("Z", &dirLightDirection.z, -1.0f, 1.0f);
+	ImGui::Begin("Light");
+	if (ImGui::CollapsingHeader("DirectionalLight"))
+	{
+		ImGui::Checkbox("isActive", &isActiveDirLight);
+		ImGui::Text("Direction:");
+		ImGui::SameLine();
+		ImGui::DragFloat3("##0", &dirLightDirection.x, 0.1f, -1.0f, 1.0f);
+	}
+	if (ImGui::CollapsingHeader("PointLight"))
+	{
+		ImGui::Text(" Position:");
+		ImGui::SameLine();
+		ImGui::DragFloat3("##1", &pointLightPosition.x);
+		ImGui::Text("    Atten:");
+		ImGui::SameLine();
+		ImGui::DragFloat3("##2", &pointLightAtten.x, 0.010f, 0.001f, 1.0f);
+	}
 	ImGui::End();
-
-	ImGui::Begin("PointLight");
-	ImGui::Text("Position:");
-	ImGui::SameLine();
-	ImGui::DragFloat3("##0", &pointLightPosition.x);
-	ImGui::Text("   Atten:");
-	ImGui::SameLine();
-	ImGui::DragFloat3("##1", &pointLightAtten.x, 0.010f, 0.001f, 1.0f);
-	ImGui::End();
-
 
 
 	//画面効果切り替え
@@ -331,6 +334,28 @@ void KochaEngine::Application::DrawGUI()
 	ImGui::End();
 }
 
+void KochaEngine::Application::MeraMera()
+{
+	const float DELTA_VALUE = 0.0015f;
+	if (Util::GetRandInt() % 2)
+	{
+		pointLightAtten.y -= DELTA_VALUE;
+	}
+	else
+	{
+		pointLightAtten.y += DELTA_VALUE;
+	}
+
+	if (pointLightAtten.y > 0.06f)
+	{
+		pointLightAtten.y -= DELTA_VALUE;
+	}
+	if (pointLightAtten.y < 0.03f)
+	{
+		pointLightAtten.y += DELTA_VALUE;
+	}
+}
+
 bool KochaEngine::Application::UpdateFPS()
 {
 	// 今の時間を取得
@@ -347,7 +372,7 @@ bool KochaEngine::Application::UpdateFPS()
 		timeEndPeriod(1);
 		return true;
 	}
-	fps = 1.0f / frameTime;
+	fps = 1.000000f / frameTime;
 	//std::wstringstream stream;
 	//stream << "FPS:" << fps << std::endl;
 	//OutputDebugString(stream.str().c_str());
@@ -396,7 +421,7 @@ bool KochaEngine::Application::Initialize()
 
 	CustomGui::DefaultCustom();
 
-	dirLightDirection = Vector3(1, 1, -1);
+	dirLightDirection = Vector3(0, 1, -1);
 	dirLightColor = Vector3(1, 0.2f, 0);
 	pointLightPosition = Vector3(0, 12, 0);
 	pointLightColor = Vector3(1, 0.7, 0);
@@ -406,19 +431,21 @@ bool KochaEngine::Application::Initialize()
 	texture[0] = new Texture2D("Resources/PIEN.png", Vector2(0, 0), Vector2(100, 100), 0);
 	for (int i = 0; i < OBJ_COUNT; ++i)
 	{
-		obj[i] = new Object("Yukidaruma");
-		//obj[i]->SetRotate({ 90,180,0 });
-		obj[i]->SetRotate({ 0,180,0 });
-		//obj[i]->SetScale({ 0.01, 0.01, 0.01 });
-		obj[i]->SetScale({ 8.0, 8.0, 8.0 });
-		obj[i]->SetPosition({ (float)Util::GetIntRand(0,100) - 50.0f,0,(float)Util::GetIntRand(0,100) - 50.0f });
+		obj[i] = new Object("plane");
+		obj[i]->SetTexture("Resources/PIEN.png");
+		obj[i]->SetRotate({ 90,180,0 });
+		//obj[i]->SetRotate({ 0,180,0 });
+		obj[i]->SetScale({ 0.01, 1, 0.01 });
+		//obj[i]->SetScale({ 8.0, 8.0, 8.0 });
+		obj[i]->SetPosition({ (float)Util::GetIntRand(0,100) - 50.0f,5,(float)Util::GetIntRand(0,100) - 50.0f });
 		//obj[i]->MoveRotate({ 0,(float)Util::GetIntRand(0,360),0 });
-		//obj[i]->SetTexture("Resources/PIEN.png");
 	}
 
 	floor = new Object("plane");
-	floor->SetScale(Vector3(50, 1, 50));
+	floor->SetScale(Vector3(0.5, 1, 0.5));
 	floor->SetPosition(Vector3(0, -1, 0));
+	//floor->MoveRotate(Vector3(180, 0, 0));
+	floor->SetTexture("Resources/kaku4.png");
 	
 	taimatu = new Object("taimatu");
 	taimatu->SetScale(Vector3(10, 10, 10));

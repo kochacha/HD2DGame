@@ -27,8 +27,6 @@ void KochaEngine::EffectManager::LoadEffect()
 		(const EFK_CHAR*)L"Resources/Effect/11/light.efk",
 		1.0f,
 		(const EFK_CHAR*)L"Resources/Effect/11");
-
-	int a = 0;
 }
 
 void KochaEngine::EffectManager::Play()

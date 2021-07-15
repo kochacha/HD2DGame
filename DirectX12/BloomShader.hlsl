@@ -7,7 +7,7 @@ float4 main(Output input) : SV_TARGET
     //高輝度部分のガウシアンぼかし
     float widthPixel = 1.0f / 1920.0f;
     float hightPixel = 1.0f / 1080.0f;
-    float blurScale = 4;
+    float blurScale = 4.0f;
     float4 blur = { 0,0,0,0 };
     blur += tex1.Sample(smp, input.uv + float2(-blurScale * widthPixel, -blurScale * hightPixel));
     blur += tex1.Sample(smp, input.uv + float2(0, -blurScale * hightPixel));
