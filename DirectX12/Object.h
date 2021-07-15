@@ -36,12 +36,21 @@ namespace KochaEngine
 			float alpha;
 		};
 
+	public:
+		enum BillboardType
+		{
+			NONE,
+			BILLBOARD,
+			BILLBOARD_Y,
+		};
+
 	private:
 		Object* parent = nullptr;
 
 		ComPtr<ID3D12Resource> constBuffB0;
 		ComPtr<ID3D12Resource> constBuffB1;
 		ComPtr<ID3D12Resource> depthBuff;
+		ComPtr<ID3D12DescriptorHeap> dsvHeap;
 
 		std::string objName;
 		std::string texName;
@@ -50,6 +59,7 @@ namespace KochaEngine
 		Vector3 position = { 0,0,0 };
 		Vector3 rotate = { 0,0,0 };
 		Vector4 color = { 1,1,1,1 };
+		BillboardType billboardType = BillboardType::NONE;
 
 		DirectX::XMMATRIX matWorld;
 		DirectX::XMMATRIX matView;
@@ -84,16 +94,17 @@ namespace KochaEngine
 		void Draw(Camera* camera);
 		void Draw(Camera* camera, Vector3 position, Vector3 scale, Vector3 rotate);
 
-		void SetPosition(const Vector3 position);
-		void SetScale(const Vector3 scale);
-		void SetRotate(const Vector3 rotate);
-		void SetColor(const Vector4 color);
-		void SetTexture(const std::string textureName);
+		void SetPosition(const Vector3& position);
+		void SetScale(const Vector3& scale);
+		void SetRotate(const Vector3& rotate);
+		void SetColor(const Vector4& color);
+		void SetTexture(const std::string& textureName);
+		void SetBillboardType(const BillboardType& arg_type);
 
-		void MovePosition(const Vector3 move);
-		void MoveScale(const Vector3 moveScale);
-		void MoveRotate(const Vector3 moveRotate);
-		void MoveColor(const Vector4 moveColor);
+		void MovePosition(const Vector3& move);
+		void MoveScale(const Vector3& moveScale);
+		void MoveRotate(const Vector3& moveRotate);
+		void MoveColor(const Vector4& moveColor);
 
 		Vector3 GetScale() { return scale; }
 

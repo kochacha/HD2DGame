@@ -28,7 +28,7 @@ KochaEngine::Object::Object(std::string objName) : objName(objName)
 	std::string filepath = directoryPath + filename;
 
 	CreateBufferView();
-	CreateDepthStencilView();
+	//CreateDepthStencilView();
 }
 
 KochaEngine::Object::~Object()
@@ -138,6 +138,22 @@ void KochaEngine::Object::CreateDepthStencilView()
 		&depthClearValue,
 		IID_PPV_ARGS(&depthBuff));
 
+	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+	dsvHeapDesc.NumDescriptors = 1;
+	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+
+	result = device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
+
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
+
+	device->CreateDepthStencilView(
+		depthBuff.Get(),
+		&dsvDesc,
+		dsvHeap->GetCPUDescriptorHandleForHeapStart());
+
 }
 
 void KochaEngine::Object::Draw(Camera* camera)
@@ -157,10 +173,24 @@ void KochaEngine::Object::Draw(Camera* camera)
 
 	// ワールド行列の合成
 	matWorld = DirectX::XMMatrixIdentity(); // 変形をリセット
-	//matWorld *= camera->GetBillboardMatrix(); //ワールド行列にビルボードを反映
 	matWorld *= matScale; // ワールド行列にスケーリングを反映
 	matWorld *= matRot; // ワールド行列に回転を反映
 	matWorld *= matTrans; // ワールド行列に平行移動を反映
+
+	switch (billboardType)
+	{
+	case BillboardType::NONE:
+		break;
+	case BillboardType::BILLBOARD:
+		matWorld *= camera->GetBillboardMatrix(); //ビルボードを反映
+		break;
+	case BillboardType::BILLBOARD_Y:
+		matWorld *= camera->GetBillboardYMatrix(); //Y軸ビルボードを反映
+		break;
+	default:
+		break;
+	}
+
 
 	matView = camera->GetMatView();
 	matProjection = camera->GetMatProjection();
@@ -225,6 +255,20 @@ void KochaEngine::Object::Draw(Camera* camera, Vector3 position, Vector3 scale, 
 	matWorld *= matRot; // ワールド行列に回転を反映
 	matWorld *= matTrans; // ワールド行列に平行移動を反映
 
+	switch (billboardType)
+	{
+	case BillboardType::NONE:
+		break;
+	case BillboardType::BILLBOARD:
+		matWorld *= camera->GetBillboardMatrix(); //ビルボードを反映
+		break;
+	case BillboardType::BILLBOARD_Y:
+		matWorld *= camera->GetBillboardYMatrix(); //Y軸ビルボードを反映
+		break;
+	default:
+		break;
+	}
+
 	matView = camera->GetMatView();
 	matProjection = camera->GetMatProjection();
 
@@ -270,27 +314,27 @@ void KochaEngine::Object::Draw(Camera* camera, Vector3 position, Vector3 scale, 
 	cmdList->DrawIndexedInstanced((UINT)KochaEngine::Dx12_Object::GetIndices(objName).size(), 1, 0, 0, 0);
 }
 
-void KochaEngine::Object::SetPosition(const Vector3 position)
+void KochaEngine::Object::SetPosition(const Vector3& position)
 {
 	this->position = position;
 }
 
-void KochaEngine::Object::SetScale(const Vector3 scale)
+void KochaEngine::Object::SetScale(const Vector3& scale)
 {
 	this->scale = scale;
 }
 
-void KochaEngine::Object::SetRotate(const Vector3 rotate)
+void KochaEngine::Object::SetRotate(const Vector3& rotate)
 {
 	this->rotate = rotate;
 }
 
-void KochaEngine::Object::SetColor(const Vector4 color)
+void KochaEngine::Object::SetColor(const Vector4& color)
 {
 	this->color = color;
 }
 
-void KochaEngine::Object::SetTexture(const std::string textureName)
+void KochaEngine::Object::SetTexture(const std::string& textureName)
 {
 	cpuDescHandleSRV = CD3DX12_CPU_DESCRIPTOR_HANDLE(Dx12_Descriptor::GetHeap().Get()->GetCPUDescriptorHandleForHeapStart(), Dx12_Texture::GetTexNum(textureName), descriptorHandleIncrementSize);
 	gpuDescHandleSRV = CD3DX12_GPU_DESCRIPTOR_HANDLE(Dx12_Descriptor::GetHeap().Get()->GetGPUDescriptorHandleForHeapStart(), Dx12_Texture::GetTexNum(textureName), descriptorHandleIncrementSize);
@@ -306,28 +350,33 @@ void KochaEngine::Object::SetTexture(const std::string textureName)
 		cpuDescHandleSRV);
 }
 
-void KochaEngine::Object::MovePosition(const Vector3 move)
+void KochaEngine::Object::SetBillboardType(const BillboardType& arg_type)
+{
+	billboardType = arg_type;
+}
+
+void KochaEngine::Object::MovePosition(const Vector3& move)
 {
 	this->position.x += move.x;
 	this->position.y += move.y;
 	this->position.z += move.z;
 }
 
-void KochaEngine::Object::MoveScale(const Vector3 moveScale)
+void KochaEngine::Object::MoveScale(const Vector3& moveScale)
 {
 	this->scale.x += moveScale.x;
 	this->scale.y += moveScale.y;
 	this->scale.z += moveScale.z;
 }
 
-void KochaEngine::Object::MoveRotate(const Vector3 moveRotate)
+void KochaEngine::Object::MoveRotate(const Vector3& moveRotate)
 {
 	this->rotate.x += moveRotate.x;
 	this->rotate.y += moveRotate.y;
 	this->rotate.z += moveRotate.z;
 }
 
-void KochaEngine::Object::MoveColor(const Vector4 moveColor)
+void KochaEngine::Object::MoveColor(const Vector4& moveColor)
 {
 	this->color.x += moveColor.x;
 	this->color.y += moveColor.y;

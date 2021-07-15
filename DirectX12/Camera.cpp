@@ -143,14 +143,13 @@ void KochaEngine::Camera::Billboard()
 	assert(!XMVector3IsInfinite(cameraAxisZ));
 	assert(!XMVector3Equal(upVector, XMVectorZero()));
 	assert(!XMVector3IsInfinite(upVector));
-	// ベクトルを正規化
+
 	cameraAxisZ = XMVector3Normalize(cameraAxisZ);
 
 	// カメラのX軸（右方向）
 	XMVECTOR cameraAxisX;
 	// X軸は上方向→Z軸の外積で求まる
 	cameraAxisX = XMVector3Cross(upVector, cameraAxisZ);
-	// ベクトルを正規化
 	cameraAxisX = XMVector3Normalize(cameraAxisX);
 
 	// カメラのY軸（上方向）
@@ -165,18 +164,17 @@ void KochaEngine::Camera::Billboard()
 	matCameraRot.r[1] = cameraAxisY;
 	matCameraRot.r[2] = cameraAxisZ;
 	matCameraRot.r[3] = XMVectorSet(0, 0, 0, 1);
-	// 転置により逆行列（逆回転）を計算
+	// 転置により逆行列を計算
 	matView = XMMatrixTranspose(matCameraRot);
 
 	// 視点座標に-1を掛けた座標
 	XMVECTOR reverseEyePosition = XMVectorNegate(eyePosition);
 	// カメラの位置からワールド原点へのベクトル（カメラ座標系）
-	XMVECTOR tX = XMVector3Dot(cameraAxisX, reverseEyePosition);	// X成分
-	XMVECTOR tY = XMVector3Dot(cameraAxisY, reverseEyePosition);	// Y成分
-	XMVECTOR tZ = XMVector3Dot(cameraAxisZ, reverseEyePosition);	// Z成分
-	// 一つのベクトルにまとめる
+	XMVECTOR tX = XMVector3Dot(cameraAxisX, reverseEyePosition);
+	XMVECTOR tY = XMVector3Dot(cameraAxisY, reverseEyePosition);
+	XMVECTOR tZ = XMVector3Dot(cameraAxisZ, reverseEyePosition);
 	XMVECTOR translation = XMVectorSet(tX.m128_f32[0], tY.m128_f32[1], tZ.m128_f32[2], 1.0f);
-	// ビュー行列に平行移動成分を設定
+
 	matView.r[3] = translation;
 
 	// 全方向ビルボード行列の計算
@@ -189,20 +187,15 @@ void KochaEngine::Camera::Billboard()
 
 	//Y軸回りビルボード行列の計算
 	{
-		// カメラX軸、Y軸、Z軸
-		XMVECTOR ybillCameraAxisX, ybillCameraAxisY, ybillCameraAxisZ;
+		XMVECTOR yBillCameraAxisX, yBillCameraAxisY, yBillCameraAxisZ;
 
-		// X軸は共通
-		ybillCameraAxisX = cameraAxisX;
-		// Y軸はワールド座標系のY軸
-		ybillCameraAxisY = XMVector3Normalize(upVector);
-		// Z軸はX軸→Y軸の外積で求まる
-		ybillCameraAxisZ = XMVector3Cross(ybillCameraAxisX, ybillCameraAxisY);
+		yBillCameraAxisX = cameraAxisX;
+		yBillCameraAxisY = XMVector3Normalize(upVector);
+		yBillCameraAxisZ = XMVector3Cross(yBillCameraAxisX, yBillCameraAxisY);
 
-		// Y軸回りビルボード行列
-		matBillboardY.r[0] = ybillCameraAxisX;
-		matBillboardY.r[1] = ybillCameraAxisY;
-		matBillboardY.r[2] = ybillCameraAxisZ;
+		matBillboardY.r[0] = yBillCameraAxisX;
+		matBillboardY.r[1] = yBillCameraAxisY;
+		matBillboardY.r[2] = yBillCameraAxisZ;
 		matBillboardY.r[3] = XMVectorSet(0, 0, 0, 1);
 	}
 

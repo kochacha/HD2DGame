@@ -64,7 +64,7 @@ PSOutput PSmain(GSOutput input)/* : SV_TARGET*/
 	}
 
 	//通常
-    output.target0 = shaderColor * texColor;
+    output.target0 = shaderColor * texColor * color;
 
 	//高輝度出力(ブルーム用)
 	float y = dot(float3(0.299f, 0.587f, 0.114f), shaderColor * texColor);

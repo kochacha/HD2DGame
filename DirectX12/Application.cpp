@@ -86,6 +86,14 @@ void KochaEngine::Application::Run()
 		{
 			camera->MoveEye(Vector3(0, -1, 0));
 		}
+		if (Input::CheckKey(DIK_UP))
+		{
+			camera->MoveEye(Vector3(0, 0, 1));
+		}
+		if (Input::CheckKey(DIK_DOWN))
+		{
+			camera->MoveEye(Vector3(0, 0, -1));
+		}
 		if (Input::CheckKey(DIK_Q))
 		{
 			camera->MoveTarget(Vector3(-1, 0, 0));
@@ -95,7 +103,7 @@ void KochaEngine::Application::Run()
 			camera->MoveTarget(Vector3(1, 0, 0));
 		}
 
-		if (Input::CheckKey(DIK_RETURN))
+		if (Input::TriggerKey(DIK_RETURN))
 		{
 			effectManager->Play();
 		}
@@ -114,7 +122,7 @@ void KochaEngine::Application::Run()
 
 		for (int i = 0; i < OBJ_COUNT; ++i)
 		{
-			//obj[i]->MoveRotate({ 0,0.4f,0 });
+			obj[i]->MoveRotate({ 0,1.5f,0 });
 		}
 
 
@@ -146,6 +154,7 @@ void KochaEngine::Application::Run()
 		//２パス
 		{
 			peraEffect->PreDrawScene(dx12->GetCmdList().Get());
+
 			if (isBloom)
 			{
 				peraBloom->Draw(ShaderType::BLOOM_SHADER); //ブルーム
@@ -154,6 +163,7 @@ void KochaEngine::Application::Run()
 			{
 				peraBloom->Draw();
 			}
+
 			peraEffect->PostDrawScene(dx12->GetCmdList().Get());
 		}
 
@@ -195,6 +205,7 @@ void KochaEngine::Application::Load()
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "box");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "plane");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "taimatu");
+	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "sphere");
 
 	//.pmdのロード *日本語！ダメ！絶対！*
 	//PMDLoader::LoadModel(dx12->GetDevice().Get(), "Resources/Model/miku/miku.pmd");
@@ -346,11 +357,11 @@ void KochaEngine::Application::MeraMera()
 		pointLightAtten.y += DELTA_VALUE;
 	}
 
-	if (pointLightAtten.y > 0.06f)
+	if (pointLightAtten.y > 0.03f)
 	{
 		pointLightAtten.y -= DELTA_VALUE;
 	}
-	if (pointLightAtten.y < 0.03f)
+	if (pointLightAtten.y < 0.01f)
 	{
 		pointLightAtten.y += DELTA_VALUE;
 	}
@@ -424,25 +435,26 @@ bool KochaEngine::Application::Initialize()
 	dirLightDirection = Vector3(0, 1, -1);
 	dirLightColor = Vector3(1, 0.2f, 0);
 	pointLightPosition = Vector3(0, 12, 0);
-	pointLightColor = Vector3(1, 0.7, 0);
+	pointLightColor = Vector3(1.0, 0.7, 0.0);
 	pointLightAtten = Vector3(1.000f, 0.050f, 0.001f);
 	isActiveDirLight = true;
 
 	texture[0] = new Texture2D("Resources/PIEN.png", Vector2(0, 0), Vector2(100, 100), 0);
 	for (int i = 0; i < OBJ_COUNT; ++i)
 	{
-		obj[i] = new Object("plane");
+		obj[i] = new Object("sphere");
 		obj[i]->SetTexture("Resources/PIEN.png");
 		obj[i]->SetRotate({ 90,180,0 });
 		//obj[i]->SetRotate({ 0,180,0 });
-		obj[i]->SetScale({ 0.01, 1, 0.01 });
-		//obj[i]->SetScale({ 8.0, 8.0, 8.0 });
+		//obj[i]->SetScale({ 0.01, 1, 0.01 });
+		obj[i]->SetScale({ 8.0, 8.0, 8.0 });
 		obj[i]->SetPosition({ (float)Util::GetIntRand(0,100) - 50.0f,5,(float)Util::GetIntRand(0,100) - 50.0f });
 		//obj[i]->MoveRotate({ 0,(float)Util::GetIntRand(0,360),0 });
+		//obj[i]->SetBillboardType(Object::BillboardType::BILLBOARD_Y);
 	}
 
 	floor = new Object("plane");
-	floor->SetScale(Vector3(0.5, 1, 0.5));
+	floor->SetScale(Vector3(500, 1, 500));
 	floor->SetPosition(Vector3(0, -1, 0));
 	//floor->MoveRotate(Vector3(180, 0, 0));
 	floor->SetTexture("Resources/kaku4.png");

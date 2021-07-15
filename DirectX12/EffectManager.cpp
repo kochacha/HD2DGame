@@ -59,10 +59,10 @@ void KochaEngine::EffectManager::Initialize()
 		1,
 		DXGI_FORMAT_D32_FLOAT,
 		false,
-		3000);
+		1000);
 
 	//最大インスタンス数
-	_efkManager = Effekseer::Manager::Create(3000);
+	_efkManager = Effekseer::Manager::Create(1000);
 
 	//座標系を左手系にする
 	_efkManager->SetCoordinateSystem(Effekseer::CoordinateSystem::LH);
@@ -76,6 +76,8 @@ void KochaEngine::EffectManager::Initialize()
 
 	_efkManager->SetTextureLoader(_efkRenderer->CreateTextureLoader());
 	_efkManager->SetModelLoader(_efkRenderer->CreateModelLoader());
+	_efkManager->SetMaterialLoader(_efkRenderer->CreateMaterialLoader());
+	_efkManager->SetCurveLoader(Effekseer::MakeRefPtr<Effekseer::CurveLoader>());
 
 	_efkMemoryPool = EffekseerRenderer::CreateSingleFrameMemoryPool(_efkRenderer->GetGraphicsDevice());
 	_efkCmdList = EffekseerRenderer::CreateCommandList(_efkRenderer->GetGraphicsDevice(), _efkMemoryPool);
