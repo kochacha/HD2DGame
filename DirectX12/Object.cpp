@@ -28,7 +28,7 @@ KochaEngine::Object::Object(std::string objName) : objName(objName)
 	std::string filepath = directoryPath + filename;
 
 	CreateBufferView();
-	//CreateDepthStencilView();
+	CreateDepthStencilView();
 }
 
 KochaEngine::Object::~Object()
@@ -138,11 +138,11 @@ void KochaEngine::Object::CreateDepthStencilView()
 		&depthClearValue,
 		IID_PPV_ARGS(&depthBuff));
 
-	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
-	dsvHeapDesc.NumDescriptors = 1;
-	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+	//D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+	//dsvHeapDesc.NumDescriptors = 1;
+	//dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 
-	result = device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
+	//result = device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
 
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
 	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
@@ -152,8 +152,7 @@ void KochaEngine::Object::CreateDepthStencilView()
 	device->CreateDepthStencilView(
 		depthBuff.Get(),
 		&dsvDesc,
-		dsvHeap->GetCPUDescriptorHandleForHeapStart());
-
+		Dx12_Descriptor::GetDepthHeap().Get()->GetCPUDescriptorHandleForHeapStart());
 }
 
 void KochaEngine::Object::Draw(Camera* camera)

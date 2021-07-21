@@ -103,9 +103,13 @@ void KochaEngine::Application::Run()
 			camera->MoveTarget(Vector3(1, 0, 0));
 		}
 
-		if (Input::TriggerKey(DIK_RETURN))
+		if (Input::TriggerKey(DIK_1))
 		{
-			effectManager->Play();
+			effectManager->Play("light.efk", Vector3(0, 0, 0));
+		}
+		if (Input::TriggerKey(DIK_2))
+		{
+			effectManager->Play("hit.efk", Vector3(0, 0, 0));
 		}
 
 		sceneManager->Update();
@@ -146,7 +150,7 @@ void KochaEngine::Application::Run()
 			//↑ObjDraw↑//
 			Object::EndDraw();
 
-			effectManager->Update();
+			effectManager->Update(camera);
 
 			peraBloom->PostDrawScene(dx12->GetCmdList().Get());
 		}
@@ -480,7 +484,8 @@ bool KochaEngine::Application::Initialize()
 	isBloom = false;
 
 	effectManager = new EffectManager(*dx12);
-	effectManager->LoadEffect();
+	effectManager->LoadEffect("light.efk", 10.0f);
+	effectManager->LoadEffect("hit.efk", 10.0f);
 
 	lightManager = LightManager::Create();
 	Object::SetLightManager(lightManager);

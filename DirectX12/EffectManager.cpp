@@ -1,5 +1,7 @@
 #include "EffectManager.h"
 #include "Dx12_Wrapper.h"
+#include "Camera.h"
+#include "Util.h"
 
 #ifdef _DEBUG
 #pragma comment(lib,"EffekseerRendererDX12d.lib")
@@ -20,22 +22,50 @@ KochaEngine::EffectManager::~EffectManager()
 {
 }
 
-void KochaEngine::EffectManager::LoadEffect()
+void KochaEngine::EffectManager::LoadEffect(const std::string& arg_efkName, const float arg_scale)
 {
-	_effect = Effekseer::Effect::Create(
+	std::string efkName = arg_efkName;
+
+	std::string commonPath = "Resources/Effect";
+	wchar_t wMaterialPath[128];
+	MultiByteToWideChar(CP_ACP, 0, commonPath.c_str(), -1, wMaterialPath, _countof(wMaterialPath));
+	auto materialPath = (const char16_t*)wMaterialPath;
+
+	wchar_t wPath[128];
+	std::string fullPath = "Resources/Effect/" + efkName;
+	MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, wPath, _countof(wPath));
+	auto path = (const char16_t*)wPath;
+
+	_effect[efkName] = Effekseer::Effect::Create(
 		_efkManager,
-		(const EFK_CHAR*)L"Resources/Effect/11/light.efk",
-		1.0f,
-		(const EFK_CHAR*)L"Resources/Effect/11");
+		path,
+		arg_scale,
+		materialPath);
 }
 
-void KochaEngine::EffectManager::Play()
+void KochaEngine::EffectManager::Play(const std::string& arg_efkName, const Vector3& arg_position)
 {
-	_efkHandle = _efkManager->Play(_effect, 0, 0, 0);
+	std::string efkName = arg_efkName;
+	_efkHandle = _efkManager->Play(_effect[efkName], arg_position.x, arg_position.y, arg_position.z);
 }
 
-void KochaEngine::EffectManager::Update()
+void KochaEngine::EffectManager::Update(Camera* camera)
 {
+	if (camera == nullptr) return;
+
+	auto cameraEye = camera->GetEye();
+	auto cameraTarget = camera->GetTarget();
+	auto cameraUp = camera->GetUp();
+
+	auto eye = Effekseer::Vector3D(cameraEye.x, cameraEye.y, cameraEye.z);
+	auto target = Effekseer::Vector3D(cameraTarget.x, cameraTarget.y, cameraTarget.z);
+	auto up = Effekseer::Vector3D(cameraUp.x, cameraUp.y, cameraUp.z);
+
+	auto matrix = Effekseer::Matrix44().LookAtLH(eye, target, up);
+
+	// カメラ行列を設定
+	_efkRenderer->SetCameraMatrix(matrix);
+
 	_efkManager->Update();
 	_efkMemoryPool->NewFrame();
 
@@ -84,13 +114,13 @@ void KochaEngine::EffectManager::Initialize()
 
 	_efkRenderer->SetCommandList(_efkCmdList);
 
-	auto g_position = Effekseer::Vector3D(10.0f, 5.0f, 20.0f);
+	auto g_position = Effekseer::Vector3D(0, 50, -150);
 
 	// 投影行列を設定
 	_efkRenderer->SetProjectionMatrix(
-		Effekseer::Matrix44().PerspectiveFovRH(90.0f / 180.0f * 3.14f, (float)dx12.GetWinSize().cx / (float)dx12.GetWinSize().cy, 1.0f, 500.0f));
+		Effekseer::Matrix44().PerspectiveFovLH(DirectX::XMConvertToRadians(60.0f), (float)dx12.GetWinSize().cx / (float)dx12.GetWinSize().cy, 0.1f, 1500.0f));
 
 	// カメラ行列を設定
 	_efkRenderer->SetCameraMatrix(
-		Effekseer::Matrix44().LookAtRH(g_position, Effekseer::Vector3D(0.0f, 0.0f, 0.0f), Effekseer::Vector3D(0.0f, 1.0f, 0.0f)));
+		Effekseer::Matrix44().LookAtLH(g_position, Effekseer::Vector3D(0.0f, 0.0f, 0.0f), Effekseer::Vector3D(0.0f, 1.0f, 0.0f)));
 }

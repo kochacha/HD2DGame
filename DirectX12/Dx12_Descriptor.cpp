@@ -8,6 +8,7 @@
 
 ComPtr<ID3D12DescriptorHeap> KochaEngine::Dx12_Descriptor::heap{};
 ComPtr<ID3D12DescriptorHeap> KochaEngine::Dx12_Descriptor::fbxHeap{};
+ComPtr<ID3D12DescriptorHeap> KochaEngine::Dx12_Descriptor::depthHeap{};
 
 KochaEngine::Dx12_Descriptor::Dx12_Descriptor(Dx12_Wrapper& dx12) : dx12(dx12)
 {
@@ -18,6 +19,7 @@ KochaEngine::Dx12_Descriptor::~Dx12_Descriptor()
 {
 	Release(heap);
 	Release(fbxHeap);
+	Release(depthHeap);
 }
 
 HRESULT KochaEngine::Dx12_Descriptor::CreateHeap()
@@ -39,6 +41,14 @@ HRESULT KochaEngine::Dx12_Descriptor::CreateHeap()
 		descHeapDesc.NumDescriptors = 512;
 		//ƒq[ƒv‚Ì¶¬
 		result = dx12.GetDevice().Get()->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&fbxHeap));
+	}
+	{
+		D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
+		descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+		descHeapDesc.NodeMask = 0;
+		descHeapDesc.NumDescriptors = 512;
+		//ƒq[ƒv‚Ì¶¬
+		result = dx12.GetDevice().Get()->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&depthHeap));
 	}
 	return result;
 }

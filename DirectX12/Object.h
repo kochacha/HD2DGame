@@ -50,7 +50,7 @@ namespace KochaEngine
 		ComPtr<ID3D12Resource> constBuffB0;
 		ComPtr<ID3D12Resource> constBuffB1;
 		ComPtr<ID3D12Resource> depthBuff;
-		ComPtr<ID3D12DescriptorHeap> dsvHeap;
+		//ComPtr<ID3D12DescriptorHeap> dsvHeap;
 
 		std::string objName;
 		std::string texName;
