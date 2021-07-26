@@ -71,7 +71,6 @@ void KochaEngine::GameObjectManager::SpriteDraw()
 
 void KochaEngine::GameObjectManager::CheckBlock(GameObject * obj, GameObjectType otherType)
 {
-	_Sphere objSphere = obj->GetSphere();
 	GameObjectType objType = obj->GetType();
 	XMFLOAT3 objPos = obj->GetPosition();
 
@@ -82,138 +81,12 @@ void KochaEngine::GameObjectManager::CheckBlock(GameObject * obj, GameObjectType
 		if ((*it)->GetType() != otherType) continue; //指定のオブジェクト以外だったら無視
 		if ((*it)->IsDead()) continue; //オブジェクトが死んでいたら無視
 
-		if (Collision::HitSphereToBox(objSphere,(*it)->GetBox()))
-		{
-			obj->HitBlock((*it)->GetBox());					
-		}
+		//if (Collision::HitSphereToBox(objSphere,(*it)->GetBox()))
+		//{
+		//	obj->HitBlock((*it)->GetBox());					
+		//}
 	}
 
-}
-
-void KochaEngine::GameObjectManager::CheckHitSphere(GameObject * obj, GameObjectType otherType)
-{
-	_Sphere objSphere = obj->GetSphere();
-	GameObjectType objType = obj->GetType();
-
-	auto end = gameObjects.end();
-	for (auto it = gameObjects.begin(); it != end; ++it)
-	{
-		if ((*it)->GetType() == objType) continue; //自分と同じオブジェクトだったら無視
-		if ((*it)->GetType() != otherType) continue; //指定のオブジェクト以外だったら無視
-		if ((*it)->IsDead()) continue; //オブジェクトが死んでいたら無視
-
-		if (Collision::HitSphereToSphere(objSphere, (*it)->GetSphere()))
-		{
-			(*it)->Hit();
-		}
-	}
-}
-
-bool KochaEngine::GameObjectManager::HitSphereToSphere(GameObject * obj, GameObjectType otherType)
-{
-	if (obj == nullptr) return false;
-
-	_Sphere objSphere = obj->GetSphere();
-	GameObjectType objType = obj->GetType();
-	XMFLOAT3 objPos = obj->GetPosition();
-	XMFLOAT3 objVel = obj->GetVelocity();
-	float objSpeed = obj->GetSpeed();
-
-	auto end = gameObjects.end();
-	for (auto it = gameObjects.begin(); it != end; ++it)
-	{
-		if ((*it)->GetType() == objType) continue; //自分と同じオブジェクトだったら無視
-		if ((*it)->GetType() != otherType) continue; //指定のオブジェクト以外だったら無視
-		if ((*it)->IsDead()) continue; //オブジェクトが死んでいたら無視
-
-		if (Collision::HitSphereToSphere(objSphere, (*it)->GetSphere()))
-		{
-			(*it)->Hit();
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool KochaEngine::GameObjectManager::HitSphereToBox(GameObject * obj, GameObjectType otherType)
-{
-	if (obj == nullptr) return false;
-
-	_Sphere objSphere = obj->GetSphere();
-	GameObjectType objType = obj->GetType();
-	XMFLOAT3 objPos = obj->GetPosition();
-	XMFLOAT3 objVel = obj->GetVelocity();
-	float objSpeed = obj->GetSpeed();
-
-	auto end = gameObjects.end();
-	for (auto it = gameObjects.begin(); it != end; ++it)
-	{
-		if ((*it)->GetType() == objType) continue; //自分と同じオブジェクトだったら無視
-		if ((*it)->GetType() != otherType) continue; //指定のオブジェクト以外だったら無視
-		if ((*it)->IsDead()) continue; //オブジェクトが死んでいたら無視
-
-		if (Collision::HitSphereToBox(objSphere, (*it)->GetBox()))
-		{
-			(*it)->Hit();
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool KochaEngine::GameObjectManager::HitPlayerKnockBack(GameObject * obj, GameObjectType otherType)
-{
-	if (obj == nullptr) return false;
-
-	_Sphere objSphere = obj->GetSphere();
-	GameObjectType objType = obj->GetType();
-	XMFLOAT3 objPos = obj->GetPosition();
-	XMFLOAT3 objVel = obj->GetVelocity();
-	float objSpeed = obj->GetSpeed();
-
-	auto end = gameObjects.end();
-	for (auto it = gameObjects.begin(); it != end; ++it)
-	{
-		if ((*it)->GetType() == objType) continue; //自分と同じオブジェクトだったら無視
-		if ((*it)->GetType() != otherType) continue; //指定のオブジェクト以外だったら無視
-		if ((*it)->IsDead()) continue; //オブジェクトが死んでいたら無視
-
-		if (Collision::HitSphereToSphere(objSphere, (*it)->GetSphere()))
-		{	
-			obj->SetKnockBackVel((*it)->GetVelocity());		
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool KochaEngine::GameObjectManager::HitPlayerKnockBack2(GameObject * obj, GameObjectType otherType)
-{
-	if (obj == nullptr) return false;
-
-	_Sphere objSphere = obj->GetSphere();
-	GameObjectType objType = obj->GetType();
-	XMFLOAT3 objPos = obj->GetPosition();
-	XMFLOAT3 objVel = obj->GetVelocity();
-	float objSpeed = obj->GetSpeed();
-
-	auto end = gameObjects.end();
-	for (auto it = gameObjects.begin(); it != end; ++it)
-	{
-		if ((*it)->GetType() == objType) continue; //自分と同じオブジェクトだったら無視
-		if ((*it)->GetType() != otherType) continue; //指定のオブジェクト以外だったら無視
-		if ((*it)->IsDead()) continue; //オブジェクトが死んでいたら無視
-
-		if (Collision::HitSphereToSphere(objSphere, (*it)->GetSphere()))
-		{	
-			return true;
-		}
-	}
-
-	return false;
 }
 
 bool KochaEngine::GameObjectManager::CheckBombAlive()
@@ -292,7 +165,7 @@ void KochaEngine::GameObjectManager::RemoveAll()
 //	}
 //	return nullptr;
 //}
-//
+
 //Boss * KochaEngine::GameObjectManager::GetBoss()
 //{
 //	auto end = gameObjects.end();

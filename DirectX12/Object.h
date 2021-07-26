@@ -111,6 +111,7 @@ namespace KochaEngine
 		static void SetLightManager(LightManager* arg_lightManager);
 		static void StaticInit(ID3D12Device* device, SIZE winSize);
 		static void BeginDraw(ID3D12GraphicsCommandList* cmdList);
+		static void BeginDrawFromLight(ID3D12GraphicsCommandList* cmdList);
 		static void EndDraw();
 	};
 }

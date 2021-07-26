@@ -29,11 +29,7 @@ void KochaEngine::GameObject::Hit()
 {
 }
 
-void KochaEngine::GameObject::HitBlock(_Box box)
-{
-}
-
-void KochaEngine::GameObject::SetKnockBackVel(XMFLOAT3 vel)
+void KochaEngine::GameObject::HitBlock(_Square arg_square)
 {
 }
 

@@ -9,7 +9,7 @@
 #include "Vector3.h"
 #include "Vector4.h"
 
-#define OBJ_COUNT 15
+#define OBJ_COUNT 25
 #define FBX_COUNT 1
 
 namespace KochaEngine
@@ -45,6 +45,7 @@ namespace KochaEngine
 		Dx12_Pipeline* pipeline;
 		SceneManager* sceneManager;
 		Camera* camera;
+		Camera* lightCamera;
 
 		Texture2D* texture[1];
 		Object* obj[OBJ_COUNT];

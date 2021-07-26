@@ -31,6 +31,7 @@ namespace KochaEngine
 		static ComPtr<ID3D12PipelineState> pmdPipelineState;
 		static ComPtr<ID3D12PipelineState> fbxPipelineState;
 		static ComPtr<ID3D12PipelineState> peraPipelineState;
+		static ComPtr<ID3D12PipelineState> shadowPipelineState;
 		static ComPtr<ID3D12PipelineState> vignettePipelineState;
 		static ComPtr<ID3D12PipelineState> bloomPipelineState;
 		static ComPtr<ID3D12PipelineState> gameBoyPipelineState;

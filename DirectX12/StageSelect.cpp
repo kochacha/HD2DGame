@@ -39,11 +39,19 @@ void KochaEngine::StageSelect::Initialize()
 
 void KochaEngine::StageSelect::Update()
 {
+	Fade();
 	gManager->Update();
 	pManager->Update();
 	camera->Update();
 
-	
+	if ((Input::TriggerKey(DIK_SPACE) || Input::TriggerPadButton(XINPUT_GAMEPAD_A)) && fadeAlpha <= 0.0f)
+	{
+		fadeFlag = false;
+	}
+	if (!fadeFlag && fadeAlpha >= 1.0f)
+	{
+		isEnd = true;
+	}
 }
 
 void KochaEngine::StageSelect::SpriteDraw()
@@ -71,3 +79,20 @@ KochaEngine::Scenes KochaEngine::StageSelect::Next()
 	return GAMEPLAY;
 }
 
+void KochaEngine::StageSelect::Fade()
+{
+	if (fadeFlag)
+	{
+		if (fadeAlpha > 0)
+		{
+			fadeAlpha -= 0.02f;
+		}
+	}
+	else
+	{
+		if (fadeAlpha < 1.0f)
+		{
+			fadeAlpha += 0.02f;
+		}
+	}
+}

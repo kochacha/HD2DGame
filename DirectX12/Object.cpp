@@ -28,7 +28,7 @@ KochaEngine::Object::Object(std::string objName) : objName(objName)
 	std::string filepath = directoryPath + filename;
 
 	CreateBufferView();
-	CreateDepthStencilView();
+	//CreateDepthStencilView();
 }
 
 KochaEngine::Object::~Object()
@@ -55,6 +55,16 @@ void KochaEngine::Object::BeginDraw(ID3D12GraphicsCommandList* cmdList)
 	KochaEngine::Object::cmdList = cmdList;
 
 	cmdList->SetPipelineState(Dx12_Pipeline::objPipelineState.Get());
+	cmdList->SetGraphicsRootSignature(Dx12_RootSignature::GetOBJRootSignature().Get());
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+void KochaEngine::Object::BeginDrawFromLight(ID3D12GraphicsCommandList* cmdList)
+{
+	if (cmdList == nullptr) return;
+	KochaEngine::Object::cmdList = cmdList;
+
+	cmdList->SetPipelineState(Dx12_Pipeline::shadowPipelineState.Get());
 	cmdList->SetGraphicsRootSignature(Dx12_RootSignature::GetOBJRootSignature().Get());
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
@@ -137,12 +147,6 @@ void KochaEngine::Object::CreateDepthStencilView()
 		D3D12_RESOURCE_STATE_DEPTH_WRITE,
 		&depthClearValue,
 		IID_PPV_ARGS(&depthBuff));
-
-	//D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
-	//dsvHeapDesc.NumDescriptors = 1;
-	//dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-
-	//result = device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
 
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
 	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
@@ -228,6 +232,7 @@ void KochaEngine::Object::Draw(Camera* camera)
 	cmdList->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
 	cmdList->SetGraphicsRootDescriptorTable(2, gpuDescHandleSRV);
 	lightManager->Draw(cmdList, 3);
+	cmdList->SetGraphicsRootDescriptorTable(4, gpuDescHandleSRV);
 
 	// 描画コマンド
 	cmdList->DrawIndexedInstanced((UINT)KochaEngine::Dx12_Object::GetIndices(objName).size(), 1, 0, 0, 0);
@@ -308,6 +313,8 @@ void KochaEngine::Object::Draw(Camera* camera, Vector3 position, Vector3 scale, 
 	cmdList->SetGraphicsRootDescriptorTable(2, gpuDescHandleSRV);
 
 	lightManager->Draw(cmdList, 3);
+
+	cmdList->SetGraphicsRootDescriptorTable(4, gpuDescHandleSRV);
 
 	// 描画コマンド
 	cmdList->DrawIndexedInstanced((UINT)KochaEngine::Dx12_Object::GetIndices(objName).size(), 1, 0, 0, 0);

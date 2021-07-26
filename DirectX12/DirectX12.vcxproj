@@ -200,6 +200,7 @@
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="ParticleEmitter.cpp" />
     <ClCompile Include="ParticleManager.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="PMDLoader.cpp" />
     <ClCompile Include="PMDModel.cpp" />
     <ClCompile Include="PostEffect.cpp" />
@@ -472,6 +473,7 @@
     <ClInclude Include="ParticleEmitter.h" />
     <ClInclude Include="ParticleManager.h" />
     <ClInclude Include="ParticleParam.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="PMDLoader.h" />
     <ClInclude Include="PMDModel.h" />
     <ClInclude Include="PointLight.h" />

@@ -92,6 +92,14 @@ void KochaEngine::Dx12_Blob::Init()
 		0, &peraBlob.vsBlob, &peraBlob.errorBlob);
 	ErrorBlob(result, peraBlob);
 
+	result = D3DCompileFromFile(
+		L"BasicVertexShader.hlsl", //シェーダーファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
+		"ShadowVS", "vs_5_0", //エントリーポイント名、シェーダーモデル指定
+		0,0, &shadowBlob.vsBlob, &shadowBlob.errorBlob);
+	ErrorBlob(result, shadowBlob);
+
 
 	//ピクセルシェーダーの読み込みとコンパイル
 	result = D3DCompileFromFile(
@@ -221,5 +229,14 @@ void KochaEngine::Dx12_Blob::Init()
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, //デバッグ用設定
 		0, &basicBlob.gsBlob, &basicBlob.errorBlob);
 	ErrorBlob(result, basicBlob);
+
+	result = D3DCompileFromFile(
+		L"BasicGeometryShader.hlsl", //シェーダーファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, //インクルード可能にする
+		"GSmain", "gs_5_0", //エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, //デバッグ用設定
+		0, &shadowBlob.gsBlob, &shadowBlob.errorBlob);
+	ErrorBlob(result, shadowBlob);
 
 }

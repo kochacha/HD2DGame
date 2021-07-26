@@ -21,11 +21,6 @@ namespace KochaEngine
 		void ObjDraw(Camera* camera);
 		void SpriteDraw();
 		void CheckBlock(GameObject* obj, GameObjectType otherType);
-		void CheckHitSphere(GameObject* obj, GameObjectType otherType);
-		bool HitSphereToSphere(GameObject* obj, GameObjectType otherType);
-		bool HitSphereToBox(GameObject* obj, GameObjectType otherType);
-		bool HitPlayerKnockBack(GameObject* obj, GameObjectType otherType);
-		bool HitPlayerKnockBack2(GameObject* obj, GameObjectType otherType);
 		bool CheckBombAlive();
 		int GetEnemyCount();
 

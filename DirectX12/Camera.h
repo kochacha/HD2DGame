@@ -1,5 +1,6 @@
 #pragma once
 #include<DirectXMath.h>
+#include "Vector2.h"
 #include "Vector3.h"
 
 namespace KochaEngine
@@ -10,11 +11,14 @@ namespace KochaEngine
 		using XMVECTOR = DirectX::XMVECTOR;
 
 	private:
+		Vector2 winSize;
 		float cameraHAngle;
 		float cameraVAngle;
 		float cameraDistance;
 		float cameraSpeed;
 		float crrentAngle;
+		float nearZ;
+		float farZ;
 		int count;
 		int nowTime;
 		int shakeTime;
@@ -67,6 +71,7 @@ namespace KochaEngine
 		XMMATRIX GetMatView() { return matView; }
 		XMMATRIX GetBillboardMatrix() { return matBillboard; }
 		XMMATRIX GetBillboardYMatrix() { return matBillboardY; }
+		XMMATRIX GetLightCameraMatrix();
 		float Getangle();
 
 		float GetCameraSpeed();

@@ -23,6 +23,7 @@ namespace KochaEngine
 		Blob pmdBlob;
 		Blob fbxBlob;
 		Blob peraBlob;
+		Blob shadowBlob;
 		Blob vignetteBlob;
 		Blob bloomBlob;
 		Blob gameBoyBlob;
@@ -47,6 +48,7 @@ namespace KochaEngine
 		Blob GetPMDBlob() { return pmdBlob; }
 		Blob GetFBXBlob() { return fbxBlob; }
 		Blob GetPeraBlob() { return peraBlob; }
+		Blob GetShadowBlob() { return shadowBlob; }
 		Blob GetVignetteBlob() { return vignetteBlob; }
 		Blob GetBloomBlob() { return bloomBlob; }
 		Blob GetGameBoyBlob() { return gameBoyBlob; }

@@ -34,6 +34,9 @@ struct PointLight
 
 cbuffer cbuff2 : register(b2)
 {
+    matrix lightCamera;
+    matrix shadow;
+    float3 eye;
     float3 ambientColor;
     DirLight dirLights[DIRECTIONAL_LIGHT_NUM];
     PointLight pointLights[POINT_LIGHT_NUM];
@@ -45,6 +48,7 @@ struct VSOutput
     float3 normal : NORMAL;
     float2 uv : TEXCOORD;
     float4 worldpos : POSITION;
+    float4 tpos : TPOS;
 };
 
 struct GSOutput
@@ -53,4 +57,5 @@ struct GSOutput
     float3 normal : NORMAL;
     float2 uv : TEXCOORD;
     float4 worldpos : POSITION;
+    float4 tpos : TPOS;
 };

@@ -13,6 +13,7 @@ void GSmain(
 		element.worldpos = input[i].worldpos;
         element.normal = input[i].normal;
         element.uv = input[i].uv;
+		element.tpos = input[i].tpos;
 		output.Append(element);
 	}
 }

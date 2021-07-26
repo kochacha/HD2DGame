@@ -114,6 +114,13 @@ void KochaEngine::Application::Run()
 
 		sceneManager->Update();
 		camera->Update();
+		auto target = camera->GetTarget();
+		auto eye = camera->GetEye();
+		auto lightPos = XMLoadFloat3(&target) + XMVector3Normalize({1,1,1})
+			* XMVector3Length(XMVectorSubtract(XMLoadFloat3(&target), XMLoadFloat3(&eye))).m128_f32[0];
+		Vector3 lightPos2 = Vector3(lightPos.m128_f32[0], lightPos.m128_f32[1], lightPos.m128_f32[2]);
+		lightCamera->SetEye(lightPos2);
+		lightCamera->Update();
 		MeraMera();
 
 		lightManager->SetDirectionalLightColor(0, dirLightColor);
@@ -126,25 +133,37 @@ void KochaEngine::Application::Run()
 
 		for (int i = 0; i < OBJ_COUNT; ++i)
 		{
-			obj[i]->MoveRotate({ 0,1.5f,0 });
+			//obj[i]->MoveRotate({ 0,1.5f,0 });
 		}
-
-
 
 		////↑毎フレーム処理↑//
 		
 		//１パス
 		{
+			//////////////////////////////
+
+			//////////////////////////////
+
 			peraBloom->PreDrawScene(dx12->GetCmdList().Get());
+
+			//Object::BeginDrawFromLight(dx12->GetCmdList().Get());
+			////peraBloom->PreDrawShadow(dx12->GetCmdList().Get());
+			//floor->Draw(camera);
+			//sceneManager->ObjDraw();
+			//for (int i = 0; i < OBJ_COUNT; ++i)
+			//{
+			//	obj[i]->Draw(camera);
+			//}
+			//taimatu->Draw(camera);
+
 			Object::BeginDraw(dx12->GetCmdList().Get());
 			//↓ObjDraw↓//
-
+			floor->Draw(camera);
 			sceneManager->ObjDraw();
 			for (int i = 0; i < OBJ_COUNT; ++i)
 			{
 				obj[i]->Draw(camera);
 			}
-			floor->Draw(camera);
 			taimatu->Draw(camera);
 
 			//↑ObjDraw↑//
@@ -361,11 +380,11 @@ void KochaEngine::Application::MeraMera()
 		pointLightAtten.y += DELTA_VALUE;
 	}
 
-	if (pointLightAtten.y > 0.03f)
+	if (pointLightAtten.y > 0.06f)
 	{
 		pointLightAtten.y -= DELTA_VALUE;
 	}
-	if (pointLightAtten.y < 0.01f)
+	if (pointLightAtten.y < 0.03f)
 	{
 		pointLightAtten.y += DELTA_VALUE;
 	}
@@ -413,6 +432,8 @@ bool KochaEngine::Application::Initialize()
 
 	camera = new Camera();
 	camera->Initialize(dx12->GetWinSize().cx, dx12->GetWinSize().cy, 90, 100, { 0,50,-150 }, { 0,0,0 }, { 0,1,0 });
+	lightCamera = new Camera();
+	lightCamera->Initialize(dx12->GetWinSize().cx, dx12->GetWinSize().cy, 90, 100, { -100,100,-100 }, { 0,0,0 }, { 0,1,0 });
 
 	Texture2D::StaticInit(dx12->GetDevice().Get(), dx12->GetWinSize());
 	PostEffect::StaticInit(dx12->GetDevice().Get(), dx12->GetCmdList().Get(), dx12->GetWinSize());
@@ -446,13 +467,13 @@ bool KochaEngine::Application::Initialize()
 	texture[0] = new Texture2D("Resources/PIEN.png", Vector2(0, 0), Vector2(100, 100), 0);
 	for (int i = 0; i < OBJ_COUNT; ++i)
 	{
-		obj[i] = new Object("sphere");
-		obj[i]->SetTexture("Resources/PIEN.png");
-		obj[i]->SetRotate({ 90,180,0 });
-		//obj[i]->SetRotate({ 0,180,0 });
+		obj[i] = new Object("LowTree");
+		//obj[i]->SetTexture("Resources/PIEN.png");
+		//obj[i]->SetRotate({ 90,180,0 });
+		obj[i]->SetRotate({ 0,180,0 });
 		//obj[i]->SetScale({ 0.01, 1, 0.01 });
-		obj[i]->SetScale({ 8.0, 8.0, 8.0 });
-		obj[i]->SetPosition({ (float)Util::GetIntRand(0,100) - 50.0f,5,(float)Util::GetIntRand(0,100) - 50.0f });
+		obj[i]->SetScale({ 1.5, 1.5, 1.5 });
+		obj[i]->SetPosition({ ((float)Util::GetIntRand(0,10) - 5.0f) * 15,0,((float)Util::GetIntRand(0,10) - 5.0f) * 15 });
 		//obj[i]->MoveRotate({ 0,(float)Util::GetIntRand(0,360),0 });
 		//obj[i]->SetBillboardType(Object::BillboardType::BILLBOARD_Y);
 	}
@@ -488,6 +509,7 @@ bool KochaEngine::Application::Initialize()
 	effectManager->LoadEffect("hit.efk", 10.0f);
 
 	lightManager = LightManager::Create();
+	lightManager->SetLightCamera(lightCamera);
 	Object::SetLightManager(lightManager);
 
 
@@ -526,6 +548,7 @@ void KochaEngine::Application::Terminate()
 	delete floor;
 	delete taimatu;
 	delete camera;
+	delete lightCamera;
 	delete fbxModel;
 	for (int i = 0; i < FBX_COUNT; i++)
 	{

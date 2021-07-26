@@ -16,6 +16,7 @@ KochaEngine::Camera::~Camera()
 
 void KochaEngine::Camera::Initialize(float WIN_WIDTH, float WIN_HEIGHT, float angle, float distance, Vector3 eye, Vector3 target, Vector3 up)
 {
+	winSize = Vector2(WIN_WIDTH, WIN_HEIGHT);
 	cameraHAngle = 0;
 	cameraVAngle = 0;
 	cameraDistance = distance;
@@ -37,10 +38,13 @@ void KochaEngine::Camera::Initialize(float WIN_WIDTH, float WIN_HEIGHT, float an
 	H = 0;
 	V = 0;
 
+	nearZ = 0.1f;
+	farZ = 1500.0f;
+
 	matProjection = DirectX::XMMatrixPerspectiveFovLH(
 		DirectX::XMConvertToRadians(60.0f),
 		WIN_WIDTH / WIN_HEIGHT,
-		0.1f, 1500.0f);
+		nearZ, farZ);
 
 	matView = DirectX::XMMatrixLookAtLH(
 		XMLoadFloat3(&eye),
@@ -250,6 +254,11 @@ void KochaEngine::Camera::MoveTarget(const Vector3& vel)
 	this->target.z += vel.z;
 	Billboard();
 	ViewUpdate();
+}
+
+XMMATRIX KochaEngine::Camera::GetLightCameraMatrix()
+{
+	return matView * DirectX::XMMatrixOrthographicLH(200, 200, nearZ, farZ);
 }
 
 float KochaEngine::Camera::Getangle()

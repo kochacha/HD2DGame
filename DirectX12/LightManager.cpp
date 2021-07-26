@@ -1,4 +1,5 @@
 #include "LightManager.h"
+#include "Camera.h"
 
 ID3D12Device* KochaEngine::LightManager::device = nullptr;
 
@@ -54,7 +55,7 @@ void KochaEngine::LightManager::Initialize()
 	}
 
 	// 定数バッファへデータ転送
-	TransferConstBuffer();
+	//TransferConstBuffer();
 }
 
 void KochaEngine::LightManager::Update()
@@ -79,6 +80,7 @@ void KochaEngine::LightManager::TransferConstBuffer()
 	result = constBuff->Map(0, nullptr, (void**)&constMap);
 	if (SUCCEEDED(result))
 	{
+		constMap->lightCamera = lightCamera->GetLightCameraMatrix();
 		constMap->ambientColor = ambientColor;
 
 		for (int i = 0; i < DIRECTIONAL_LIGHT_NUM; i++)
@@ -158,4 +160,10 @@ void KochaEngine::LightManager::SetPointLightAtten(int arg_index, const Vector3&
 	assert(0 <= arg_index && arg_index < POINT_LIGHT_NUM);
 	pointLights[arg_index].SetLightAtten(arg_lightAtten);
 	isDirty = true;
+}
+
+void KochaEngine::LightManager::SetLightCamera(Camera* arg_lightCamera)
+{
+	if (arg_lightCamera == nullptr)return;
+	lightCamera = arg_lightCamera;
 }

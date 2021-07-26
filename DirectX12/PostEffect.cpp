@@ -20,6 +20,51 @@ KochaEngine::PostEffect::~PostEffect()
 {
 }
 
+//void KochaEngine::PostEffect::PreDrawShadow(ID3D12GraphicsCommandList* cmdList)
+//{
+//	//リソースバリアを変更
+//	for (int i = 0; i < TEX_BUFF_COUNT; i++)
+//	{
+//		auto resBarrier = CD3DX12_RESOURCE_BARRIER::Transition(texBuff[i].Get(),
+//			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+//			D3D12_RESOURCE_STATE_RENDER_TARGET);
+//		cmdList->ResourceBarrier(1, &resBarrier);
+//	}
+//
+//	//レンダーターゲットビュー用デスクリプタヒープのハンドルを取得
+//	D3D12_CPU_DESCRIPTOR_HANDLE rtvHs[TEX_BUFF_COUNT];
+//	for (int i = 0; i < TEX_BUFF_COUNT; i++)
+//	{
+//		rtvHs[i] = CD3DX12_CPU_DESCRIPTOR_HANDLE(descHeapRTV->GetCPUDescriptorHandleForHeapStart(), i,
+//			device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV));
+//	}
+//
+//	auto handle = descHeapDSV->GetCPUDescriptorHandleForHeapStart();
+//	handle.ptr += device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+//
+//	cmdList->OMSetRenderTargets(0, nullptr, false, &handle);
+//
+//	//ビューポートの設定
+//	CD3DX12_VIEWPORT viewports[TEX_BUFF_COUNT];
+//	//シザリング矩形の設定
+//	CD3DX12_RECT scissorRects[TEX_BUFF_COUNT];
+//	for (int i = 0; i < TEX_BUFF_COUNT; i++)
+//	{
+//		viewports[i] = CD3DX12_VIEWPORT(0.0f, 0.0f, winSize.cx, winSize.cy);
+//		scissorRects[i] = CD3DX12_RECT(0, 0, winSize.cx, winSize.cy);
+//	}
+//	cmdList->RSSetViewports(TEX_BUFF_COUNT, viewports);
+//	cmdList->RSSetScissorRects(TEX_BUFF_COUNT, scissorRects);
+//
+//	//全画面クリア
+//	for (int i = 0; i < TEX_BUFF_COUNT; i++)
+//	{
+//		cmdList->ClearRenderTargetView(rtvHs[i], Application::clearColor, 0, nullptr);
+//	}
+//	//深度バッファのクリア
+//	cmdList->ClearDepthStencilView(descHeapDSV->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+//}
+
 void KochaEngine::PostEffect::PreDrawScene(ID3D12GraphicsCommandList* cmdList)
 {
 	//リソースバリアを変更
@@ -106,6 +151,11 @@ void KochaEngine::PostEffect::Draw()
 	cmdList->SetGraphicsRootDescriptorTable(3,
 		CD3DX12_GPU_DESCRIPTOR_HANDLE(descHeapSRV->GetGPUDescriptorHandleForHeapStart(), 2,
 			device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+	//深度バッファテクスチャ
+	cmdList->SetDescriptorHeaps(1, _depthSRVHeap.GetAddressOf());
+	//auto handle = _depthSRVHeap->GetGPUDescriptorHandleForHeapStart();
+	//handle.ptr += device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	cmdList->SetGraphicsRootDescriptorTable(4, _depthSRVHeap->GetGPUDescriptorHandleForHeapStart());
 
 	cmdList->DrawInstanced(4, 1, 0, 0);
 }
@@ -172,6 +222,11 @@ void KochaEngine::PostEffect::Draw(const ShaderType& arg_type)
 	cmdList->SetGraphicsRootDescriptorTable(3,
 		CD3DX12_GPU_DESCRIPTOR_HANDLE(descHeapSRV->GetGPUDescriptorHandleForHeapStart(), 2,
 			device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+	//深度バッファテクスチャ
+	cmdList->SetDescriptorHeaps(1, _depthSRVHeap.GetAddressOf());
+	auto handle = _depthSRVHeap->GetGPUDescriptorHandleForHeapStart();
+	handle.ptr += device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	cmdList->SetGraphicsRootDescriptorTable(4, handle);
 
 	cmdList->DrawInstanced(4, 1, 0, 0);
 }
@@ -301,22 +356,66 @@ void KochaEngine::PostEffect::Initialize()
 			IID_PPV_ARGS(&depthBuff));
 		assert(SUCCEEDED(result));
 	}
+	{
+		depthResDesc.Width = winSize.cx / 200;
+		depthResDesc.Height = winSize.cy / 200;
+		depthResDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+		auto heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+		auto clearValue = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_D32_FLOAT, 1.0f, 0);
+		result = device->CreateCommittedResource(
+			&heapProp,
+			D3D12_HEAP_FLAG_NONE,
+			&depthResDesc,
+			D3D12_RESOURCE_STATE_DEPTH_WRITE,
+			&clearValue,
+			IID_PPV_ARGS(lightDepthBuff.ReleaseAndGetAddressOf()));
+		assert(SUCCEEDED(result));
+	}
 
 	//DSV用デスクリプタヒープ設定
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc{};
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-	descHeapDesc.NumDescriptors = 1;
+	descHeapDesc.NumDescriptors = 2;
 
 	//DSV用デスクリプタヒープを作成
 	result = device->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeapDSV));
 	assert(SUCCEEDED(result));
 
 	//デスクリプタヒープにDSV作成
-	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
-	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
-	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-	device->CreateDepthStencilView(depthBuff.Get(), &dsvDesc, descHeapDSV->GetCPUDescriptorHandleForHeapStart());
+	{
+		D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
+		dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+		dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
 
+		auto handle = descHeapDSV->GetCPUDescriptorHandleForHeapStart();
+
+		device->CreateDepthStencilView(depthBuff.Get(), &dsvDesc, handle);
+		handle.ptr += device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+		device->CreateDepthStencilView(lightDepthBuff.Get(), &dsvDesc, handle);
+	
+	}
+	{
+		D3D12_DESCRIPTOR_HEAP_DESC heapDesc;
+		heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+		heapDesc.NodeMask = 0;
+		heapDesc.NumDescriptors = 2;
+		heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+
+		result = device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&_depthSRVHeap));
+	}
+	{
+		D3D12_SHADER_RESOURCE_VIEW_DESC resDesc = {};
+		resDesc.Format = DXGI_FORMAT_R32_FLOAT;
+		resDesc.Texture2D.MipLevels = 1;
+		resDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		resDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+		auto handle = _depthSRVHeap->GetCPUDescriptorHandleForHeapStart();
+
+		device->CreateShaderResourceView(depthBuff.Get(), &resDesc, handle);
+		handle.ptr += device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		device->CreateShaderResourceView(lightDepthBuff.Get(), &resDesc, handle);
+	}
 }
 
 void KochaEngine::PostEffect::SetVertices()

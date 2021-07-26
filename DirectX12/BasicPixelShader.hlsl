@@ -1,6 +1,7 @@
 #include "BasicShaderHeader.hlsli"
 
 Texture2D<float4> tex : register(t0);
+Texture2D<float> lightDepthTex : register(t1);
 SamplerState smp : register(s0);
 
 struct PSOutput
@@ -14,14 +15,6 @@ PSOutput PSmain(GSOutput input)/* : SV_TARGET*/
 {
 	PSOutput output;
 
-	//////テクスチャマッピング
-	//float4 texColor = tex.Sample(smp, input.uv);
-
-	////Lambert反射
-	//float diffuse = saturate(dot(-dirLights[0].direction, input.normal));
-	//float brightness = diffuse + 0.7f;
-	//float4 shaderColor = float4(brightness, brightness, brightness, 1.0f);
-
 	// テクスチャマッピング
 	float4 texColor = tex.Sample(smp, input.uv);
 	// 光沢度
@@ -33,10 +26,13 @@ PSOutput PSmain(GSOutput input)/* : SV_TARGET*/
 	// シェーディングによる色
 	float4 shaderColor = float4(ambientColor * ambient, m_alpha);
 
+	float3 light = normalize(float3(0, 0, 0));
+
 	for (int i = 0; i < DIRECTIONAL_LIGHT_NUM; i++) 
 	{
 		if (dirLights[i].isActive) 
 		{
+			light = dirLights[i].direction;
 			float3 dotLightNormal = dot(dirLights[i].direction, input.normal);
 			float3 reflect = normalize(-dirLights[i].direction + 2.0f * dotLightNormal * input.normal);
 			float3 diffuse = dotLightNormal * m_diffuse;
@@ -62,6 +58,14 @@ PSOutput PSmain(GSOutput input)/* : SV_TARGET*/
 			shaderColor.rgb += atten * (diffuse + specular) * pointLights[i].lightColor;
 		}
 	}
+
+	float bright = dot(input.normal, -light);
+	float shadowWeight = 1.0f;
+	float3 posFromLightVP = input.tpos.xyz / input.tpos.w;
+	float2 shadowUV = (posFromLightVP + float2(1, -1)) * float2(0.5, -0.5);
+	float depthFromLight = lightDepthTex.Sample(smp, shadowUV);
+	shadowWeight = lerp(0.5f, 1.0f, depthFromLight);
+	float b = bright * shadowWeight;
 
 	//通常
     output.target0 = shaderColor * texColor * color;

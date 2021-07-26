@@ -30,6 +30,8 @@ namespace KochaEngine
 		float fadeAlpha;
 		bool fadeFlag;
 
+		void Fade();
+
 	public:
 		StageSelect();
 		~StageSelect() override;

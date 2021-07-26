@@ -2,6 +2,8 @@ Texture2D<float4> tex0 : register(t0);
 Texture2D<float4> tex1 : register(t1);
 Texture2D<float4> texShrink : register(t2);
 
+Texture2D<float> depthTex : register(t3);
+
 SamplerState smp : register(s0);
 
 cbuffer cbuff0 : register(b0)

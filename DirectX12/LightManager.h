@@ -8,6 +8,7 @@ namespace KochaEngine
 {
 	using namespace Microsoft::WRL;
 
+	class Camera;
 	class LightManager
 	{
 	public:
@@ -16,8 +17,12 @@ namespace KochaEngine
 
 		struct ConstBufferData
 		{
-			Vector3 ambientColor;
+			DirectX::XMMATRIX lightCamera;
+			DirectX::XMMATRIX shadow;
+			Vector3 eye;
 			float pad1;
+			Vector3 ambientColor;
+			float pad2;
 			DirectionalLight::ConstBufferData dirLights[DIRECTIONAL_LIGHT_NUM];
 			PointLight::ConstBufferData pointLights[POINT_LIGHT_NUM];
 		};
@@ -37,8 +42,11 @@ namespace KochaEngine
 		void SetPointLightPos(int arg_index, const Vector3& arg_lightPos);
 		void SetPointLightColor(int arg_index, const Vector3& arg_lightColor);
 		void SetPointLightAtten(int arg_index, const Vector3& arg_lightAtten);
+		void SetLightCamera(Camera* arg_lightCamera);
 
 	private:
+		Camera* lightCamera;
+
 		ComPtr<ID3D12Resource> constBuff;
 		Vector3 ambientColor = { 1,1,1 };
 		bool isDirty = false;

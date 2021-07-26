@@ -37,20 +37,20 @@ void KochaEngine::GamePlay::Initialize()
 
 void KochaEngine::GamePlay::Update()
 {
-
 	Fade();
-
 	gManager->Update();
 	pManager->Update();
 	camera->Update();
+
+
 }
 
 void KochaEngine::GamePlay::SpriteDraw()
 {
 	gManager->SpriteDraw();
-	if (seconds > 999)
+	if (seconds > 9999)
 	{
-		seconds = 999;
+		seconds = 9999;
 	}
 	
 }

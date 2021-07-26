@@ -9,6 +9,7 @@ ComPtr<ID3D12RootSignature> KochaEngine::Dx12_RootSignature::objRootSignature{};
 ComPtr<ID3D12RootSignature> KochaEngine::Dx12_RootSignature::pmdRootSignature{};
 ComPtr<ID3D12RootSignature> KochaEngine::Dx12_RootSignature::fbxRootSignature{};
 ComPtr<ID3D12RootSignature> KochaEngine::Dx12_RootSignature::peraRootSignature{};
+ComPtr<ID3D12RootSignature> KochaEngine::Dx12_RootSignature::shadowRootSignature{};
 
 KochaEngine::Dx12_RootSignature::Dx12_RootSignature(Dx12_Wrapper& dx12) : dx12(dx12)
 {
@@ -56,15 +57,18 @@ HRESULT KochaEngine::Dx12_RootSignature::CreateSpriteRootSignature()
 HRESULT KochaEngine::Dx12_RootSignature::CreateOBJRootSignature()
 {
 	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
-	CD3DX12_ROOT_PARAMETER rootparams[4] = {};
+	CD3DX12_ROOT_PARAMETER rootparams[5] = {};
 
 	CD3DX12_DESCRIPTOR_RANGE descRangeSRV;
 	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV1;
+	descRangeSRV1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1); // t1 レジスタ
 
 	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[1].InitAsConstantBufferView(1, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[2].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[3].InitAsConstantBufferView(2, 0, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[4].InitAsDescriptorTable(1, &descRangeSRV1);
 
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
 
@@ -184,14 +188,17 @@ HRESULT KochaEngine::Dx12_RootSignature::CreatePeraRootSignature()
 	descRangeSRV1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1); // t1 レジスタ
 	CD3DX12_DESCRIPTOR_RANGE descRangeSRV2;
 	descRangeSRV2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2); // t2 レジスタ
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV3;
+	descRangeSRV3.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 3); // t3 レジスタ
 	//CD3DX12_DESCRIPTOR_RANGE descRangeCBV0;
 	//descRangeCBV0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0); // b0 レジスタ
 
-	CD3DX12_ROOT_PARAMETER rootparams[4];
+	CD3DX12_ROOT_PARAMETER rootparams[5];
 	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[1].InitAsDescriptorTable(1, &descRangeSRV0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[2].InitAsDescriptorTable(1, &descRangeSRV1, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[3].InitAsDescriptorTable(1, &descRangeSRV2, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[4].InitAsDescriptorTable(1, &descRangeSRV3, D3D12_SHADER_VISIBILITY_PIXEL);
 	//rootparams[3].InitAsDescriptorTable(1, &descRangeCBV0, D3D12_SHADER_VISIBILITY_ALL);
 
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0, D3D12_FILTER_MIN_MAG_MIP_POINT, D3D12_TEXTURE_ADDRESS_MODE_CLAMP);
@@ -211,4 +218,9 @@ HRESULT KochaEngine::Dx12_RootSignature::CreatePeraRootSignature()
 		return false;
 	}
 	return result;
+}
+
+HRESULT KochaEngine::Dx12_RootSignature::CreateShadowRootSignature()
+{
+	return E_NOTIMPL;
 }

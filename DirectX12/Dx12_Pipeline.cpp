@@ -8,6 +8,7 @@ ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::objPipelineState;
 ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::pmdPipelineState;
 ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::fbxPipelineState;
 ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::peraPipelineState;
+ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::shadowPipelineState;
 ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::vignettePipelineState;
 ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::bloomPipelineState;
 ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::gameBoyPipelineState;
@@ -172,6 +173,14 @@ void KochaEngine::Dx12_Pipeline::CreateOBJGraphicsPipelineState()
 	gpipeline.pRootSignature = Dx12_RootSignature::GetOBJRootSignature().Get();
 
 	auto result = dx12.GetDevice().Get()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&objPipelineState));
+	if (FAILED(result)) { assert(0); }
+
+	gpipeline.VS = CD3DX12_SHADER_BYTECODE(blob.GetShadowBlob().vsBlob.Get());
+	gpipeline.GS = CD3DX12_SHADER_BYTECODE(blob.GetShadowBlob().gsBlob.Get());
+	gpipeline.PS.BytecodeLength = 0;
+	gpipeline.PS.pShaderBytecode = nullptr;
+	gpipeline.RTVFormats[0] = DXGI_FORMAT_UNKNOWN;
+	result = dx12.GetDevice().Get()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&shadowPipelineState));
 	if (FAILED(result)) { assert(0); }
 }
 
@@ -450,5 +459,13 @@ void KochaEngine::Dx12_Pipeline::CreatePeraGraphicsPipelineState()
 		gpipeline.PS = CD3DX12_SHADER_BYTECODE(blob.GetBlurBlob().psBlob.Get());
 		result = dx12.GetDevice().Get()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&blurPipelineState));
 		if (FAILED(result)) { assert(0); }
+
+		//gpipeline.VS = CD3DX12_SHADER_BYTECODE(blob.GetShadowBlob().vsBlob.Get());
+		//gpipeline.PS.BytecodeLength = 0;
+		//gpipeline.PS.pShaderBytecode = nullptr;
+		//gpipeline.NumRenderTargets = 0;
+		//gpipeline.RTVFormats[0] = DXGI_FORMAT_UNKNOWN;
+		//result = dx12.GetDevice().Get()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&shadowPipelineState));
+		//if (FAILED(result)) { assert(0); }
 	}
 }

@@ -93,12 +93,6 @@
     <ClCompile Include="Figure2D.cpp">
       <Filter>Source\Object</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObjectManager.cpp">
-      <Filter>Source\Object</Filter>
-    </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>Source\Object</Filter>
     </ClCompile>
@@ -222,6 +216,15 @@
     <ClCompile Include="LightManager.cpp">
       <Filter>Source\Object</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source\Object\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectManager.cpp">
+      <Filter>Source\Object\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source\Object\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShaderHeader.hlsli">
@@ -294,6 +297,12 @@
     </Filter>
     <Filter Include="Source\UI">
       <UniqueIdentifier>{05958280-d496-45f3-a048-e0f08d37d814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Object\GameObject">
+      <UniqueIdentifier>{1f2bd67d-77e1-4ff5-99e1-81ccb491b0f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Object\GameObject">
+      <UniqueIdentifier>{d0c31d25-7612-4543-90df-05517a2c7e21}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -381,12 +390,6 @@
     <ClInclude Include="Figure2D.h">
       <Filter>Header\Object</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Header\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObjectManager.h">
-      <Filter>Header\Object</Filter>
-    </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Header\Object</Filter>
     </ClInclude>
@@ -470,6 +473,15 @@
     </ClInclude>
     <ClInclude Include="LightManager.h">
       <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header\Object\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>Header\Object\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header\Object\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
