@@ -74,7 +74,7 @@ PSOutput PSmain(GSOutput input)/* : SV_TARGET*/
 	float y = dot(float3(0.299f, 0.587f, 0.114f), shaderColor * texColor);
     output.target1 = y > 0.8f ? shaderColor * texColor : 0.0f;
 
-	output.target2 = float4(1, 0, 0, 1); //shaderColor * texColor;
+	output.target2 = float4(b, b, b, 1); //shaderColor * texColor;
 
     return output;
 }

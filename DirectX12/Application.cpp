@@ -128,6 +128,7 @@ void KochaEngine::Application::Run()
 		lightManager->SetDirectionalLightIsActive(0, isActiveDirLight);
 		lightManager->SetPointLightPos(0, pointLightPosition);
 		lightManager->SetPointLightAtten(0, pointLightAtten);
+		lightManager->SetLightCamera(lightCamera);
 		taimatu->SetPosition(Vector3(pointLightPosition.x, pointLightPosition.y - 13, pointLightPosition.z + 3));
 		lightManager->Update();
 
@@ -144,17 +145,17 @@ void KochaEngine::Application::Run()
 
 			//////////////////////////////
 
-			peraBloom->PreDrawScene(dx12->GetCmdList().Get());
+			peraDof->PreDrawScene(dx12->GetCmdList().Get());
 
 			//Object::BeginDrawFromLight(dx12->GetCmdList().Get());
 			////peraBloom->PreDrawShadow(dx12->GetCmdList().Get());
-			//floor->Draw(camera);
+			//floor->Draw(lightCamera);
 			//sceneManager->ObjDraw();
-			//for (int i = 0; i < OBJ_COUNT; ++i)
-			//{
-			//	obj[i]->Draw(camera);
-			//}
-			//taimatu->Draw(camera);
+			////for (int i = 0; i < OBJ_COUNT; ++i)
+			////{
+			////	obj[i]->Draw(lightCamera);
+			////}
+			//taimatu->Draw(lightCamera);
 
 			Object::BeginDraw(dx12->GetCmdList().Get());
 			//↓ObjDraw↓//
@@ -171,26 +172,36 @@ void KochaEngine::Application::Run()
 
 			effectManager->Update(camera);
 
-			peraBloom->PostDrawScene(dx12->GetCmdList().Get());
+			peraDof->PostDrawScene(dx12->GetCmdList().Get());
 		}
 
 		//２パス
 		{
-			peraEffect->PreDrawScene(dx12->GetCmdList().Get());
+			peraBloom->PreDrawScene(dx12->GetCmdList().Get());
 
-			if (isBloom)
+			if (isDof)
 			{
-				peraBloom->Draw(ShaderType::BLOOM_SHADER); //ブルーム
+				peraDof->Draw(ShaderType::DEPTH_OF_FIELD_SHADER); //被写界深度
 			}
 			else
 			{
-				peraBloom->Draw();
+				peraDof->Draw();
 			}
+			
+
+			peraBloom->PostDrawScene(dx12->GetCmdList().Get());
+		}
+
+		//３パス
+		{
+			peraEffect->PreDrawScene(dx12->GetCmdList().Get());
+
+			peraBloom->Draw();
 
 			peraEffect->PostDrawScene(dx12->GetCmdList().Get());
 		}
 
-		//３パス
+		//４パス
 		{
 			dx12->BeginDraw(clearColor[0], clearColor[1], clearColor[2]);
 
@@ -229,6 +240,7 @@ void KochaEngine::Application::Load()
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "plane");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "taimatu");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "sphere");
+	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "Ground1");
 
 	//.pmdのロード *日本語！ダメ！絶対！*
 	//PMDLoader::LoadModel(dx12->GetDevice().Get(), "Resources/Model/miku/miku.pmd");
@@ -296,7 +308,7 @@ void KochaEngine::Application::DrawGUI()
 
 	//画面効果切り替え
 	ImGui::Begin("PostEffect");
-	ImGui::Checkbox("isBloom", &isBloom);
+	ImGui::Checkbox("isDof", &isDof);
 	int _effectType = peraEffectType;
 	ImGui::RadioButton("None", &_effectType, ShaderType::PERA_SHADER);
 	ImGui::RadioButton("Vignette", &_effectType, ShaderType::VIGNETTE_SHADER);
@@ -501,8 +513,9 @@ bool KochaEngine::Application::Initialize()
 
 	peraBloom = new PostEffect();
 	peraEffect = new PostEffect();
+	peraDof = new PostEffect();
 	peraEffectType = ShaderType::PERA_SHADER;
-	isBloom = false;
+	isDof = false;
 
 	effectManager = new EffectManager(*dx12);
 	effectManager->LoadEffect("light.efk", 10.0f);
@@ -556,6 +569,7 @@ void KochaEngine::Application::Terminate()
 	}
 	delete peraBloom;
 	delete peraEffect;
+	delete peraDof;
 	delete effectManager;
 	delete lightManager;
 

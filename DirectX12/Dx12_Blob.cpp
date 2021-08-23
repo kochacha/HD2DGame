@@ -219,6 +219,15 @@ void KochaEngine::Dx12_Blob::Init()
 		0, &blurBlob.psBlob, &blurBlob.errorBlob);
 	ErrorBlob(result, blurBlob);
 
+	result = D3DCompileFromFile(
+		L"DepthOfFieldShader.hlsl", //シェーダーファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, //インクルード可能にする
+		"main", "ps_5_0", //エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, //デバッグ用設定
+		0, &dofBlob.psBlob, &dofBlob.errorBlob);
+	ErrorBlob(result, dofBlob);
+
 
 	//ジオメトリシェーダーの読み込みとコンパイル
 	result = D3DCompileFromFile(

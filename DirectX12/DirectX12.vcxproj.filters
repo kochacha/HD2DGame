@@ -58,6 +58,9 @@
     <FxCompile Include="GaussianBlurShader.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="DepthOfFieldShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -225,6 +228,7 @@
     <ClCompile Include="Player.cpp">
       <Filter>Source\Object\GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="Map.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShaderHeader.hlsli">
@@ -483,5 +487,6 @@
     <ClInclude Include="Player.h">
       <Filter>Header\Object\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="Map.h" />
   </ItemGroup>
 </Project>

@@ -78,6 +78,14 @@ void KochaEngine::EffectManager::Update(Camera* camera)
 	EffekseerRendererDX12::EndCommandList(_efkCmdList);
 }
 
+void KochaEngine::EffectManager::SetPosition(const Vector3& arg_position)
+{
+}
+
+void KochaEngine::EffectManager::SetScale(const float arg_scale)
+{
+}
+
 void KochaEngine::EffectManager::Initialize()
 {
 	auto format = DXGI_FORMAT_R8G8B8A8_UNORM;

@@ -23,6 +23,7 @@ namespace KochaEngine
 		GRAY_SCALE_SHADER,
 		MOSAIC_SHADER,
 		GAUSSIAN_BLUR_SHADER,
+		DEPTH_OF_FIELD_SHADER,
 	};
 
 	class PostEffect

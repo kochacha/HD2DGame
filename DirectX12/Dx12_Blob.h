@@ -32,6 +32,7 @@ namespace KochaEngine
 		Blob grayScaleBlob;
 		Blob mosaicBlob;
 		Blob blurBlob;
+		Blob dofBlob;
 
 		HRESULT CompileShader(const std::string& arg_ShaderName, const std::string& arg_EntryPoint, const std::string& arg_ShaderModel, Blob& arg_Blob);
 		void ErrorBlob(const HRESULT& result, const Blob& blob);
@@ -57,5 +58,6 @@ namespace KochaEngine
 		Blob GetGrayScaleBlob() { return grayScaleBlob; }
 		Blob GetMosaicBlob() { return mosaicBlob; }
 		Blob GetBlurBlob() { return blurBlob; }
+		Blob GetDofBlob() { return dofBlob; }
 	};
 }

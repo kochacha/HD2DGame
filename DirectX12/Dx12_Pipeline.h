@@ -40,5 +40,6 @@ namespace KochaEngine
 		static ComPtr<ID3D12PipelineState> grayScalePipelineState;
 		static ComPtr<ID3D12PipelineState> mosaicPipelineState;
 		static ComPtr<ID3D12PipelineState> blurPipelineState;
+		static ComPtr<ID3D12PipelineState> dofPipelineState;
 	};
 }

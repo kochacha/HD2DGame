@@ -57,12 +57,13 @@ namespace KochaEngine
 
 		PostEffect* peraBloom;
 		PostEffect* peraEffect;
+		PostEffect* peraDof;
 
 		EffectManager* effectManager;
 		LightManager* lightManager;
 
 		ShaderType peraEffectType;
-		bool isBloom;
+		bool isDof;
 
 		float vignetteScale;
 		float gBoyPixelSize;

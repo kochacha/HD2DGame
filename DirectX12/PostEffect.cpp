@@ -200,6 +200,9 @@ void KochaEngine::PostEffect::Draw(const ShaderType& arg_type)
 	case ShaderType::GAUSSIAN_BLUR_SHADER: //ガウシアンブラー
 		cmdList->SetPipelineState(Dx12_Pipeline::blurPipelineState.Get());
 		break;
+	case ShaderType::DEPTH_OF_FIELD_SHADER: //被写界深度
+		cmdList->SetPipelineState(Dx12_Pipeline::dofPipelineState.Get());
+		break;
 	default: //通常
 		cmdList->SetPipelineState(Dx12_Pipeline::peraPipelineState.Get());
 		break;
@@ -224,9 +227,9 @@ void KochaEngine::PostEffect::Draw(const ShaderType& arg_type)
 			device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
 	//深度バッファテクスチャ
 	cmdList->SetDescriptorHeaps(1, _depthSRVHeap.GetAddressOf());
-	auto handle = _depthSRVHeap->GetGPUDescriptorHandleForHeapStart();
-	handle.ptr += device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	cmdList->SetGraphicsRootDescriptorTable(4, handle);
+	//auto handle = _depthSRVHeap->GetGPUDescriptorHandleForHeapStart();
+	//handle.ptr += device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	cmdList->SetGraphicsRootDescriptorTable(4, _depthSRVHeap->GetGPUDescriptorHandleForHeapStart());
 
 	cmdList->DrawInstanced(4, 1, 0, 0);
 }

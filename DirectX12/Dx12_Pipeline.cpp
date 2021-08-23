@@ -17,6 +17,7 @@ ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::toonPipelineState;
 ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::grayScalePipelineState;
 ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::mosaicPipelineState;
 ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::blurPipelineState;
+ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::dofPipelineState;
 
 KochaEngine::Dx12_Pipeline::Dx12_Pipeline(Dx12_Wrapper& dx12, Dx12_Blob& blob) : dx12(dx12), blob(blob)
 {
@@ -458,6 +459,11 @@ void KochaEngine::Dx12_Pipeline::CreatePeraGraphicsPipelineState()
 		//ガウシアンブラー用
 		gpipeline.PS = CD3DX12_SHADER_BYTECODE(blob.GetBlurBlob().psBlob.Get());
 		result = dx12.GetDevice().Get()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&blurPipelineState));
+		if (FAILED(result)) { assert(0); }
+
+		//被写界深度用
+		gpipeline.PS = CD3DX12_SHADER_BYTECODE(blob.GetDofBlob().psBlob.Get());
+		result = dx12.GetDevice().Get()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&dofPipelineState));
 		if (FAILED(result)) { assert(0); }
 
 		//gpipeline.VS = CD3DX12_SHADER_BYTECODE(blob.GetShadowBlob().vsBlob.Get());
