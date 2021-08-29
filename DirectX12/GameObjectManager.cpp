@@ -1,5 +1,6 @@
 #include "GameObjectManager.h"
 #include "Collision.h"
+#include <map>
 
 KochaEngine::GameObjectManager::GameObjectManager()
 {
@@ -33,27 +34,66 @@ void KochaEngine::GameObjectManager::Update()
 	Remove();
 }
 
-void KochaEngine::GameObjectManager::ObjDraw(Camera* camera)
+void KochaEngine::GameObjectManager::Zsort(const int arg_count)
+{
+	int sortCount = 0;
+	while (sortCount == arg_count)
+	{
+
+	}
+}
+
+void KochaEngine::GameObjectManager::AlphaObjDraw(Camera* camera)
 {
 	if (camera == nullptr) return;
 	this->camera = camera;
 	auto end = gameObjects.end();
+	int alphaObjCount = 0;
+	//std::map<float, GameObject*> alphaObjects;
+
 	for (auto it = gameObjects.begin(); it != end; ++it)
 	{
-		if ((*it)->IsDead())
-		{
-			continue;
-		}	
-		(*it)->ObjDraw(this->camera);
-	}
-	for (auto it = gameObjects.begin(); it != end; ++it)
-	{
-		if ((*it)->IsDead())
+		if ((*it)->IsDead() || !(*it)->IsAlphaObject())
 		{
 			continue;
 		}
-		(*it)->ObjDraw(this->camera);
+		alphaObjCount++;
+		//alphaObjects.emplace();
 	}
+	//Zsort(alphaObjCount);
+
+	int sortCount = 0;
+	while (sortCount == alphaObjCount)
+	{
+		
+	}
+
+}
+
+void KochaEngine::GameObjectManager::ObjDraw(Camera* camera, LightManager* arg_lightManager)
+{
+	if (camera == nullptr) return;
+	if (arg_lightManager == nullptr) return;
+
+	this->camera = camera;
+	this->lightManager = arg_lightManager;
+	auto end = gameObjects.end();
+	for (auto it = gameObjects.begin(); it != end; ++it)
+	{
+		if ((*it)->IsDead()/* || (*it)->IsAlphaObject()*/)
+		{
+			continue;
+		}	
+		(*it)->ObjDraw(this->camera, this->lightManager);
+	}
+	//for (auto it = gameObjects.begin(); it != end; ++it)
+	//{
+	//	if ((*it)->IsDead())
+	//	{
+	//		continue;
+	//	}
+	//	(*it)->ObjDraw(this->camera);
+	//}
 }
 
 void KochaEngine::GameObjectManager::SpriteDraw()

@@ -3,6 +3,7 @@
 KochaEngine::Player::Player()
 {
 	obj = new Object("plane");
+	Initialize();
 }
 
 KochaEngine::Player::~Player()
@@ -25,10 +26,10 @@ void KochaEngine::Player::Update()
 	SetObjParam();
 }
 
-void KochaEngine::Player::ObjDraw(Camera* camera)
+void KochaEngine::Player::ObjDraw(Camera* camera, LightManager* arg_lightManager)
 {
 	if (camera == nullptr) return;
-	obj->Draw(camera);
+	obj->Draw(camera, lightManager);
 }
 
 void KochaEngine::Player::InputMove()

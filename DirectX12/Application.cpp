@@ -132,6 +132,9 @@ void KochaEngine::Application::Run()
 		taimatu->SetPosition(Vector3(pointLightPosition.x, pointLightPosition.y - 13, pointLightPosition.z + 3));
 		lightManager->Update();
 
+		skyObj->MoveRotate(Vector3(0, 0.02f, 0));
+		skyObj->SetPosition(Vector3(camera->GetEye().x,0,camera->GetEye().z));
+
 		for (int i = 0; i < OBJ_COUNT; ++i)
 		{
 			//obj[i]->MoveRotate({ 0,1.5f,0 });
@@ -159,13 +162,15 @@ void KochaEngine::Application::Run()
 
 			Object::BeginDraw(dx12->GetCmdList().Get());
 			//↓ObjDraw↓//
-			floor->Draw(camera);
+			//for (int i = 0; i < OBJ_COUNT; ++i)
+			//{
+			//	obj[i]->Draw(camera, lightManager);
+			//}
+
+			//taimatu->Draw(camera, lightManager);
+			//floor->Draw(camera, lightManager);
+			//skyObj->Draw(camera, lightManager);
 			sceneManager->ObjDraw();
-			for (int i = 0; i < OBJ_COUNT; ++i)
-			{
-				obj[i]->Draw(camera);
-			}
-			taimatu->Draw(camera);
 
 			//↑ObjDraw↑//
 			Object::EndDraw();
@@ -187,7 +192,6 @@ void KochaEngine::Application::Run()
 			{
 				peraDof->Draw();
 			}
-			
 
 			peraBloom->PostDrawScene(dx12->GetCmdList().Get());
 		}
@@ -232,15 +236,23 @@ void KochaEngine::Application::Load()
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/PIEN.png");
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/kaku4.png");
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/number.png");
+	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/stone.png");
+	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_grass.png");
+	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_rock1.png");
+	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_rock2.png");
+	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_water1.png");
+	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_water2.png");
 
 	//.objのロード
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "LowTree");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "Yukidaruma");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "box");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "plane");
+	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "graund");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "taimatu");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "sphere");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "Ground1");
+	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "skydome");
 
 	//.pmdのロード *日本語！ダメ！絶対！*
 	//PMDLoader::LoadModel(dx12->GetDevice().Get(), "Resources/Model/miku/miku.pmd");
@@ -450,10 +462,10 @@ bool KochaEngine::Application::Initialize()
 	Texture2D::StaticInit(dx12->GetDevice().Get(), dx12->GetWinSize());
 	PostEffect::StaticInit(dx12->GetDevice().Get(), dx12->GetCmdList().Get(), dx12->GetWinSize());
 	Object::StaticInit(dx12->GetDevice().Get(), dx12->GetWinSize());
-	FBXLoader::GetInstance()->Initialize(dx12->GetDevice().Get());
+	//FBXLoader::GetInstance()->Initialize(dx12->GetDevice().Get());
 	LightManager::StaticInitialize(dx12->GetDevice().Get());
-	FBXObject::SetDevice(dx12->GetDevice().Get());
-	FBXObject::SetCamera(camera);
+	//FBXObject::SetDevice(dx12->GetDevice().Get());
+	//FBXObject::SetCamera(camera);
 
 	Load();
 
@@ -479,37 +491,41 @@ bool KochaEngine::Application::Initialize()
 	texture[0] = new Texture2D("Resources/PIEN.png", Vector2(0, 0), Vector2(100, 100), 0);
 	for (int i = 0; i < OBJ_COUNT; ++i)
 	{
-		obj[i] = new Object("LowTree");
-		//obj[i]->SetTexture("Resources/PIEN.png");
-		//obj[i]->SetRotate({ 90,180,0 });
-		obj[i]->SetRotate({ 0,180,0 });
+		obj[i] = new Object("plane");
+		obj[i]->SetTexture("Resources/PIEN.png");
+		obj[i]->SetRotate({ 90,180,0 });
+		//obj[i]->SetRotate({ 0,180,0 });
 		//obj[i]->SetScale({ 0.01, 1, 0.01 });
-		obj[i]->SetScale({ 1.5, 1.5, 1.5 });
+		obj[i]->SetScale({ 15, 15, 15 });
 		obj[i]->SetPosition({ ((float)Util::GetIntRand(0,10) - 5.0f) * 15,0,((float)Util::GetIntRand(0,10) - 5.0f) * 15 });
 		//obj[i]->MoveRotate({ 0,(float)Util::GetIntRand(0,360),0 });
 		//obj[i]->SetBillboardType(Object::BillboardType::BILLBOARD_Y);
 	}
 
-	floor = new Object("plane");
-	floor->SetScale(Vector3(500, 1, 500));
+	floor = new Object("graund");
+	//floor->SetScale(Vector3(2000, 1, 2000));
 	floor->SetPosition(Vector3(0, -1, 0));
 	//floor->MoveRotate(Vector3(180, 0, 0));
-	floor->SetTexture("Resources/kaku4.png");
+	floor->SetTexture("Resources/stone.png");
+
+	skyObj = new Object("skydome");
+	skyObj->SetScale(Vector3(11, 11, 11));
+	skyObj->SetPosition(Vector3(0, 0, 0));
 	
 	taimatu = new Object("taimatu");
 	taimatu->SetScale(Vector3(10, 10, 10));
 	taimatu->SetPosition(Vector3(pointLightPosition.x, pointLightPosition.y - 13, pointLightPosition.z + 3));
 
-	fbxModel = FBXLoader::GetInstance()->LoadModelFromFile("boneTest");
+	//fbxModel = FBXLoader::GetInstance()->LoadModelFromFile("boneTest");
 
-	for (int i = 0; i < FBX_COUNT; i++)
-	{
-		fbxObject[i] = new FBXObject();
-		fbxObject[i]->SetModel(fbxModel);
-		fbxObject[i]->SetPosition({ (float)Util::GetIntRand(0,40) - 20.0f,0,(float)Util::GetIntRand(0,40) - 20.0f });
-		fbxObject[i]->MoveRotate({ 0,(float)Util::GetIntRand(0,360),0 });
-		fbxObject[i]->PlayAnimation();
-	}
+	//for (int i = 0; i < FBX_COUNT; i++)
+	//{
+	//	fbxObject[i] = new FBXObject();
+	//	fbxObject[i]->SetModel(fbxModel);
+	//	fbxObject[i]->SetPosition({ (float)Util::GetIntRand(0,40) - 20.0f,0,(float)Util::GetIntRand(0,40) - 20.0f });
+	//	fbxObject[i]->MoveRotate({ 0,(float)Util::GetIntRand(0,360),0 });
+	//	fbxObject[i]->PlayAnimation();
+	//}
 
 	peraBloom = new PostEffect();
 	peraEffect = new PostEffect();
@@ -523,7 +539,7 @@ bool KochaEngine::Application::Initialize()
 
 	lightManager = LightManager::Create();
 	lightManager->SetLightCamera(lightCamera);
-	Object::SetLightManager(lightManager);
+	//Object::SetLightManager(lightManager);
 
 
 	lightManager->SetPointLightColor(0, pointLightColor);
@@ -559,14 +575,15 @@ void KochaEngine::Application::Terminate()
 		delete obj[i];
 	}
 	delete floor;
+	delete skyObj;
 	delete taimatu;
 	delete camera;
 	delete lightCamera;
 	delete fbxModel;
-	for (int i = 0; i < FBX_COUNT; i++)
-	{
-		delete fbxObject[i];
-	}
+	//for (int i = 0; i < FBX_COUNT; i++)
+	//{
+	//	delete fbxObject[i];
+	//}
 	delete peraBloom;
 	delete peraEffect;
 	delete peraDof;
@@ -574,7 +591,7 @@ void KochaEngine::Application::Terminate()
 	delete lightManager;
 
 	Input::Terminate();
-	FBXLoader::GetInstance()->Finalize();
+	//FBXLoader::GetInstance()->Finalize();
 }
 
 KochaEngine::Application& KochaEngine::Application::Instance()

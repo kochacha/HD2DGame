@@ -45,5 +45,5 @@ void KochaEngine::Particle::Update()
 void KochaEngine::Particle::Draw(Camera* camera)
 {
 	if (camera == nullptr) return;
-	obj->Draw(camera);
+	//obj->Draw(camera);
 }

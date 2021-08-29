@@ -51,6 +51,7 @@ namespace KochaEngine
 		Object* obj[OBJ_COUNT];
 		Object* floor;
 		Object* taimatu;
+		Object* skyObj;
 
 		FBXModel* fbxModel = nullptr;
 		FBXObject* fbxObject[FBX_COUNT];

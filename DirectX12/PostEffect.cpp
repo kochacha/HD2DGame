@@ -427,6 +427,19 @@ void KochaEngine::PostEffect::SetVertices()
 	vertex[1] = { {-1,  1, 0.1f}, {0, 0} }; //左上
 	vertex[2] = { { 1, -1, 0.1f}, {1, 1} }; //右下
 	vertex[3] = { { 1,  1, 0.1f}, {1, 0} }; //右上
+//#ifdef DEBUG
+//	vertex[0] = { {-1, -1, 0.1f}, {0, 1} }; //左下
+//	vertex[1] = { {-1,  1, 0.1f}, {0, 0} }; //左上
+//	vertex[2] = { { 1, -1, 0.1f}, {1, 1} }; //右下
+//	vertex[3] = { { 1,  1, 0.1f}, {1, 0} }; //右上
+//#else
+//	vertex[0] = { {-0.9f, -0.9f, 0.1f}, {0, 1} }; //左下
+//	vertex[1] = { {-0.9f,  0.9f, 0.1f}, {0, 0} }; //左上
+//	vertex[2] = { { 0.9f, -0.9f, 0.1f}, {1, 1} }; //右下
+//	vertex[3] = { { 0.9f,  0.9f, 0.1f}, {1, 0} }; //右上
+//#endif
+
+
 }
 
 void KochaEngine::PostEffect::CreateBufferView()

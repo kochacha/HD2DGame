@@ -78,7 +78,7 @@ void KochaEngine::Title::Load()
 
 KochaEngine::Scenes KochaEngine::Title::Next()
 {
-	return STAGESELECT;
+	return GAMEPLAY;
 }
 
 void KochaEngine::Title::Fade()

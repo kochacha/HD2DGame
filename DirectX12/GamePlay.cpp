@@ -1,6 +1,8 @@
 #include "GamePlay.h"
 #include "Input.h"
 #include "Util.h"
+#include "Map.h"
+#include "LightManager.h"
 
 KochaEngine::GamePlay::GamePlay()
 {
@@ -9,23 +11,45 @@ KochaEngine::GamePlay::GamePlay()
 
 	pManager = new ParticleManager();
 	emitter = new ParticleEmitter(pManager);
+	map = new Map(gManager, camera);
+	lightManager = new LightManager();
+
+	floor = new Object("graund");
+	skyObj = new Object("skydome");
 }
 
 KochaEngine::GamePlay::~GamePlay()
 {
 	delete camera;
+	delete lightManager;
 	delete gManager;
 	delete pManager;
 	delete emitter;
+	delete map;
+	delete floor;
+	delete skyObj;
 }
 
 void KochaEngine::GamePlay::Initialize()
 {
 	isEnd = false;
 	isGameOver = false;
-	
+
 	gManager->RemoveAll();
-	camera->Initialize(1280, 720, 90, 80, { 0,80,-100 }, { 0,0,0 }, { 0,1,0 });
+	camera->Initialize(1920, 1080, 90, 100, { 0,50,-100 }, { 0,0,0 }, { 0,1,0 });
+	lightManager = LightManager::Create();
+	lightManager->SetDirectionalLightColor(0, Vector3(1, 1, 1));
+	lightManager->SetDirectionalLightDirection(0, Vector3(0, 1, -1));
+	lightManager->SetDirectionalLightIsActive(0, true);
+	lightManager->SetLightCamera(camera);
+
+	map->CreateMap(0);
+
+	floor->SetPosition(Vector3(0, -1, 0));
+	floor->SetTexture("Resources/tiling_water2.png");
+
+	skyObj->SetScale(Vector3(8, 8, 8));
+	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
 
 	frameCount = 0;
 	seconds = 0;
@@ -41,23 +65,22 @@ void KochaEngine::GamePlay::Update()
 	gManager->Update();
 	pManager->Update();
 	camera->Update();
+	lightManager->Update();
 
-
+	//skyObj->MoveRotate(Vector3(0, 0.02f, 0));
+	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
 }
 
 void KochaEngine::GamePlay::SpriteDraw()
 {
 	gManager->SpriteDraw();
-	if (seconds > 9999)
-	{
-		seconds = 9999;
-	}
-	
 }
 
 void KochaEngine::GamePlay::ObjDraw()
 {
-	gManager->ObjDraw(camera);
+	gManager->ObjDraw(camera, lightManager);
+	floor->Draw(camera, lightManager);
+	skyObj->Draw(camera, lightManager);
 	pManager->Draw(camera);
 }
 

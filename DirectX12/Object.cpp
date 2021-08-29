@@ -10,7 +10,7 @@
 
 #pragma comment(lib, "d3dcompiler.lib")
 
-KochaEngine::LightManager* KochaEngine::Object::lightManager{};
+//KochaEngine::LightManager* KochaEngine::Object::lightManager{};
 ID3D12Device* KochaEngine::Object::device{};
 ID3D12GraphicsCommandList* KochaEngine::Object::cmdList{};
 SIZE KochaEngine::Object::winSize{};
@@ -35,11 +35,11 @@ KochaEngine::Object::~Object()
 {
 }
 
-void KochaEngine::Object::SetLightManager(LightManager* arg_lightManager)
-{
-	if (arg_lightManager == nullptr) return;
-	Object::lightManager = arg_lightManager;
-}
+//void KochaEngine::Object::SetLightManager(LightManager* arg_lightManager)
+//{
+//	if (arg_lightManager == nullptr) return;
+//	Object::lightManager = arg_lightManager;
+//}
 
 void KochaEngine::Object::StaticInit(ID3D12Device* device, SIZE winSize)
 {
@@ -159,9 +159,10 @@ void KochaEngine::Object::CreateDepthStencilView()
 		Dx12_Descriptor::GetDepthHeap().Get()->GetCPUDescriptorHandleForHeapStart());
 }
 
-void KochaEngine::Object::Draw(Camera* camera)
+void KochaEngine::Object::Draw(Camera* camera, LightManager* arg_lightManager)
 {
 	if (camera == nullptr)	return;
+	if (arg_lightManager == nullptr) return;
 
 	HRESULT result;
 	DirectX::XMMATRIX matScale, matRot, matTrans;
@@ -231,16 +232,17 @@ void KochaEngine::Object::Draw(Camera* camera)
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 	cmdList->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
 	cmdList->SetGraphicsRootDescriptorTable(2, gpuDescHandleSRV);
-	lightManager->Draw(cmdList, 3);
+	arg_lightManager->Draw(cmdList, 3);
 	cmdList->SetGraphicsRootDescriptorTable(4, gpuDescHandleSRV);
 
 	// •`‰æƒRƒ}ƒ“ƒh
 	cmdList->DrawIndexedInstanced((UINT)KochaEngine::Dx12_Object::GetIndices(objName).size(), 1, 0, 0, 0);
 }
 
-void KochaEngine::Object::Draw(Camera* camera, Vector3 position, Vector3 scale, Vector3 rotate)
+void KochaEngine::Object::Draw(Camera* camera, LightManager* arg_lightManager, Vector3 position, Vector3 scale, Vector3 rotate)
 {
 	if (camera == nullptr)	return;
+	if (arg_lightManager == nullptr) return;
 
 	HRESULT result;
 	DirectX::XMMATRIX matScale, matRot, matTrans;
@@ -312,7 +314,7 @@ void KochaEngine::Object::Draw(Camera* camera, Vector3 position, Vector3 scale, 
 
 	cmdList->SetGraphicsRootDescriptorTable(2, gpuDescHandleSRV);
 
-	lightManager->Draw(cmdList, 3);
+	arg_lightManager->Draw(cmdList, 3);
 
 	cmdList->SetGraphicsRootDescriptorTable(4, gpuDescHandleSRV);
 
@@ -338,6 +340,11 @@ void KochaEngine::Object::SetRotate(const Vector3& rotate)
 void KochaEngine::Object::SetColor(const Vector4& color)
 {
 	this->color = color;
+}
+
+void KochaEngine::Object::SetAlpha(const float arg_alpha)
+{
+	this->color.w = arg_alpha;
 }
 
 void KochaEngine::Object::SetTexture(const std::string& textureName)

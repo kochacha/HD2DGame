@@ -19,6 +19,6 @@ namespace KochaEngine
 
 		void Initialize() override;
 		void Update() override;
-		void ObjDraw(Camera* camera) override;
+		void ObjDraw(Camera* camera, LightManager* arg_lightManager) override;
 	};
 }

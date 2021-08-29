@@ -1,5 +1,7 @@
 #include "Scene.h"
 
+int KochaEngine::Scene::mapNum = 0;
+
 KochaEngine::Scene::Scene()
 {
 }

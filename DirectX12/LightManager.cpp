@@ -80,7 +80,7 @@ void KochaEngine::LightManager::TransferConstBuffer()
 	result = constBuff->Map(0, nullptr, (void**)&constMap);
 	if (SUCCEEDED(result))
 	{
-		constMap->lightCamera = lightCamera->GetLightCameraMatrix();
+		//constMap->lightCamera = lightCamera->GetLightCameraMatrix();
 		constMap->ambientColor = ambientColor;
 
 		for (int i = 0; i < DIRECTIONAL_LIGHT_NUM; i++)

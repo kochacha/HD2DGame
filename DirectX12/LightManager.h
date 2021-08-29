@@ -13,7 +13,7 @@ namespace KochaEngine
 	{
 	public:
 		static const int DIRECTIONAL_LIGHT_NUM = 1;
-		static const int POINT_LIGHT_NUM = 3;
+		static const int POINT_LIGHT_NUM = 10;
 
 		struct ConstBufferData
 		{

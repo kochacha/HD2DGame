@@ -10,21 +10,13 @@
 
 namespace KochaEngine
 {
-	class Map;
-	class LightManager;
-
-	class GamePlay : public Scene
+	class Battle : public Scene
 	{
 	private:
-		Map* map;
 		Camera* camera;
 		GameObjectManager* gManager;
 		ParticleManager* pManager;
 		ParticleEmitter* emitter;
-		LightManager* lightManager;
-
-		Object* floor;
-		Object* skyObj;
 
 		bool fadeFlag;
 		float fadeAlpha;
@@ -33,8 +25,9 @@ namespace KochaEngine
 		int seconds;
 		int endCount;
 	public:
-		GamePlay();
-		~GamePlay() override;
+
+		Battle();
+		~Battle() override;
 		void Initialize() override;
 		void Update() override;
 		void SpriteDraw() override;

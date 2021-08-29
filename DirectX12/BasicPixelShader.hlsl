@@ -22,7 +22,7 @@ PSOutput PSmain(GSOutput input)/* : SV_TARGET*/
 	// 頂点から視点への方向ベクトル
 	float3 eyedir = normalize(cameraPos - input.worldpos.xyz);
 	// 環境反射光
-	float3 ambient = 0.1f;
+	float3 ambient = m_ambient;
 	// シェーディングによる色
 	float4 shaderColor = float4(ambientColor * ambient, m_alpha);
 
@@ -59,22 +59,23 @@ PSOutput PSmain(GSOutput input)/* : SV_TARGET*/
 		}
 	}
 
-	float bright = dot(input.normal, -light);
-	float shadowWeight = 1.0f;
-	float3 posFromLightVP = input.tpos.xyz / input.tpos.w;
-	float2 shadowUV = (posFromLightVP + float2(1, -1)) * float2(0.5, -0.5);
-	float depthFromLight = lightDepthTex.Sample(smp, shadowUV);
-	shadowWeight = lerp(0.5f, 1.0f, depthFromLight);
-	float b = bright * shadowWeight;
+	//float bright = dot(input.normal, -light);
+	//float shadowWeight = 1.0f;
+	//float3 posFromLightVP = input.tpos.xyz / input.tpos.w;
+	//float2 shadowUV = (posFromLightVP + float2(1, -1)) * float2(0.5, -0.5);
+	//float depthFromLight = lightDepthTex.Sample(smp, shadowUV);
+	//shadowWeight = lerp(0.5f, 1.0f, depthFromLight);
+	//float b = bright * shadowWeight;
 
 	//通常
     output.target0 = shaderColor * texColor * color;
+
 
 	//高輝度出力(ブルーム用)
 	float y = dot(float3(0.299f, 0.587f, 0.114f), shaderColor * texColor);
     output.target1 = y > 0.8f ? shaderColor * texColor : 0.0f;
 
-	output.target2 = float4(b, b, b, 1); //shaderColor * texColor;
+	output.target2 = float4(1, 1, 1, 1); //shaderColor * texColor;
 
     return output;
 }

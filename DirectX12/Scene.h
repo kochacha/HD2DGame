@@ -12,6 +12,9 @@ namespace KochaEngine
 		GAMEPLAY,
 		ENDING,
 		GAMEOVER,
+
+		BEGIN_TOWN,
+		BEGIN_FIELD,
 	};
 
 	enum Color
@@ -37,6 +40,8 @@ namespace KochaEngine
 		virtual bool IsGameOverFlag();
 		virtual Scenes Next();
 		virtual Scenes GameOver();
+
+		static int mapNum;
 	protected:
 		bool isEnd;
 		bool isGameOver;

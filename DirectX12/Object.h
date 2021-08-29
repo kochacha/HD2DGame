@@ -82,7 +82,7 @@ namespace KochaEngine
 		void CreateBufferView();
 		void CreateDepthStencilView();
 
-		static LightManager* lightManager;
+		//static LightManager* lightManager;
 		static ID3D12Device* device;
 		static ID3D12GraphicsCommandList* cmdList;
 		static SIZE winSize;
@@ -91,13 +91,14 @@ namespace KochaEngine
 		Object(std::string objName);
 		~Object();
 
-		void Draw(Camera* camera);
-		void Draw(Camera* camera, Vector3 position, Vector3 scale, Vector3 rotate);
+		void Draw(Camera* camera, LightManager* arg_lightManager);
+		void Draw(Camera* camera, LightManager* arg_lightManager, Vector3 position, Vector3 scale, Vector3 rotate);
 
 		void SetPosition(const Vector3& position);
 		void SetScale(const Vector3& scale);
 		void SetRotate(const Vector3& rotate);
 		void SetColor(const Vector4& color);
+		void SetAlpha(const float arg_alpha);
 		void SetTexture(const std::string& textureName);
 		void SetBillboardType(const BillboardType& arg_type);
 
@@ -108,7 +109,7 @@ namespace KochaEngine
 
 		Vector3 GetScale() { return scale; }
 
-		static void SetLightManager(LightManager* arg_lightManager);
+		//static void SetLightManager(LightManager* arg_lightManager);
 		static void StaticInit(ID3D12Device* device, SIZE winSize);
 		static void BeginDraw(ID3D12GraphicsCommandList* cmdList);
 		static void BeginDrawFromLight(ID3D12GraphicsCommandList* cmdList);
