@@ -233,6 +233,7 @@ void KochaEngine::Application::Load()
 {
 	//Textureのロード
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/white.png");
+	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/green.png");
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/PIEN.png");
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/kaku4.png");
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/number.png");
@@ -253,6 +254,7 @@ void KochaEngine::Application::Load()
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "sphere");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "Ground1");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "skydome");
+	//Dx12_Object::LoadObject(dx12->GetDevice().Get(), "tree");
 
 	//.pmdのロード *日本語！ダメ！絶対！*
 	//PMDLoader::LoadModel(dx12->GetDevice().Get(), "Resources/Model/miku/miku.pmd");

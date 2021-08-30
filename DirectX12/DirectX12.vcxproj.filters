@@ -237,6 +237,9 @@
     <ClCompile Include="Block.cpp">
       <Filter>Source\Object\GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="FieldObject.cpp">
+      <Filter>Source\Object\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShaderHeader.hlsli">
@@ -502,6 +505,9 @@
       <Filter>Header\Object\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="Block.h">
+      <Filter>Header\Object\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="FieldObject.h">
       <Filter>Header\Object\GameObject</Filter>
     </ClInclude>
   </ItemGroup>

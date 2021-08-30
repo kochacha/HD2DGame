@@ -182,6 +182,7 @@
     <ClCompile Include="FBXLoader.cpp" />
     <ClCompile Include="FBXModel.cpp" />
     <ClCompile Include="FBXObject.cpp" />
+    <ClCompile Include="FieldObject.cpp" />
     <ClCompile Include="Figure2D.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
@@ -466,6 +467,7 @@
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="FBXModel.h" />
     <ClInclude Include="FBXObject.h" />
+    <ClInclude Include="FieldObject.h" />
     <ClInclude Include="Figure2D.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectManager.h" />

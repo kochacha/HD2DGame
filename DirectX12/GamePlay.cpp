@@ -46,7 +46,7 @@ void KochaEngine::GamePlay::Initialize()
 	map->CreateMap(0);
 
 	floor->SetPosition(Vector3(0, -1, 0));
-	floor->SetTexture("Resources/tiling_water2.png");
+	floor->SetTexture("Resources/tiling_rock1.png");
 
 	skyObj->SetScale(Vector3(8, 8, 8));
 	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
@@ -67,7 +67,7 @@ void KochaEngine::GamePlay::Update()
 	camera->Update();
 	lightManager->Update();
 
-	//skyObj->MoveRotate(Vector3(0, 0.02f, 0));
+	skyObj->MoveRotate(Vector3(0, 0.02f, 0));
 	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
 }
 
