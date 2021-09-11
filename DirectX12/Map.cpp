@@ -28,15 +28,15 @@ void KochaEngine::Map::CreateMap(const int arg_mapNum)
 	{
 		for (int z = 0; z < z_Data; z++)
 		{
-			float posZ = -CHIP_SIZE * (float)z + z_Data * 0.5f * CHIP_SIZE;
-			float posX = CHIP_SIZE * (float)x - x_Data * 0.5f * CHIP_SIZE;
+			float posZ = -CHIP_SIZE * (float)z + (z_Data - 1) * 0.5f * CHIP_SIZE;
+			float posX = CHIP_SIZE * (float)x - (x_Data - 1) * 0.5f * CHIP_SIZE;
 			switch (mapData[z][x])
 			{
 			case 0:
-				gManager->AddObject(new FieldObject(camera, KochaEngine::FieldObjType::TREE, Vector3(posX, 0, posZ)));
+				//gManager->AddObject(new FieldObject(camera, KochaEngine::FieldObjType::TREE, Vector3(posX, 0, posZ)));
 				break;
 			case 1:
-				gManager->AddObject(new Block(camera, KochaEngine::BlockType::SOIL_BLOCK, Vector3(posX, 0, posZ)));
+				gManager->AddObject(new Block(KochaEngine::BlockType::SOIL_BLOCK, Vector3(posX, 8, posZ)));
 				break;
 			}
 		}

@@ -47,6 +47,11 @@ void KochaEngine::SceneManager::SpriteDraw()
 	currentScene->SpriteDraw();
 }
 
+void KochaEngine::SceneManager::AlphaObjDraw()
+{
+	currentScene->AlphaObjDraw();
+}
+
 void KochaEngine::SceneManager::ObjDraw()
 {
 	currentScene->ObjDraw();

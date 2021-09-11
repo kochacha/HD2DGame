@@ -33,6 +33,7 @@ namespace KochaEngine
 		virtual void Update();
 		virtual void SpriteDraw();
 		virtual void ObjDraw();
+		virtual void AlphaObjDraw();
 		virtual void DrawGUI();
 		virtual void Initialize();
 		virtual void Load();

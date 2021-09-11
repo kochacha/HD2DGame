@@ -3,6 +3,7 @@
 #include "Util.h"
 #include "Map.h"
 #include "LightManager.h"
+#include "Player.h"
 
 KochaEngine::GamePlay::GamePlay()
 {
@@ -36,7 +37,7 @@ void KochaEngine::GamePlay::Initialize()
 	isGameOver = false;
 
 	gManager->RemoveAll();
-	camera->Initialize(1920, 1080, 90, 100, { 0,50,-100 }, { 0,0,0 }, { 0,1,0 });
+	camera->Initialize(1280, 720, 90, 100, { 0,1,0 }, { 0,0,0 }, { 0,1,0 });
 	lightManager = LightManager::Create();
 	lightManager->SetDirectionalLightColor(0, Vector3(1, 1, 1));
 	lightManager->SetDirectionalLightDirection(0, Vector3(0, 1, -1));
@@ -44,9 +45,10 @@ void KochaEngine::GamePlay::Initialize()
 	lightManager->SetLightCamera(camera);
 
 	map->CreateMap(0);
+	gManager->AddObject(new Player(camera, Vector3(0, 5, 0)));
 
-	floor->SetPosition(Vector3(0, -1, 0));
-	floor->SetTexture("Resources/tiling_rock1.png");
+	floor->SetPosition(Vector3(0, 0, 0));
+	floor->SetTexture("Resources/stone.png");
 
 	skyObj->SetScale(Vector3(8, 8, 8));
 	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
@@ -80,8 +82,13 @@ void KochaEngine::GamePlay::ObjDraw()
 {
 	gManager->ObjDraw(camera, lightManager);
 	floor->Draw(camera, lightManager);
-	skyObj->Draw(camera, lightManager);
+	//skyObj->Draw(camera, lightManager);
 	pManager->Draw(camera);
+}
+
+void KochaEngine::GamePlay::AlphaObjDraw()
+{
+	gManager->AlphaObjDraw(camera, lightManager);
 }
 
 void KochaEngine::GamePlay::DrawGUI()

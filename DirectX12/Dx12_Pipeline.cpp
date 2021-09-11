@@ -5,6 +5,7 @@
 
 ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::spritePipelineState;
 ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::objPipelineState;
+ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::alphaObjPipelineState;
 ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::pmdPipelineState;
 ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::fbxPipelineState;
 ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::peraPipelineState;
@@ -23,6 +24,7 @@ KochaEngine::Dx12_Pipeline::Dx12_Pipeline(Dx12_Wrapper& dx12, Dx12_Blob& blob) :
 {
 	CreateSpriteGraphicsPipelineState();
 	CreateOBJGraphicsPipelineState();
+	CreateAlphaOBJGraphicsPipelineState();
 	CreatePMDGraphicsPipelineState();
 	CreateFBXGraphicsPipelineState();
 	CreatePeraGraphicsPipelineState();
@@ -182,6 +184,84 @@ void KochaEngine::Dx12_Pipeline::CreateOBJGraphicsPipelineState()
 	gpipeline.PS.pShaderBytecode = nullptr;
 	gpipeline.RTVFormats[0] = DXGI_FORMAT_UNKNOWN;
 	result = dx12.GetDevice().Get()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&shadowPipelineState));
+	if (FAILED(result)) { assert(0); }
+}
+
+void KochaEngine::Dx12_Pipeline::CreateAlphaOBJGraphicsPipelineState()
+{
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline = {};
+	D3D12_RENDER_TARGET_BLEND_DESC blendDesc = {};
+	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
+	{ // xy座標
+		"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
+		D3D12_APPEND_ALIGNED_ELEMENT,
+		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
+	},
+	{ // 法線ベクトル
+		"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
+		D3D12_APPEND_ALIGNED_ELEMENT,
+		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
+	},
+	{ // uv座標
+		"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
+		D3D12_APPEND_ALIGNED_ELEMENT,
+		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
+	},
+	};
+
+	gpipeline.VS = CD3DX12_SHADER_BYTECODE(blob.GetBasicBlob().vsBlob.Get());
+	gpipeline.PS = CD3DX12_SHADER_BYTECODE(blob.GetBasicBlob().psBlob.Get());
+	gpipeline.GS = CD3DX12_SHADER_BYTECODE(blob.GetBasicBlob().gsBlob.Get());
+
+	// サンプルマスク
+	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+	// ラスタライザステート
+	gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	// デプスステンシルステート
+	gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+
+	// レンダーターゲットのブレンド設定
+	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
+	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	// RBGA全てのチャンネルを描画
+	blenddesc.BlendEnable = true;
+	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+
+	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+
+	// ブレンドステートの設定
+	gpipeline.BlendState.AlphaToCoverageEnable = true;
+	gpipeline.BlendState.RenderTarget[0] = blenddesc;
+	gpipeline.BlendState.RenderTarget[1] = blenddesc;
+	gpipeline.BlendState.RenderTarget[2] = blenddesc;
+
+	// 深度バッファのフォーマット
+	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+
+	// 頂点レイアウトの設定
+	gpipeline.InputLayout.pInputElementDescs = inputLayout;
+	gpipeline.InputLayout.NumElements = _countof(inputLayout);
+
+	// 図形の形状設定（三角形）
+	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+	gpipeline.NumRenderTargets = 3;	// 描画対象は3つ
+	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM; // 0～255指定のRGBA
+	gpipeline.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM; // 0～255指定のRGBA
+	gpipeline.RTVFormats[2] = DXGI_FORMAT_R8G8B8A8_UNORM; // 0～255指定のRGBA
+	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+
+	gpipeline.DepthStencilState.DepthEnable = true;
+	gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	gpipeline.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+	gpipeline.DepthStencilState.StencilEnable = false;
+
+	gpipeline.pRootSignature = Dx12_RootSignature::GetOBJRootSignature().Get();
+
+	auto result = dx12.GetDevice().Get()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&alphaObjPipelineState));
 	if (FAILED(result)) { assert(0); }
 }
 

@@ -44,14 +44,8 @@ namespace KochaEngine
 		Dx12_RootSignature* rootSignature;
 		Dx12_Pipeline* pipeline;
 		SceneManager* sceneManager;
-		Camera* camera;
-		Camera* lightCamera;
 
 		Texture2D* texture[1];
-		Object* obj[OBJ_COUNT];
-		Object* floor;
-		Object* taimatu;
-		Object* skyObj;
 
 		FBXModel* fbxModel = nullptr;
 		FBXObject* fbxObject[FBX_COUNT];
@@ -61,7 +55,6 @@ namespace KochaEngine
 		PostEffect* peraDof;
 
 		EffectManager* effectManager;
-		LightManager* lightManager;
 
 		ShaderType peraEffectType;
 		bool isDof;

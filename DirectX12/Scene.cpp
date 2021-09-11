@@ -31,6 +31,10 @@ void KochaEngine::Scene::ObjDraw()
 {
 }
 
+void KochaEngine::Scene::AlphaObjDraw()
+{
+}
+
 void KochaEngine::Scene::DrawGUI()
 {
 }

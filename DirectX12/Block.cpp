@@ -1,17 +1,15 @@
 #include "Block.h"
 
-KochaEngine::Block::Block(Camera* arg_camera, const BlockType arg_blockType, const Vector3& arg_position)
+KochaEngine::Block::Block(const BlockType arg_blockType, const Vector3& arg_position)
 {
-	if (arg_camera == nullptr) return;
-
-	camera = arg_camera;
 	blockType = arg_blockType;
 	position = arg_position;
 
 	switch (blockType)
 	{
 	case KochaEngine::SOIL_BLOCK:
-		obj = new Object("Ground1");
+		obj = new Object("box");
+		//obj->SetTexture("Resources/PIEN.png");
 		break;
 	default:
 		obj = new Object("box");
@@ -28,14 +26,19 @@ KochaEngine::Block::~Block()
 void KochaEngine::Block::Initialize()
 {
 	obj->SetPosition(position);
-	obj->SetScale(Vector3(3,3,3));
+	obj->SetScale(Vector3(8,8,8));
+
+	isAlpha = true;
 }
 
 void KochaEngine::Block::Update()
 {
+	obj->MoveRotate(Vector3(-0.1f,0,0));
 }
 
 void KochaEngine::Block::ObjDraw(Camera* camera, LightManager* arg_lightManager)
 {
+	if (camera == nullptr) return;
+	if (arg_lightManager == nullptr) return;
 	obj->Draw(camera, arg_lightManager);
 }

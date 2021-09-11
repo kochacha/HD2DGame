@@ -18,6 +18,7 @@ namespace KochaEngine
 
 		void CreateSpriteGraphicsPipelineState();
 		void CreateOBJGraphicsPipelineState();
+		void CreateAlphaOBJGraphicsPipelineState();
 		void CreatePMDGraphicsPipelineState();
 		void CreateFBXGraphicsPipelineState();
 		void CreatePeraGraphicsPipelineState();
@@ -28,6 +29,7 @@ namespace KochaEngine
 
 		static ComPtr<ID3D12PipelineState> spritePipelineState;
 		static ComPtr<ID3D12PipelineState> objPipelineState;
+		static ComPtr<ID3D12PipelineState> alphaObjPipelineState;
 		static ComPtr<ID3D12PipelineState> pmdPipelineState;
 		static ComPtr<ID3D12PipelineState> fbxPipelineState;
 		static ComPtr<ID3D12PipelineState> peraPipelineState;

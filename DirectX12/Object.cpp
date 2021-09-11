@@ -59,6 +59,16 @@ void KochaEngine::Object::BeginDraw(ID3D12GraphicsCommandList* cmdList)
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
+void KochaEngine::Object::BeginAlphaDraw(ID3D12GraphicsCommandList* cmdList)
+{
+	if (cmdList == nullptr) return;
+	KochaEngine::Object::cmdList = cmdList;
+
+	cmdList->SetPipelineState(Dx12_Pipeline::alphaObjPipelineState.Get());
+	cmdList->SetGraphicsRootSignature(Dx12_RootSignature::GetOBJRootSignature().Get());
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
 void KochaEngine::Object::BeginDrawFromLight(ID3D12GraphicsCommandList* cmdList)
 {
 	if (cmdList == nullptr) return;

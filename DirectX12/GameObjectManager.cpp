@@ -43,29 +43,43 @@ void KochaEngine::GameObjectManager::Zsort(const int arg_count)
 	}
 }
 
-void KochaEngine::GameObjectManager::AlphaObjDraw(Camera* camera)
+void KochaEngine::GameObjectManager::AlphaObjDraw(Camera* camera, LightManager* arg_lightManager)
 {
-	if (camera == nullptr) return;
-	this->camera = camera;
-	auto end = gameObjects.end();
-	int alphaObjCount = 0;
-	//std::map<float, GameObject*> alphaObjects;
+	//if (camera == nullptr) return;
+	//this->camera = camera;
+	//auto end = gameObjects.end();
+	//int alphaObjCount = 0;
+	////std::map<float, GameObject*> alphaObjects;
 
+	//for (auto it = gameObjects.begin(); it != end; ++it)
+	//{
+	//	if ((*it)->IsDead() || !(*it)->IsAlphaObject())
+	//	{
+	//		continue;
+	//	}
+	//	alphaObjCount++;
+	//	//alphaObjects.emplace();
+	//}
+	////Zsort(alphaObjCount);
+
+	//int sortCount = 0;
+	//while (sortCount == alphaObjCount)
+	//{
+	//	
+	//}
+
+	if (camera == nullptr) return;
+	if (arg_lightManager == nullptr) return;
+
+	this->camera = camera;
+	this->lightManager = arg_lightManager;
+	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
 	{
-		if ((*it)->IsDead() || !(*it)->IsAlphaObject())
-		{
-			continue;
-		}
-		alphaObjCount++;
-		//alphaObjects.emplace();
-	}
-	//Zsort(alphaObjCount);
+		if (!(*it)->IsAlphaObject()) continue;
+		if ((*it)->IsDead()) continue;
 
-	int sortCount = 0;
-	while (sortCount == alphaObjCount)
-	{
-		
+		(*it)->ObjDraw(this->camera, this->lightManager);
 	}
 
 }
@@ -80,20 +94,11 @@ void KochaEngine::GameObjectManager::ObjDraw(Camera* camera, LightManager* arg_l
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
 	{
-		if ((*it)->IsDead()/* || (*it)->IsAlphaObject()*/)
-		{
-			continue;
-		}	
+		if ((*it)->IsAlphaObject()) continue;
+		if ((*it)->IsDead()) continue;
+
 		(*it)->ObjDraw(this->camera, this->lightManager);
 	}
-	//for (auto it = gameObjects.begin(); it != end; ++it)
-	//{
-	//	if ((*it)->IsDead())
-	//	{
-	//		continue;
-	//	}
-	//	(*it)->ObjDraw(this->camera);
-	//}
 }
 
 void KochaEngine::GameObjectManager::SpriteDraw()

@@ -21,7 +21,7 @@ namespace KochaEngine
 		void AddObject(GameObject* gameObject);
 		void Initialize();
 		void Update();
-		void AlphaObjDraw(Camera* camera);
+		void AlphaObjDraw(Camera* camera, LightManager* arg_lightManager);
 		void ObjDraw(Camera* camera, LightManager* arg_lightManager);
 		void SpriteDraw();
 		void CheckBlock(GameObject* obj, GameObjectType otherType);

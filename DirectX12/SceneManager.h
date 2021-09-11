@@ -14,6 +14,7 @@ namespace KochaEngine
 		void Load(Scenes name);
 		void Update();
 		void SpriteDraw();
+		void AlphaObjDraw();
 		void ObjDraw();
 		void DrawGUI();
 		void Terminate();

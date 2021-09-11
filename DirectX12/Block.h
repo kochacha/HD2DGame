@@ -14,11 +14,10 @@ namespace KochaEngine
 	{
 
 	private:
-		Camera* camera;
 		BlockType blockType;
 
 	public:
-		Block(Camera* arg_camera, const BlockType arg_blockType, const Vector3& arg_position);
+		Block(const BlockType arg_blockType, const Vector3& arg_position);
 		~Block() override;
 
 		void Initialize() override;

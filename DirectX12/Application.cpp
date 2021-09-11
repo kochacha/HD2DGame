@@ -34,7 +34,7 @@
 
 using namespace DirectX;
 
-float KochaEngine::Application::clearColor[4] = { 0,0,0,1 };
+float KochaEngine::Application::clearColor[4] = { 0.1568f,0.1176f,0.1960f,1 };
 
 KochaEngine::Application::Application()
 {
@@ -70,38 +70,38 @@ void KochaEngine::Application::Run()
 		////↓毎フレーム処理↓//
 		Input::Update();
 
-		if (Input::CheckKey(DIK_A))
-		{
-			camera->MoveEye(Vector3(-1, 0, 0));
-		}
-		if (Input::CheckKey(DIK_D))
-		{
-			camera->MoveEye(Vector3(1, 0, 0));
-		}
-		if (Input::CheckKey(DIK_W))
-		{
-			camera->MoveEye(Vector3(0, 1, 0));
-		}
-		if (Input::CheckKey(DIK_S))
-		{
-			camera->MoveEye(Vector3(0, -1, 0));
-		}
-		if (Input::CheckKey(DIK_UP))
-		{
-			camera->MoveEye(Vector3(0, 0, 1));
-		}
-		if (Input::CheckKey(DIK_DOWN))
-		{
-			camera->MoveEye(Vector3(0, 0, -1));
-		}
-		if (Input::CheckKey(DIK_Q))
-		{
-			camera->MoveTarget(Vector3(-1, 0, 0));
-		}
-		if (Input::CheckKey(DIK_E))
-		{
-			camera->MoveTarget(Vector3(1, 0, 0));
-		}
+		//if (Input::CheckKey(DIK_A))
+		//{
+		//	camera->MoveEye(Vector3(-1, 0, 0));
+		//}
+		//if (Input::CheckKey(DIK_D))
+		//{
+		//	camera->MoveEye(Vector3(1, 0, 0));
+		//}
+		//if (Input::CheckKey(DIK_W))
+		//{
+		//	camera->MoveEye(Vector3(0, 1, 0));
+		//}
+		//if (Input::CheckKey(DIK_S))
+		//{
+		//	camera->MoveEye(Vector3(0, -1, 0));
+		//}
+		//if (Input::CheckKey(DIK_UP))
+		//{
+		//	camera->MoveEye(Vector3(0, 0, 1));
+		//}
+		//if (Input::CheckKey(DIK_DOWN))
+		//{
+		//	camera->MoveEye(Vector3(0, 0, -1));
+		//}
+		//if (Input::CheckKey(DIK_Q))
+		//{
+		//	camera->MoveTarget(Vector3(-1, 0, 0));
+		//}
+		//if (Input::CheckKey(DIK_E))
+		//{
+		//	camera->MoveTarget(Vector3(1, 0, 0));
+		//}
 
 		if (Input::TriggerKey(DIK_1))
 		{
@@ -113,7 +113,7 @@ void KochaEngine::Application::Run()
 		}
 
 		sceneManager->Update();
-		camera->Update();
+		/*camera->Update();
 		auto target = camera->GetTarget();
 		auto eye = camera->GetEye();
 		auto lightPos = XMLoadFloat3(&target) + XMVector3Normalize({1,1,1})
@@ -129,11 +129,7 @@ void KochaEngine::Application::Run()
 		lightManager->SetPointLightPos(0, pointLightPosition);
 		lightManager->SetPointLightAtten(0, pointLightAtten);
 		lightManager->SetLightCamera(lightCamera);
-		taimatu->SetPosition(Vector3(pointLightPosition.x, pointLightPosition.y - 13, pointLightPosition.z + 3));
-		lightManager->Update();
-
-		skyObj->MoveRotate(Vector3(0, 0.02f, 0));
-		skyObj->SetPosition(Vector3(camera->GetEye().x,0,camera->GetEye().z));
+		lightManager->Update();*/
 
 		for (int i = 0; i < OBJ_COUNT; ++i)
 		{
@@ -162,20 +158,21 @@ void KochaEngine::Application::Run()
 
 			Object::BeginDraw(dx12->GetCmdList().Get());
 			//↓ObjDraw↓//
-			//for (int i = 0; i < OBJ_COUNT; ++i)
-			//{
-			//	obj[i]->Draw(camera, lightManager);
-			//}
 
-			//taimatu->Draw(camera, lightManager);
-			//floor->Draw(camera, lightManager);
-			//skyObj->Draw(camera, lightManager);
 			sceneManager->ObjDraw();
 
 			//↑ObjDraw↑//
 			Object::EndDraw();
 
-			effectManager->Update(camera);
+			Object::BeginAlphaDraw(dx12->GetCmdList().Get());
+
+			sceneManager->AlphaObjDraw();
+
+			//↑ObjDraw↑//
+			Object::EndDraw();
+
+
+			//effectManager->Update(camera);
 
 			peraDof->PostDrawScene(dx12->GetCmdList().Get());
 		}
@@ -243,6 +240,7 @@ void KochaEngine::Application::Load()
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_rock2.png");
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_water1.png");
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_water2.png");
+	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/water_ball1.png");
 
 	//.objのロード
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "LowTree");
@@ -256,12 +254,6 @@ void KochaEngine::Application::Load()
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "skydome");
 	//Dx12_Object::LoadObject(dx12->GetDevice().Get(), "tree");
 
-	//.pmdのロード *日本語！ダメ！絶対！*
-	//PMDLoader::LoadModel(dx12->GetDevice().Get(), "Resources/Model/miku/miku.pmd");
-	//PMDLoader::LoadModel(dx12->GetDevice().Get(), "Resources/Model/kirama/kirama.pmd");
-
-	//.fbxのロード
-	//FBXLoader::GetInstance()->LoadModelFromFile("cube");
 }
 
 void KochaEngine::Application::LoadScene()
@@ -456,10 +448,10 @@ bool KochaEngine::Application::Initialize()
 	rootSignature = new Dx12_RootSignature(*dx12);
 	pipeline = new Dx12_Pipeline(*dx12, *blob);
 
-	camera = new Camera();
+	/*camera = new Camera();
 	camera->Initialize(dx12->GetWinSize().cx, dx12->GetWinSize().cy, 90, 100, { 0,50,-150 }, { 0,0,0 }, { 0,1,0 });
 	lightCamera = new Camera();
-	lightCamera->Initialize(dx12->GetWinSize().cx, dx12->GetWinSize().cy, 90, 100, { -100,100,-100 }, { 0,0,0 }, { 0,1,0 });
+	lightCamera->Initialize(dx12->GetWinSize().cx, dx12->GetWinSize().cy, 90, 100, { -100,100,-100 }, { 0,0,0 }, { 0,1,0 });*/
 
 	Texture2D::StaticInit(dx12->GetDevice().Get(), dx12->GetWinSize());
 	PostEffect::StaticInit(dx12->GetDevice().Get(), dx12->GetCmdList().Get(), dx12->GetWinSize());
@@ -491,43 +483,6 @@ bool KochaEngine::Application::Initialize()
 	isActiveDirLight = true;
 
 	texture[0] = new Texture2D("Resources/PIEN.png", Vector2(0, 0), Vector2(100, 100), 0);
-	for (int i = 0; i < OBJ_COUNT; ++i)
-	{
-		obj[i] = new Object("plane");
-		obj[i]->SetTexture("Resources/PIEN.png");
-		obj[i]->SetRotate({ 90,180,0 });
-		//obj[i]->SetRotate({ 0,180,0 });
-		//obj[i]->SetScale({ 0.01, 1, 0.01 });
-		obj[i]->SetScale({ 15, 15, 15 });
-		obj[i]->SetPosition({ ((float)Util::GetIntRand(0,10) - 5.0f) * 15,0,((float)Util::GetIntRand(0,10) - 5.0f) * 15 });
-		//obj[i]->MoveRotate({ 0,(float)Util::GetIntRand(0,360),0 });
-		//obj[i]->SetBillboardType(Object::BillboardType::BILLBOARD_Y);
-	}
-
-	floor = new Object("graund");
-	//floor->SetScale(Vector3(2000, 1, 2000));
-	floor->SetPosition(Vector3(0, -1, 0));
-	//floor->MoveRotate(Vector3(180, 0, 0));
-	floor->SetTexture("Resources/stone.png");
-
-	skyObj = new Object("skydome");
-	skyObj->SetScale(Vector3(11, 11, 11));
-	skyObj->SetPosition(Vector3(0, 0, 0));
-	
-	taimatu = new Object("taimatu");
-	taimatu->SetScale(Vector3(10, 10, 10));
-	taimatu->SetPosition(Vector3(pointLightPosition.x, pointLightPosition.y - 13, pointLightPosition.z + 3));
-
-	//fbxModel = FBXLoader::GetInstance()->LoadModelFromFile("boneTest");
-
-	//for (int i = 0; i < FBX_COUNT; i++)
-	//{
-	//	fbxObject[i] = new FBXObject();
-	//	fbxObject[i]->SetModel(fbxModel);
-	//	fbxObject[i]->SetPosition({ (float)Util::GetIntRand(0,40) - 20.0f,0,(float)Util::GetIntRand(0,40) - 20.0f });
-	//	fbxObject[i]->MoveRotate({ 0,(float)Util::GetIntRand(0,360),0 });
-	//	fbxObject[i]->PlayAnimation();
-	//}
 
 	peraBloom = new PostEffect();
 	peraEffect = new PostEffect();
@@ -539,13 +494,13 @@ bool KochaEngine::Application::Initialize()
 	effectManager->LoadEffect("light.efk", 10.0f);
 	effectManager->LoadEffect("hit.efk", 10.0f);
 
-	lightManager = LightManager::Create();
-	lightManager->SetLightCamera(lightCamera);
-	//Object::SetLightManager(lightManager);
+	//lightManager = LightManager::Create();
+	//lightManager->SetLightCamera(lightCamera);
+	////Object::SetLightManager(lightManager);
 
 
-	lightManager->SetPointLightColor(0, pointLightColor);
-	lightManager->SetPointLightAtten(0, pointLightAtten);
+	/*lightManager->SetPointLightColor(0, pointLightColor);
+	lightManager->SetPointLightAtten(0, pointLightAtten);*/
 
 	vignetteScale = 0.25f;
 	gBoyPixelSize = 4.0f;
@@ -572,15 +527,8 @@ void KochaEngine::Application::Terminate()
 	delete pipeline;
 	delete dx12;
 	delete window;
-	for (int i = 0; i < OBJ_COUNT; ++i)
-	{
-		delete obj[i];
-	}
-	delete floor;
-	delete skyObj;
-	delete taimatu;
-	delete camera;
-	delete lightCamera;
+	//delete camera;
+	//delete lightCamera;
 	delete fbxModel;
 	//for (int i = 0; i < FBX_COUNT; i++)
 	//{
@@ -590,7 +538,7 @@ void KochaEngine::Application::Terminate()
 	delete peraEffect;
 	delete peraDof;
 	delete effectManager;
-	delete lightManager;
+	//delete lightManager;
 
 	Input::Terminate();
 	//FBXLoader::GetInstance()->Finalize();

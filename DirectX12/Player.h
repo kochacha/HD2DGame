@@ -14,11 +14,11 @@ namespace KochaEngine
 		void SetObjParam();
 
 	public:
-		Player();
+		Player(Camera* arg_camera, const Vector3& arg_position);
 		~Player() override;
 
 		void Initialize() override;
 		void Update() override;
-		void ObjDraw(Camera* camera, LightManager* arg_lightManager) override;
+		void ObjDraw(Camera* arg_camera, LightManager* arg_lightManager) override;
 	};
 }
