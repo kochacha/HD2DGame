@@ -36,9 +36,9 @@ void KochaEngine::Block::Update()
 	obj->MoveRotate(Vector3(-0.1f,0,0));
 }
 
-void KochaEngine::Block::ObjDraw(Camera* camera, LightManager* arg_lightManager)
+void KochaEngine::Block::ObjDraw(Camera* arg_camera, LightManager* arg_lightManager)
 {
-	if (camera == nullptr) return;
+	if (arg_camera == nullptr) return;
 	if (arg_lightManager == nullptr) return;
-	obj->Draw(camera, arg_lightManager);
+	obj->Draw(arg_camera, arg_lightManager);
 }

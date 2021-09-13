@@ -13,9 +13,11 @@ KochaEngine::FieldObject::FieldObject(Camera* arg_camera, const FieldObjType arg
 	{
 	case KochaEngine::TREE:
 		obj = new Object("LowTree");
+		obj->SetScale(Vector3(2, 2, 2));
 		break;
 	default:
 		obj = new Object("box");
+		obj->SetScale(Vector3(8, 8, 8));
 		break;
 	}
 	Initialize();
@@ -28,9 +30,7 @@ KochaEngine::FieldObject::~FieldObject()
 
 void KochaEngine::FieldObject::Initialize()
 {
-	obj->SetTexture("Resources/green.png");
 	obj->SetPosition(position);
-	obj->SetScale(Vector3(2, 2, 2));
 }
 
 void KochaEngine::FieldObject::Update()

@@ -17,7 +17,7 @@ void KochaEngine::GameObject::Update()
 {
 }
 
-void KochaEngine::GameObject::ObjDraw(Camera* camera, LightManager* lightManager)
+void KochaEngine::GameObject::ObjDraw(Camera* arg_camera, LightManager* arg_lightManager)
 {
 }
 
@@ -29,7 +29,7 @@ void KochaEngine::GameObject::Hit()
 {
 }
 
-void KochaEngine::GameObject::HitBlock(_Square arg_square)
+void KochaEngine::GameObject::HitBlock(_Box arg_box)
 {
 }
 

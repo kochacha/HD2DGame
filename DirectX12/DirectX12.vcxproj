@@ -168,6 +168,7 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="CollisionBlock.cpp" />
     <ClCompile Include="CSVReader.cpp" />
     <ClCompile Include="CustomGui.cpp" />
     <ClCompile Include="Dx12_Blob.cpp" />
@@ -182,6 +183,7 @@
     <ClCompile Include="FBXLoader.cpp" />
     <ClCompile Include="FBXModel.cpp" />
     <ClCompile Include="FBXObject.cpp" />
+    <ClCompile Include="FieldAlphaObject.cpp" />
     <ClCompile Include="FieldObject.cpp" />
     <ClCompile Include="Figure2D.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -452,6 +454,7 @@
     <ClInclude Include="Block.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="CollisionBlock.h" />
     <ClInclude Include="CSVReader.h" />
     <ClInclude Include="CustomGui.h" />
     <ClInclude Include="DirectionalLight.h" />
@@ -467,6 +470,7 @@
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="FBXModel.h" />
     <ClInclude Include="FBXObject.h" />
+    <ClInclude Include="FieldAlphaObject.h" />
     <ClInclude Include="FieldObject.h" />
     <ClInclude Include="Figure2D.h" />
     <ClInclude Include="GameObject.h" />

@@ -40,18 +40,19 @@ void KochaEngine::GamePlay::Initialize()
 	camera->Initialize(1280, 720, 90, 100, { 0,1,0 }, { 0,0,0 }, { 0,1,0 });
 	lightManager = LightManager::Create();
 	lightManager->SetDirectionalLightColor(0, Vector3(1, 1, 1));
-	lightManager->SetDirectionalLightDirection(0, Vector3(0, 1, -1));
+	lightManager->SetDirectionalLightDirection(0, Vector3(1, 1, -1));
 	lightManager->SetDirectionalLightIsActive(0, true);
 	lightManager->SetLightCamera(camera);
 
 	map->CreateMap(0);
-	gManager->AddObject(new Player(camera, Vector3(0, 5, 0)));
 
 	floor->SetPosition(Vector3(0, 0, 0));
-	floor->SetTexture("Resources/stone.png");
+	floor->SetTexture("Resources/tiling_grass1.png");
 
 	skyObj->SetScale(Vector3(8, 8, 8));
 	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
+
+
 
 	frameCount = 0;
 	seconds = 0;

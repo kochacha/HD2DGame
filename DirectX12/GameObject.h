@@ -14,6 +14,7 @@ namespace KochaEngine
 	{
 		PLAYER,
 		BLOCK,
+		COLLISION_BLOCK,
 	};
 
 	class GameObject
@@ -33,9 +34,12 @@ namespace KochaEngine
 		Vector3 prePosition = { 0,0,0 };
 		Vector3 velocity = { 0,0,0 };
 
-		_Square square;
-		Vector3 maxPos = { 0,0,0 };
-		Vector3 minPos = { 0,0,0 };
+		_Sphere sphere;
+		_Box box;
+		CollisionFace faceX;
+		CollisionFace faceZ;
+		XMFLOAT3 maxPos = { 0,0,0 };
+		XMFLOAT3 minPos = { 0,0,0 };
 
 		bool hitFlag;
 		int hitCount;
@@ -47,11 +51,11 @@ namespace KochaEngine
 		virtual ~GameObject();
 		virtual void Initialize();
 		virtual void Update();
-		virtual void ObjDraw(Camera* camera, LightManager* lightManager);
+		virtual void ObjDraw(Camera* arg_camera, LightManager* arg_lightManager);
 		virtual void SpriteDraw();
 
 		virtual void Hit();
-		virtual void HitBlock(_Square arg_square);
+		virtual void HitBlock(_Box arg_box);
 		virtual void Dead();
 		virtual GameObjectType GetType();
 		virtual float GetSpeed();
@@ -65,7 +69,10 @@ namespace KochaEngine
 
 		Vector3 GetPosition() { return position; }
 		Vector3 GetVelocity() { return velocity; }
-		_Square GetSquare() { return square; }
+		_Sphere GetSphere() { return sphere; }
+		_Box GetBox() { return box; }
+		void SetFaceX(CollisionFace arg_faceX) { this->faceX = arg_faceX; }
+		void SetFaceZ(CollisionFace arg_faceZ) { this->faceZ = arg_faceZ; }
 		void SetPosition(const Vector3& arg_position) { this->position = arg_position; }
 		void SetMaxPos(const Vector3& arg_position) { this->maxPos = arg_position; }
 		void SetMinPos(const Vector3& arg_position) { this->minPos = arg_position; }

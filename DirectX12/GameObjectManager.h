@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Camera.h"
+#include "Player.h"
 #include <vector>
 
 namespace KochaEngine
@@ -24,9 +25,10 @@ namespace KochaEngine
 		void AlphaObjDraw(Camera* camera, LightManager* arg_lightManager);
 		void ObjDraw(Camera* camera, LightManager* arg_lightManager);
 		void SpriteDraw();
-		void CheckBlock(GameObject* obj, GameObjectType otherType);
-		bool CheckBombAlive();
+		void CheckBlock(GameObject* obj, const GameObjectType& otherType);
 		int GetEnemyCount();
+
+		Player* GetPlayer();
 
 		void Remove();
 		void RemoveAll();

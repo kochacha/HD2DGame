@@ -230,17 +230,25 @@ void KochaEngine::Application::Load()
 {
 	//Textureのロード
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/white.png");
+	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/player0.png");
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/green.png");
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/PIEN.png");
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/kaku4.png");
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/number.png");
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/stone.png");
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_grass.png");
+	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_grass1.png");
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_rock1.png");
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_rock2.png");
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_water1.png");
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_water2.png");
 	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/water_ball1.png");
+	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/rock1.png");
+	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/rock2.png");
+	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/rock3.png");
+	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tree1.png");
+	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tree2.png");
+	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/grass1.png");
 
 	//.objのロード
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "LowTree");
@@ -502,7 +510,7 @@ bool KochaEngine::Application::Initialize()
 	/*lightManager->SetPointLightColor(0, pointLightColor);
 	lightManager->SetPointLightAtten(0, pointLightAtten);*/
 
-	vignetteScale = 0.25f;
+	vignetteScale = 0.2f;
 	gBoyPixelSize = 4.0f;
 	mosaicSize = 4.0f;
 	sepiaScale = 0.2f;

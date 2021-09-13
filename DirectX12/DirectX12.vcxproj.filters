@@ -240,6 +240,12 @@
     <ClCompile Include="FieldObject.cpp">
       <Filter>Source\Object\GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="CollisionBlock.cpp">
+      <Filter>Source\Object\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="FieldAlphaObject.cpp">
+      <Filter>Source\Object\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShaderHeader.hlsli">
@@ -508,6 +514,12 @@
       <Filter>Header\Object\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="FieldObject.h">
+      <Filter>Header\Object\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionBlock.h">
+      <Filter>Header\Object\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="FieldAlphaObject.h">
       <Filter>Header\Object\GameObject</Filter>
     </ClInclude>
   </ItemGroup>

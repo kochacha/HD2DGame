@@ -27,9 +27,13 @@ float4 main(Output input) : SV_TARGET
     {
         return GaussianBlur(tex0, smp, input, 1.5f);
     }
+    else if (dep > 0.35f)
+    {
+        return GaussianBlur(tex0, smp, input, 2.5f);
+    }
     else
     {
-        return GaussianBlur(tex0, smp, input, 3.0f);
+        return GaussianBlur(tex0, smp, input, 3.5f);
     }
 
    /* if (dep > 0.8f)
