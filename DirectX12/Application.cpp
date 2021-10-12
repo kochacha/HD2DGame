@@ -260,6 +260,7 @@ void KochaEngine::Application::Load()
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "sphere");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "Ground1");
 	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "skydome");
+	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "saku");
 	//Dx12_Object::LoadObject(dx12->GetDevice().Get(), "tree");
 
 }

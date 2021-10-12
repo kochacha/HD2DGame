@@ -5,6 +5,8 @@
 namespace KochaEngine
 {
 	class Camera;
+	class LightManager;
+
 	class ParticleManager
 	{
 	private:
@@ -17,7 +19,7 @@ namespace KochaEngine
 		void AddParticle(Particle* particle);
 
 		void Update();
-		void Draw(Camera* camera);
+		void Draw(Camera* camera, LightManager* arg_lightManager);
 
 		void RemoveAll();
 		void Remove();

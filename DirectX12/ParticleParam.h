@@ -15,6 +15,7 @@ namespace KochaEngine
 		Vector3 moveRotate;
 		Vector4 color;
 		Vector4 moveColor;
+		std::string textureName;
 		int life;
 	};
 }

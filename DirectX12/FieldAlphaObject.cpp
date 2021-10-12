@@ -41,7 +41,7 @@ void KochaEngine::FieldAlphaObject::Initialize()
 		break;
 	case KochaEngine::GRASS1:
 		obj->SetTexture("Resources/grass1.png");
-		obj->SetScale(Vector3(8, 8, 8));
+		obj->SetScale(Vector3(6, 6, 6));
 		break;
 	default:
 		break;

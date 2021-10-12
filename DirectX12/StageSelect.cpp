@@ -62,7 +62,7 @@ void KochaEngine::StageSelect::SpriteDraw()
 void KochaEngine::StageSelect::ObjDraw()
 {	
 	//gManager->ObjDraw(camera);
-	pManager->Draw(camera);
+	//pManager->Draw(camera);
 }
 
 void KochaEngine::StageSelect::DrawGUI()

@@ -5,6 +5,8 @@
 namespace KochaEngine
 {
 	class Camera;
+	class LightManager;
+
 	class Particle
 	{
 	private:
@@ -17,7 +19,7 @@ namespace KochaEngine
 		~Particle();
 
 		void Update();
-		void Draw(Camera* camera);
+		void Draw(Camera* camera, LightManager* arg_lightManager);
 
 		bool IsDead() { return isDead; }
 	};

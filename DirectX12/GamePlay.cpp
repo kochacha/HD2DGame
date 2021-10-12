@@ -14,6 +14,7 @@ KochaEngine::GamePlay::GamePlay()
 	emitter = new ParticleEmitter(pManager);
 	map = new Map(gManager, camera);
 	lightManager = new LightManager();
+	lightManager = LightManager::Create();
 
 	floor = new Object("graund");
 	skyObj = new Object("skydome");
@@ -21,6 +22,7 @@ KochaEngine::GamePlay::GamePlay()
 
 KochaEngine::GamePlay::~GamePlay()
 {
+	gManager->RemoveAll();
 	delete camera;
 	delete lightManager;
 	delete gManager;
@@ -38,7 +40,6 @@ void KochaEngine::GamePlay::Initialize()
 
 	gManager->RemoveAll();
 	camera->Initialize(1280, 720, 90, 100, { 0,1,0 }, { 0,0,0 }, { 0,1,0 });
-	lightManager = LightManager::Create();
 	lightManager->SetDirectionalLightColor(0, Vector3(1, 1, 1));
 	lightManager->SetDirectionalLightDirection(0, Vector3(1, 1, -1));
 	lightManager->SetDirectionalLightIsActive(0, true);
@@ -47,12 +48,10 @@ void KochaEngine::GamePlay::Initialize()
 	map->CreateMap(0);
 
 	floor->SetPosition(Vector3(0, 0, 0));
-	floor->SetTexture("Resources/tiling_grass1.png");
+	floor->SetTexture("Resources/stone.png");
 
 	skyObj->SetScale(Vector3(8, 8, 8));
 	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
-
-
 
 	frameCount = 0;
 	seconds = 0;
@@ -70,7 +69,7 @@ void KochaEngine::GamePlay::Update()
 	camera->Update();
 	lightManager->Update();
 
-	skyObj->MoveRotate(Vector3(0, 0.02f, 0));
+	skyObj->MoveRotate(Vector3(0, 0.005f, 0));
 	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
 }
 
@@ -83,8 +82,8 @@ void KochaEngine::GamePlay::ObjDraw()
 {
 	gManager->ObjDraw(camera, lightManager);
 	floor->Draw(camera, lightManager);
-	//skyObj->Draw(camera, lightManager);
-	pManager->Draw(camera);
+	skyObj->Draw(camera, lightManager);
+	pManager->Draw(camera, lightManager);
 }
 
 void KochaEngine::GamePlay::AlphaObjDraw()
@@ -134,4 +133,24 @@ void KochaEngine::GamePlay::Fade()
 		}
 	}
 	
+}
+
+void KochaEngine::GamePlay::BattleUpdate()
+{
+
+}
+
+void KochaEngine::GamePlay::FieldUpdate()
+{
+
+}
+
+void KochaEngine::GamePlay::BattleDraw()
+{
+
+}
+
+void KochaEngine::GamePlay::FieldDraw()
+{
+
 }

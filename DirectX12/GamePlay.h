@@ -32,6 +32,11 @@ namespace KochaEngine
 		int frameCount;
 		int seconds;
 		int endCount;
+
+		void BattleUpdate();
+		void FieldUpdate();
+		void BattleDraw();
+		void FieldDraw();
 	public:
 		GamePlay();
 		~GamePlay() override;

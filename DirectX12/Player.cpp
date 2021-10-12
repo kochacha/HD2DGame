@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "GameObjectManager.h"
+#include "Util.h"
 
 KochaEngine::Player::Player(Camera* arg_camera, GameObjectManager* arg_gManager, const Vector3& arg_position)
 {
@@ -23,9 +24,11 @@ KochaEngine::Player::~Player()
 void KochaEngine::Player::Initialize()
 {
 	isAlpha = true;
+	isEncount = false;
 
 	velocity.Zero();
 	speed = 0.5f;
+	encountCount = Util::GetIntRand(10, 120) * 10;
 
 	sphere.radius = 4.0f;
 	sphere.position = this->position;
@@ -98,31 +101,43 @@ KochaEngine::GameObjectType KochaEngine::Player::GetType()
 void KochaEngine::Player::InputMove()
 {
 	velocity.Zero();
-	if (Input::CheckKey(DIK_LSHIFT))
-	{
-		speed = 0.8f;
-	}
-	else
-	{
-		speed = 0.5f;
-	}
+	speed = 0.5f;
+	bool isDash = false;
+
 	if (Input::CheckKey(DIK_W))
 	{
 		velocity.z = 1;
+		isDash = true;
+		encountCount--;
 	}
-	if (Input::CheckKey(DIK_S))
+	else if (Input::CheckKey(DIK_S))
 	{
 		velocity.z = -1;
+		isDash = true;
+		encountCount--;
 	}
-	if (Input::CheckKey(DIK_A))
+	else if (Input::CheckKey(DIK_A))
 	{
 		velocity.x = -1;
+		isDash = true;
+		encountCount--;
 	}
-	if (Input::CheckKey(DIK_D))
+	else if (Input::CheckKey(DIK_D))
 	{
 		velocity.x = 1;
+		isDash = true;
+		encountCount--;
 	}
 	velocity.normalize();
+
+	if (isDash)
+	{
+		if (Input::CheckKey(DIK_LSHIFT))
+		{
+			speed = 0.8f;
+			encountCount--;
+		}
+	}
 }
 
 void KochaEngine::Player::MoveX()
@@ -147,4 +162,12 @@ void KochaEngine::Player::CameraTracking()
 	Vector3 cameraTargetPos = Vector3(position.x, position.y, position.z + 20);
 	camera->SetEye(cameraPos);
 	camera->SetTarget(cameraTargetPos);
+}
+
+void KochaEngine::Player::EncountEnemy()
+{
+	if (encountCount <= 0)
+	{
+		isEncount = true;
+	}
 }

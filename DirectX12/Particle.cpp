@@ -1,12 +1,15 @@
 #include "Particle.h"
 #include "Camera.h"
+#include "LightManager.h"
 
 KochaEngine::Particle::Particle(ParticleParam param) : param(param)
 {
-	obj = new Object("Particle");
+	obj = new Object("plane");
+	obj->SetBillboardType(Object::BILLBOARD);
 	obj->SetPosition(param.position);
 	obj->SetScale(param.scale);
 	obj->SetRotate(param.rotate);
+	obj->SetTexture(param.textureName);
 	obj->SetColor(param.color);
 	isDead = false;
 }
@@ -42,8 +45,9 @@ void KochaEngine::Particle::Update()
 	obj->MoveColor(param.moveColor);
 }
 
-void KochaEngine::Particle::Draw(Camera* camera)
+void KochaEngine::Particle::Draw(Camera* camera, LightManager* arg_lightManager)
 {
 	if (camera == nullptr) return;
-	//obj->Draw(camera);
+	if (arg_lightManager == nullptr) return;
+	obj->Draw(camera, arg_lightManager);
 }

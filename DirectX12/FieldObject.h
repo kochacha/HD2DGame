@@ -6,6 +6,10 @@ namespace KochaEngine
 	enum FieldObjType
 	{
 		TREE,
+		SAKU_WOODEN_SIDEWAYS_UP,
+		SAKU_WOODEN_SIDEWAYS_DOWN,
+		SAKU_WOODEN_VERTICAL_LEFT,
+		SAKU_WOODEN_VERTICAL_RIGHT,
 	};
 
 	class FieldObject : public GameObject

@@ -9,6 +9,10 @@ namespace KochaEngine
 	private:
 		GameObjectManager* gManager;
 
+		bool isEncount;
+
+		int encountCount;
+
 		float speed;
 
 		void InputMove();
@@ -16,6 +20,7 @@ namespace KochaEngine
 		void MoveZ();
 		void SetObjParam();
 		void CameraTracking();
+		void EncountEnemy();
 
 	public:
 		Player(Camera* arg_camera, GameObjectManager* arg_gManager, const Vector3& arg_position);
@@ -27,5 +32,7 @@ namespace KochaEngine
 		void HitBlock(_Box box)override;
 		void ObjDraw(Camera* arg_camera, LightManager* arg_lightManager) override;
 		GameObjectType GetType();
+
+		bool IsEncount() { return isEncount; }
 	};
 }
