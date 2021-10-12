@@ -1,9 +1,9 @@
-#include "GamePlay.h"
-#include "Input.h"
-#include "Util.h"
-#include "Map.h"
-#include "LightManager.h"
-#include "Player.h"
+#include "../Header/GamePlay.h"
+#include "../Header/Input.h"
+#include "../Header/Util.h"
+#include "../Header/Map.h"
+#include "../Header/LightManager.h"
+#include "../Header/Player.h"
 
 KochaEngine::GamePlay::GamePlay()
 {
@@ -37,7 +37,6 @@ void KochaEngine::GamePlay::Initialize()
 {
 	isEnd = false;
 	isGameOver = false;
-	isBattle = false;
 
 	gManager->RemoveAll();
 	camera->Initialize(1280, 720, 90, 100, { 0,1,0 }, { 0,0,0 }, { 0,1,0 });
@@ -65,72 +64,36 @@ void KochaEngine::GamePlay::Initialize()
 void KochaEngine::GamePlay::Update()
 {
 	Fade();
-	auto player = gManager->GetPlayer();
-	if (player == nullptr) return;
-	if (player->IsEncount())
-	{
-		isBattle = true;
-	}
-	if (isBattle)
-	{
-		BattleUpdate();
-	}
-	else
-	{
-		FieldUpdate();
-	}
+	gManager->Update();
+	pManager->Update();
+	camera->Update();
+	lightManager->Update();
+
+	skyObj->MoveRotate(Vector3(0, 0.005f, 0));
+	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
 }
 
 void KochaEngine::GamePlay::SpriteDraw()
 {
-	if (isBattle)
-	{
-		BattleSpriteDraw();
-	}
-	else
-	{
-		FieldSpriteDraw();
-	}
+	gManager->SpriteDraw();
 }
 
 void KochaEngine::GamePlay::ObjDraw()
 {
-	if (isBattle)
-	{
-		BattleObjDraw();
-	}
-	else
-	{
-		FieldObjDraw();
-	}
-
-
+	gManager->ObjDraw(camera, lightManager);
+	floor->Draw(camera, lightManager);
+	skyObj->Draw(camera, lightManager);
+	pManager->Draw(camera, lightManager);
 }
 
 void KochaEngine::GamePlay::AlphaObjDraw()
 {
-	if (isBattle)
-	{
-		BattleAlphaObjDraw();
-	}
-	else
-	{
-		FieldAlphaObjDraw();
-	}
-
-
+	gManager->AlphaObjDraw(camera, lightManager);
 }
 
 void KochaEngine::GamePlay::DrawGUI()
 {
-	if (isBattle)
-	{
-		ImGui::Text("GamePlay_Battle");
-	}
-	else
-	{
-		ImGui::Text("GamePlay_Field");
-	}
+	ImGui::Text("GamePlay");
 }
 
 void KochaEngine::GamePlay::Load()
@@ -179,43 +142,15 @@ void KochaEngine::GamePlay::BattleUpdate()
 
 void KochaEngine::GamePlay::FieldUpdate()
 {
-	gManager->Update();
-	pManager->Update();
-	camera->Update();
-	lightManager->Update();
 
-	skyObj->MoveRotate(Vector3(0, 0.005f, 0));
-	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
 }
 
-void KochaEngine::GamePlay::BattleObjDraw()
+void KochaEngine::GamePlay::BattleDraw()
 {
 
 }
 
-void KochaEngine::GamePlay::BattleAlphaObjDraw()
+void KochaEngine::GamePlay::FieldDraw()
 {
 
-}
-
-void KochaEngine::GamePlay::BattleSpriteDraw()
-{
-}
-
-void KochaEngine::GamePlay::FieldObjDraw()
-{
-	gManager->ObjDraw(camera, lightManager);
-	floor->Draw(camera, lightManager);
-	skyObj->Draw(camera, lightManager);
-	pManager->Draw(camera, lightManager);
-}
-
-void KochaEngine::GamePlay::FieldAlphaObjDraw()
-{
-	gManager->AlphaObjDraw(camera, lightManager);
-}
-
-void KochaEngine::GamePlay::FieldSpriteDraw()
-{
-	gManager->SpriteDraw();
 }

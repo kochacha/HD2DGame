@@ -12,9 +12,9 @@ namespace KochaEngine
 {
 	enum GameObjectType
 	{
+		PLAYER,
 		BLOCK,
 		COLLISION_BLOCK,
-		PLAYER,
 	};
 
 	class GameObject

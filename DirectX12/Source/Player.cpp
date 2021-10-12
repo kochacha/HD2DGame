@@ -1,6 +1,6 @@
-#include "Player.h"
-#include "GameObjectManager.h"
-#include "Util.h"
+#include "../Header/Player.h"
+#include "../Header/GameObjectManager.h"
+#include "../Header/Util.h"
 
 KochaEngine::Player::Player(Camera* arg_camera, GameObjectManager* arg_gManager, const Vector3& arg_position)
 {
@@ -46,7 +46,6 @@ void KochaEngine::Player::Update()
 	InputMove();
 	MoveX();
 	MoveZ();
-	EncountEnemy();
 
 	SetObjParam();
 	CameraTracking();
@@ -170,6 +169,5 @@ void KochaEngine::Player::EncountEnemy()
 	if (encountCount <= 0)
 	{
 		isEncount = true;
-		encountCount = 0;
 	}
 }

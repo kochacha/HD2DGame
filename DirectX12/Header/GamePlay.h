@@ -27,7 +27,6 @@ namespace KochaEngine
 		Object* skyObj;
 
 		bool fadeFlag;
-		bool isBattle;
 		float fadeAlpha;
 
 		int frameCount;
@@ -36,12 +35,8 @@ namespace KochaEngine
 
 		void BattleUpdate();
 		void FieldUpdate();
-		void BattleObjDraw();
-		void BattleAlphaObjDraw();
-		void BattleSpriteDraw();
-		void FieldObjDraw();
-		void FieldAlphaObjDraw();
-		void FieldSpriteDraw();
+		void BattleDraw();
+		void FieldDraw();
 	public:
 		GamePlay();
 		~GamePlay() override;

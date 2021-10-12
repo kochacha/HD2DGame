@@ -10,46 +10,28 @@
 
 namespace KochaEngine
 {
-	class Map;
-	class LightManager;
-
-	class GamePlay : public Scene
+	class Battle : public Scene
 	{
 	private:
-		Map* map;
 		Camera* camera;
 		GameObjectManager* gManager;
 		ParticleManager* pManager;
 		ParticleEmitter* emitter;
-		LightManager* lightManager;
-
-		Object* floor;
-		Object* skyObj;
 
 		bool fadeFlag;
-		bool isBattle;
 		float fadeAlpha;
 
 		int frameCount;
 		int seconds;
 		int endCount;
-
-		void BattleUpdate();
-		void FieldUpdate();
-		void BattleObjDraw();
-		void BattleAlphaObjDraw();
-		void BattleSpriteDraw();
-		void FieldObjDraw();
-		void FieldAlphaObjDraw();
-		void FieldSpriteDraw();
 	public:
-		GamePlay();
-		~GamePlay() override;
+
+		Battle();
+		~Battle() override;
 		void Initialize() override;
 		void Update() override;
 		void SpriteDraw() override;
 		void ObjDraw() override;
-		void AlphaObjDraw() override;
 		void DrawGUI() override;
 		void Load() override;
 		Scenes Next() override;
