@@ -10,8 +10,9 @@ namespace KochaEngine
 	class Title : public Scene
 	{
 	private:
-		Camera* camera;
 		Object* obj;
+		Texture2D* backTexture;
+		Texture2D* fadeTexture;
 
 		bool bgmFlag;
 		bool fadeFlag;
@@ -20,7 +21,7 @@ namespace KochaEngine
 
 		int count;
 
-		void Fade();
+		void FadeUpdate();
 
 	public:
 		Title();

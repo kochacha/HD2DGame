@@ -4,6 +4,7 @@
 #include "Dx12_RootSignature.h"
 
 ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::spritePipelineState;
+ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::spriteAlphaPipelineState;
 ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::objPipelineState;
 ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::alphaObjPipelineState;
 ComPtr<ID3D12PipelineState> KochaEngine::Dx12_Pipeline::pmdPipelineState;
@@ -77,6 +78,7 @@ void KochaEngine::Dx12_Pipeline::CreateSpriteGraphicsPipelineState()
 	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
 
 	// ブレンドステートの設定
+	gpipeline.BlendState.AlphaToCoverageEnable = true;
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
 
 	// 深度バッファのフォーマット
@@ -95,7 +97,11 @@ void KochaEngine::Dx12_Pipeline::CreateSpriteGraphicsPipelineState()
 
 	gpipeline.pRootSignature = Dx12_RootSignature::GetSpriteRootSignature().Get();
 
-	auto result = dx12.GetDevice().Get()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&spritePipelineState));
+	auto result = dx12.GetDevice().Get()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&spriteAlphaPipelineState));
+	if (FAILED(result)) { assert(0); }
+
+	gpipeline.BlendState.AlphaToCoverageEnable = false;
+	result = dx12.GetDevice().Get()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&spritePipelineState));
 	if (FAILED(result)) { assert(0); }
 }
 

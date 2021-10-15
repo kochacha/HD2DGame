@@ -19,7 +19,7 @@ KochaEngine::GamePlay::GamePlay()
 	floor = new Object("graund");
 	skyObj = new Object("skydome");
 
-	fadeTexture = new Texture2D("Resources/Texture/black.png", Vector2(0, 0), Vector2(1280, 720), 0);
+	fadeTexture = new Texture2D("Resources/Texture/white.png", Vector2(0, 0), Vector2(1280, 720), 0);
 }
 
 KochaEngine::GamePlay::~GamePlay()
@@ -57,6 +57,8 @@ void KochaEngine::GamePlay::Initialize()
 
 	skyObj->SetScale(Vector3(8, 8, 8));
 	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
+
+	fadeTexture->SetColor(Vector4(0, 0, 0.12f, 1));
 
 	frameCount = 0;
 	seconds = 0;
@@ -187,7 +189,7 @@ void KochaEngine::GamePlay::FadeUpdate()
 			fadeFlag = false;
 		}
 	}
-	fadeTexture->SetColor(Vector4(0, 0, 0, fadeAlpha));
+	fadeTexture->SetColor(Vector4(0, 0, 0.12f, fadeAlpha));
 }
 
 void KochaEngine::GamePlay::BattleUpdate()

@@ -45,7 +45,7 @@ namespace KochaEngine
 		Dx12_Pipeline* pipeline;
 		SceneManager* sceneManager;
 
-		Texture2D* texture[1];
+		Texture2D* texture[2];
 
 		FBXModel* fbxModel = nullptr;
 		FBXObject* fbxObject[FBX_COUNT];
@@ -58,6 +58,10 @@ namespace KochaEngine
 
 		ShaderType peraEffectType;
 		bool isDof;
+		bool isLogoFlag;
+		bool isAlphaChange;
+		float logoAlpha;
+		int alphaCount;
 
 		float vignetteScale;
 		float gBoyPixelSize;
@@ -81,6 +85,7 @@ namespace KochaEngine
 		void InitFPS();
 		void DrawGUI();
 		void MeraMera();
+		void EngineLogo();
 		bool UpdateFPS();
 
 		const double MIN_FRAME_TIME = 1.000000f / 60.000000f;

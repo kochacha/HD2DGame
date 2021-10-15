@@ -95,6 +95,7 @@ namespace KochaEngine
 		void SetSize(Vector2 size);
 
 		static void StaticInit(ID3D12Device* device, SIZE winSize);
+		static void BeginDrawAlphaSort(ID3D12GraphicsCommandList* cmdList);
 		static void BeginDraw(ID3D12GraphicsCommandList* cmdList);
 		static void EndDraw();
 	};

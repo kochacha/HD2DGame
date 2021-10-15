@@ -34,7 +34,7 @@
 
 using namespace DirectX;
 
-float KochaEngine::Application::clearColor[4] = { 0.1568f,0.1176f,0.1960f,1 };
+float KochaEngine::Application::clearColor[4] = { 0.0f,0.0f,0.12f,1 };
 
 KochaEngine::Application::Application()
 {
@@ -70,39 +70,6 @@ void KochaEngine::Application::Run()
 		////↓毎フレーム処理↓//
 		Input::Update();
 
-		//if (Input::CheckKey(DIK_A))
-		//{
-		//	camera->MoveEye(Vector3(-1, 0, 0));
-		//}
-		//if (Input::CheckKey(DIK_D))
-		//{
-		//	camera->MoveEye(Vector3(1, 0, 0));
-		//}
-		//if (Input::CheckKey(DIK_W))
-		//{
-		//	camera->MoveEye(Vector3(0, 1, 0));
-		//}
-		//if (Input::CheckKey(DIK_S))
-		//{
-		//	camera->MoveEye(Vector3(0, -1, 0));
-		//}
-		//if (Input::CheckKey(DIK_UP))
-		//{
-		//	camera->MoveEye(Vector3(0, 0, 1));
-		//}
-		//if (Input::CheckKey(DIK_DOWN))
-		//{
-		//	camera->MoveEye(Vector3(0, 0, -1));
-		//}
-		//if (Input::CheckKey(DIK_Q))
-		//{
-		//	camera->MoveTarget(Vector3(-1, 0, 0));
-		//}
-		//if (Input::CheckKey(DIK_E))
-		//{
-		//	camera->MoveTarget(Vector3(1, 0, 0));
-		//}
-
 		if (Input::TriggerKey(DIK_1))
 		{
 			effectManager->Play("light.efk", Vector3(0, 0, 0));
@@ -112,7 +79,15 @@ void KochaEngine::Application::Run()
 			effectManager->Play("hit.efk", Vector3(0, 0, 0));
 		}
 
-		sceneManager->Update();
+		if (isLogoFlag)
+		{
+			sceneManager->Update();
+		}
+		else
+		{
+			EngineLogo();
+			texture[1]->SetColor(Vector4(1, 1, 1, logoAlpha));
+		}
 		/*camera->Update();
 		auto target = camera->GetTarget();
 		auto eye = camera->GetEye();
@@ -211,13 +186,24 @@ void KochaEngine::Application::Run()
 			Texture2D::BeginDraw(dx12->GetCmdList().Get());
 			//↓SpriteDraw↓//
 
-			sceneManager->SpriteDraw();
-			texture[0]->Draw();
+			//Texture2D::BeginDrawAlphaSort(dx12->GetCmdList().Get());
+
+			if (isLogoFlag)
+			{
+				sceneManager->SpriteDraw();
+			}
+			else
+			{
+				texture[0]->Draw();
+				texture[1]->Draw();
+			}
 
 			//↑SpriteDraw↑//
 			Texture2D::EndDraw();
-
+			
+#ifdef _DEBUG
 			DrawGUI();
+#endif
 
 			dx12->EndDraw();
 		}
@@ -229,8 +215,9 @@ void KochaEngine::Application::Run()
 void KochaEngine::Application::Load()
 {
 	//Textureのロード
-	Dx12_Texture::LoadTexture("Resources/Texture/white.png");
 	Dx12_Texture::LoadTexture("Resources/Texture/black.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/white.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/EngineLogo.png");
 	Dx12_Texture::LoadTexture("Resources/Texture/player0.png");
 	Dx12_Texture::LoadTexture("Resources/Texture/green.png");
 	Dx12_Texture::LoadTexture("Resources/Texture/PIEN.png");
@@ -417,6 +404,36 @@ void KochaEngine::Application::MeraMera()
 	}
 }
 
+void KochaEngine::Application::EngineLogo()
+{
+	if (!isAlphaChange)
+	{
+		if (logoAlpha < 1.00f)
+		{
+			logoAlpha += 0.02f;
+		}
+		else
+		{
+			alphaCount++;
+		}
+		if (alphaCount > 150)
+		{
+			isAlphaChange = true;
+		}
+	}
+	else
+	{
+		if (logoAlpha > -0.80f)
+		{
+			logoAlpha -= 0.02f;
+		}
+		else
+		{
+			isLogoFlag = true;
+		}
+	}
+}
+
 bool KochaEngine::Application::UpdateFPS()
 {
 	// 今の時間を取得
@@ -495,7 +512,9 @@ bool KochaEngine::Application::Initialize()
 	pointLightAtten = Vector3(1.000f, 0.050f, 0.001f);
 	isActiveDirLight = true;
 
-	texture[0] = new Texture2D("Resources/PIEN.png", Vector2(0, 0), Vector2(100, 100), 0);
+	texture[0] = new Texture2D("Resources/Texture/white.png", Vector2(0, 0), Vector2(1280, 720), 0);
+	texture[0]->SetColor(Vector4(0, 0, 0.12f, 1));
+	texture[1] = new Texture2D("Resources/Texture/EngineLogo.png", Vector2(0, 0), Vector2(1280, 720), 0);
 
 	peraBloom = new PostEffect();
 	peraEffect = new PostEffect();
@@ -522,7 +541,15 @@ bool KochaEngine::Application::Initialize()
 	blurScale = 2.0f;
 	cAbeScale = 0.4f;
 
+	peraEffect->SetValue(vignetteScale);
 
+	logoAlpha = 0.0f;
+	alphaCount = 0;
+	isLogoFlag = false;
+	isAlphaChange = false;
+#ifdef _DEBUG
+	isLogoFlag = true;
+#endif
 
 	shaderColor = Vector4(1, 1, 1, 1);
 
@@ -534,27 +561,20 @@ void KochaEngine::Application::Terminate()
 	sceneManager->Terminate();
 	delete sceneManager;
 	delete texture[0];
+	delete texture[1];
 	delete blob;
 	delete descriptor;
 	delete rootSignature;
 	delete pipeline;
 	delete dx12;
 	delete window;
-	//delete camera;
-	//delete lightCamera;
 	delete fbxModel;
-	//for (int i = 0; i < FBX_COUNT; i++)
-	//{
-	//	delete fbxObject[i];
-	//}
 	delete peraBloom;
 	delete peraEffect;
 	delete peraDof;
 	delete effectManager;
-	//delete lightManager;
 
 	Input::Terminate();
-	//FBXLoader::GetInstance()->Finalize();
 }
 
 KochaEngine::Application& KochaEngine::Application::Instance()

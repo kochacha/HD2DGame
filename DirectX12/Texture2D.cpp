@@ -44,6 +44,16 @@ void KochaEngine::Texture2D::StaticInit(ID3D12Device* device, SIZE winSize)
 	descriptorHandleIncrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
+void KochaEngine::Texture2D::BeginDrawAlphaSort(ID3D12GraphicsCommandList* cmdList)
+{
+	if (cmdList == nullptr) return;
+	KochaEngine::Texture2D::cmdList = cmdList;
+
+	cmdList->SetPipelineState(Dx12_Pipeline::spriteAlphaPipelineState.Get());
+	cmdList->SetGraphicsRootSignature(Dx12_RootSignature::GetSpriteRootSignature().Get());
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+}
+
 void KochaEngine::Texture2D::BeginDraw(ID3D12GraphicsCommandList* cmdList)
 {
 	if (cmdList == nullptr) return;
