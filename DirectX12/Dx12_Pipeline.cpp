@@ -37,7 +37,6 @@ KochaEngine::Dx12_Pipeline::~Dx12_Pipeline()
 void KochaEngine::Dx12_Pipeline::CreateSpriteGraphicsPipelineState()
 {
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline = {};
-	D3D12_RENDER_TARGET_BLEND_DESC blendDesc = {};
 	D3D12_INPUT_ELEMENT_DESC spriteInputLayout[] =
 	{
 		{
@@ -103,7 +102,6 @@ void KochaEngine::Dx12_Pipeline::CreateSpriteGraphicsPipelineState()
 void KochaEngine::Dx12_Pipeline::CreateOBJGraphicsPipelineState()
 {
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline = {};
-	D3D12_RENDER_TARGET_BLEND_DESC blendDesc = {};
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
 	{ // xyç¿ïW
 		"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
@@ -190,7 +188,6 @@ void KochaEngine::Dx12_Pipeline::CreateOBJGraphicsPipelineState()
 void KochaEngine::Dx12_Pipeline::CreateAlphaOBJGraphicsPipelineState()
 {
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline = {};
-	D3D12_RENDER_TARGET_BLEND_DESC blendDesc = {};
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
 	{ // xyç¿ïW
 		"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
@@ -269,7 +266,6 @@ void KochaEngine::Dx12_Pipeline::CreateAlphaOBJGraphicsPipelineState()
 void KochaEngine::Dx12_Pipeline::CreatePMDGraphicsPipelineState()
 {
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline = {};
-	D3D12_RENDER_TARGET_BLEND_DESC blendDesc = {};
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
 	{ // xyç¿ïW
 		"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
@@ -439,7 +435,6 @@ void KochaEngine::Dx12_Pipeline::CreateFBXGraphicsPipelineState()
 void KochaEngine::Dx12_Pipeline::CreatePeraGraphicsPipelineState()
 {
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline = {};
-	D3D12_RENDER_TARGET_BLEND_DESC blendDesc = {};
 	D3D12_INPUT_ELEMENT_DESC spriteInputLayout[] =
 	{
 		{

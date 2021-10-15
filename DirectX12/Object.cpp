@@ -49,34 +49,34 @@ void KochaEngine::Object::StaticInit(ID3D12Device* device, SIZE winSize)
 	KochaEngine::Object::device = device;
 }
 
-void KochaEngine::Object::BeginDraw(ID3D12GraphicsCommandList* cmdList)
+void KochaEngine::Object::BeginDraw(ID3D12GraphicsCommandList* arg_cmdList)
 {
-	if (cmdList == nullptr) return;
-	KochaEngine::Object::cmdList = cmdList;
+	if (arg_cmdList == nullptr) return;
+	KochaEngine::Object::cmdList = arg_cmdList;
 
-	cmdList->SetPipelineState(Dx12_Pipeline::objPipelineState.Get());
-	cmdList->SetGraphicsRootSignature(Dx12_RootSignature::GetOBJRootSignature().Get());
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	arg_cmdList->SetPipelineState(Dx12_Pipeline::objPipelineState.Get());
+	arg_cmdList->SetGraphicsRootSignature(Dx12_RootSignature::GetOBJRootSignature().Get());
+	arg_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void KochaEngine::Object::BeginAlphaDraw(ID3D12GraphicsCommandList* cmdList)
+void KochaEngine::Object::BeginAlphaDraw(ID3D12GraphicsCommandList* arg_cmdList)
 {
-	if (cmdList == nullptr) return;
-	KochaEngine::Object::cmdList = cmdList;
+	if (arg_cmdList == nullptr) return;
+	KochaEngine::Object::cmdList = arg_cmdList;
 
-	cmdList->SetPipelineState(Dx12_Pipeline::alphaObjPipelineState.Get());
-	cmdList->SetGraphicsRootSignature(Dx12_RootSignature::GetOBJRootSignature().Get());
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	arg_cmdList->SetPipelineState(Dx12_Pipeline::alphaObjPipelineState.Get());
+	arg_cmdList->SetGraphicsRootSignature(Dx12_RootSignature::GetOBJRootSignature().Get());
+	arg_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void KochaEngine::Object::BeginDrawFromLight(ID3D12GraphicsCommandList* cmdList)
+void KochaEngine::Object::BeginDrawFromLight(ID3D12GraphicsCommandList* arg_cmdList)
 {
-	if (cmdList == nullptr) return;
-	KochaEngine::Object::cmdList = cmdList;
+	if (arg_cmdList == nullptr) return;
+	KochaEngine::Object::cmdList = arg_cmdList;
 
-	cmdList->SetPipelineState(Dx12_Pipeline::shadowPipelineState.Get());
-	cmdList->SetGraphicsRootSignature(Dx12_RootSignature::GetOBJRootSignature().Get());
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	arg_cmdList->SetPipelineState(Dx12_Pipeline::shadowPipelineState.Get());
+	arg_cmdList->SetGraphicsRootSignature(Dx12_RootSignature::GetOBJRootSignature().Get());
+	arg_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void KochaEngine::Object::EndDraw()

@@ -18,6 +18,8 @@ KochaEngine::GamePlay::GamePlay()
 
 	floor = new Object("graund");
 	skyObj = new Object("skydome");
+
+	fadeTexture = new Texture2D("Resources/Texture/black.png", Vector2(0, 0), Vector2(1280, 720), 0);
 }
 
 KochaEngine::GamePlay::~GamePlay()
@@ -31,6 +33,7 @@ KochaEngine::GamePlay::~GamePlay()
 	delete map;
 	delete floor;
 	delete skyObj;
+	delete fadeTexture;
 }
 
 void KochaEngine::GamePlay::Initialize()
@@ -38,6 +41,7 @@ void KochaEngine::GamePlay::Initialize()
 	isEnd = false;
 	isGameOver = false;
 	isBattle = false;
+	isBattleEnd = false;
 
 	gManager->RemoveAll();
 	camera->Initialize(1280, 720, 90, 100, { 0,1,0 }, { 0,0,0 }, { 0,1,0 });
@@ -49,7 +53,7 @@ void KochaEngine::GamePlay::Initialize()
 	map->CreateMap(0);
 
 	floor->SetPosition(Vector3(0, 0, 0));
-	floor->SetTexture("Resources/stone.png");
+	floor->SetTexture("Resources/Texture/stone.png");
 
 	skyObj->SetScale(Vector3(8, 8, 8));
 	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
@@ -57,20 +61,27 @@ void KochaEngine::GamePlay::Initialize()
 	frameCount = 0;
 	seconds = 0;
 	
-	fadeFlag = true;
-	fadeAlpha = 1;
+	fadeFlag = false;
+	fadeAlpha = 1.0f;
 	endCount = 180;
 }
 
 void KochaEngine::GamePlay::Update()
 {
-	Fade();
+	FadeUpdate();
 	auto player = gManager->GetPlayer();
 	if (player == nullptr) return;
-	if (player->IsEncount())
+	if (player->IsEncount() && !fadeFlag)
 	{
-		isBattle = true;
+		fadeFlag = true;
+		if (fadeAlpha >= 1.0f)
+		{
+			player->EncountReset();
+			isBattle = true;
+		}
 	}
+	player->SetIsBattle(isBattle);
+
 	if (isBattle)
 	{
 		BattleUpdate();
@@ -91,6 +102,8 @@ void KochaEngine::GamePlay::SpriteDraw()
 	{
 		FieldSpriteDraw();
 	}
+
+	fadeTexture->Draw();
 }
 
 void KochaEngine::GamePlay::ObjDraw()
@@ -153,39 +166,42 @@ void KochaEngine::GamePlay::CountTime()
 	}
 }
 
-void KochaEngine::GamePlay::Fade()
+void KochaEngine::GamePlay::FadeUpdate()
 {
-	if (fadeFlag)
+	const float MOVE_ALPHA = 0.05f;
+	if (!fadeFlag)
 	{
 		if (fadeAlpha > 0)
 		{
-			fadeAlpha -= 0.02f;
+			fadeAlpha -= MOVE_ALPHA;
 		}
 	}
 	else
 	{
 		if (fadeAlpha < 1.0f)
 		{
-			fadeAlpha += 0.02f;
+			fadeAlpha += MOVE_ALPHA;
+		}
+		else
+		{
+			fadeFlag = false;
 		}
 	}
-	
+	fadeTexture->SetColor(Vector4(0, 0, 0, fadeAlpha));
 }
 
 void KochaEngine::GamePlay::BattleUpdate()
 {
-
-}
-
-void KochaEngine::GamePlay::FieldUpdate()
-{
-	gManager->Update();
-	pManager->Update();
-	camera->Update();
-	lightManager->Update();
-
-	skyObj->MoveRotate(Vector3(0, 0.005f, 0));
-	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
+	if (Input::TriggerKey(DIK_SPACE))
+	{
+		fadeFlag = true;
+		isBattleEnd = true;
+	}
+	if (fadeAlpha >= 1.0f && isBattleEnd)
+	{
+		isBattle = false;
+		isBattleEnd = false;
+	}
 }
 
 void KochaEngine::GamePlay::BattleObjDraw()
@@ -200,6 +216,17 @@ void KochaEngine::GamePlay::BattleAlphaObjDraw()
 
 void KochaEngine::GamePlay::BattleSpriteDraw()
 {
+}
+
+void KochaEngine::GamePlay::FieldUpdate()
+{
+	gManager->Update();
+	pManager->Update();
+	camera->Update();
+	lightManager->Update();
+
+	skyObj->MoveRotate(Vector3(0, 0.005f, 0));
+	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
 }
 
 void KochaEngine::GamePlay::FieldObjDraw()

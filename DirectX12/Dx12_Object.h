@@ -53,17 +53,18 @@ namespace KochaEngine
 	class Dx12_Object
 	{
 	private:
-
+		static ID3D12Device* device;
 	public:
 
-		static void LoadTexture(ID3D12Device* device, const std::string& directoryPath, const std::string& filename);
-		static void LoadMaterial(ID3D12Device* device, std::string objName, const std::string& directoryPath, const std::string& filename);
-		static void LoadObject(ID3D12Device* device, std::string objName);
-		static void CreateBufferView(ID3D12Device* device, std::string objName);
+		static void LoadTexture(const std::string& directoryPath, const std::string& filename);
+		static void LoadMaterial(std::string objName, const std::string& directoryPath, const std::string& filename);
+		static void LoadObject(std::string objName);
+		static void CreateBufferView(std::string objName);
 
 		static Material GetMaterial(const std::string& objName);
 		static D3D12_VERTEX_BUFFER_VIEW GetVBView(const std::string& objName);
 		static D3D12_INDEX_BUFFER_VIEW GetIBView(const std::string& objName);
 		static std::vector<unsigned short>GetIndices(const std::string& objName);
+		static void SetDevice(ID3D12Device* arg_device) { device = arg_device; }
 	};
 }

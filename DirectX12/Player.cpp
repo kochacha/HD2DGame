@@ -24,11 +24,12 @@ KochaEngine::Player::~Player()
 void KochaEngine::Player::Initialize()
 {
 	isAlpha = true;
-	isEncount = false;
+	isBattle = false;
+
+	EncountReset();
 
 	velocity.Zero();
 	speed = 0.5f;
-	encountCount = Util::GetIntRand(10, 120) * 10;
 
 	sphere.radius = 4.0f;
 	sphere.position = this->position;
@@ -36,7 +37,7 @@ void KochaEngine::Player::Initialize()
 	obj->SetPosition(position);
 	obj->SetRotate(Vector3(0, 0, 0));
 	obj->SetScale(Vector3(10, 10, 10));
-	obj->SetTexture("Resources/player0.png");
+	obj->SetTexture("Resources/Texture/player0.png");
 }
 
 void KochaEngine::Player::Update()
@@ -103,6 +104,9 @@ void KochaEngine::Player::InputMove()
 {
 	velocity.Zero();
 	speed = 0.5f;
+
+	if (isBattle || isEncount) return;
+
 	bool isDash = false;
 
 	if (Input::CheckKey(DIK_W))
@@ -117,7 +121,7 @@ void KochaEngine::Player::InputMove()
 		isDash = true;
 		encountCount--;
 	}
-	else if (Input::CheckKey(DIK_A))
+	if (Input::CheckKey(DIK_A))
 	{
 		velocity.x = -1;
 		isDash = true;
@@ -165,11 +169,16 @@ void KochaEngine::Player::CameraTracking()
 	camera->SetTarget(cameraTargetPos);
 }
 
+void KochaEngine::Player::EncountReset()
+{
+	isEncount = false;
+	encountCount = Util::GetIntRand(4, 30) * 40;
+}
+
 void KochaEngine::Player::EncountEnemy()
 {
 	if (encountCount <= 0)
 	{
 		isEncount = true;
-		encountCount = 0;
 	}
 }

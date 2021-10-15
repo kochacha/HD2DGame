@@ -15,16 +15,17 @@ static std::map<std::string, D3D12_VERTEX_BUFFER_VIEW> vbViews;
 static std::map<std::string, D3D12_INDEX_BUFFER_VIEW> ibViews;
 KochaEngine::VertexPosNormalUv* vertMap = nullptr;
 unsigned short* indexMap = nullptr;
+ID3D12Device* KochaEngine::Dx12_Object::device{};
 
-void KochaEngine::Dx12_Object::LoadTexture(ID3D12Device* device, const std::string& directoryPath, const std::string& filename)
+void KochaEngine::Dx12_Object::LoadTexture(const std::string& directoryPath, const std::string& filename)
 {
 	//ファイルパスを結合
 	std::string filepath = directoryPath + filename;
 
-	Dx12_Texture::LoadTexture(device, filepath);
+	Dx12_Texture::LoadTexture(filepath);
 }
 
-void KochaEngine::Dx12_Object::LoadMaterial(ID3D12Device* device, std::string objName, const std::string & directoryPath, const std::string & filename)
+void KochaEngine::Dx12_Object::LoadMaterial(std::string objName, const std::string & directoryPath, const std::string & filename)
 {
 	//ファイルストリーム
 	std::ifstream file;
@@ -88,12 +89,12 @@ void KochaEngine::Dx12_Object::LoadMaterial(ID3D12Device* device, std::string ob
 		{
 			//テクスチャのファイル名読み込み
 			line_stream >> material[objName].textureFilename;
-			LoadTexture(device, directoryPath, material[objName].textureFilename);
+			LoadTexture(directoryPath, material[objName].textureFilename);
 		}
 	}
 }
 
-void KochaEngine::Dx12_Object::LoadObject(ID3D12Device* device, std::string objName)
+void KochaEngine::Dx12_Object::LoadObject(std::string objName)
 {
 	HRESULT result = S_FALSE;
 
@@ -133,7 +134,7 @@ void KochaEngine::Dx12_Object::LoadObject(ID3D12Device* device, std::string objN
 			std::string filename;
 			line_stream >> filename;
 
-			LoadMaterial(device, objName, directoryPath, filename);
+			LoadMaterial(objName, directoryPath, filename);
 		}
 
 		//先頭文字列がvなら頂点座標
@@ -207,14 +208,14 @@ void KochaEngine::Dx12_Object::LoadObject(ID3D12Device* device, std::string objN
 	}
 	file.close();
 
-	CreateBufferView(device, objName);
+	CreateBufferView(objName);
 	if (objCount < 256)
 	{
 		objCount++;
 	}
 }
 
-void KochaEngine::Dx12_Object::CreateBufferView(ID3D12Device* device, std::string objName)
+void KochaEngine::Dx12_Object::CreateBufferView(std::string objName)
 {
 	auto sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUv) * mesh[objNum[objName]].vertices.size());
 	auto sizeIB = static_cast<UINT>(sizeof(unsigned short) * mesh[objNum[objName]].indices.size());

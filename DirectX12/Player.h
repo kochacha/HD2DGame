@@ -10,6 +10,7 @@ namespace KochaEngine
 		GameObjectManager* gManager;
 
 		bool isEncount;
+		bool isBattle;
 
 		int encountCount;
 
@@ -33,6 +34,8 @@ namespace KochaEngine
 		void ObjDraw(Camera* arg_camera, LightManager* arg_lightManager) override;
 		GameObjectType GetType();
 
+		void SetIsBattle(const bool arg_isBattle) { isBattle = arg_isBattle; }
+		void EncountReset();
 		bool IsEncount() { return isEncount; }
 	};
 }

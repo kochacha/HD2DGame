@@ -26,8 +26,11 @@ namespace KochaEngine
 		Object* floor;
 		Object* skyObj;
 
+		Texture2D* fadeTexture;
+
 		bool fadeFlag;
 		bool isBattle;
+		bool isBattleEnd;
 		float fadeAlpha;
 
 		int frameCount;
@@ -35,10 +38,11 @@ namespace KochaEngine
 		int endCount;
 
 		void BattleUpdate();
-		void FieldUpdate();
 		void BattleObjDraw();
 		void BattleAlphaObjDraw();
 		void BattleSpriteDraw();
+
+		void FieldUpdate();
 		void FieldObjDraw();
 		void FieldAlphaObjDraw();
 		void FieldSpriteDraw();
@@ -54,6 +58,6 @@ namespace KochaEngine
 		void Load() override;
 		Scenes Next() override;
 		void CountTime();
-		void Fade();
+		void FadeUpdate();
 	};
 }

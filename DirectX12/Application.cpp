@@ -229,39 +229,39 @@ void KochaEngine::Application::Run()
 void KochaEngine::Application::Load()
 {
 	//Textureのロード
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/white.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/player0.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/green.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/PIEN.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/kaku4.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/number.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/stone.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_grass.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_grass1.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_rock1.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_rock2.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_water1.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tiling_water2.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/water_ball1.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/rock1.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/rock2.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/rock3.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tree1.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/tree2.png");
-	Dx12_Texture::LoadTexture(dx12->GetDevice().Get(), "Resources/grass1.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/white.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/black.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/player0.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/green.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/PIEN.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/kaku4.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/number.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/stone.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/tiling_grass.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/tiling_grass1.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/tiling_rock1.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/tiling_rock2.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/tiling_water1.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/tiling_water2.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/water_ball1.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/rock1.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/rock2.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/rock3.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/tree1.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/tree2.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/grass1.png");
 
 	//.objのロード
-	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "LowTree");
-	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "Yukidaruma");
-	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "box");
-	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "plane");
-	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "graund");
-	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "taimatu");
-	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "sphere");
-	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "Ground1");
-	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "skydome");
-	Dx12_Object::LoadObject(dx12->GetDevice().Get(), "saku");
-	//Dx12_Object::LoadObject(dx12->GetDevice().Get(), "tree");
+	Dx12_Object::LoadObject("LowTree");
+	Dx12_Object::LoadObject("Yukidaruma");
+	Dx12_Object::LoadObject("box");
+	Dx12_Object::LoadObject("plane");
+	Dx12_Object::LoadObject("graund");
+	Dx12_Object::LoadObject("taimatu");
+	Dx12_Object::LoadObject("sphere");
+	Dx12_Object::LoadObject("Ground1");
+	Dx12_Object::LoadObject("skydome");
+	Dx12_Object::LoadObject("saku");
 
 }
 
@@ -462,11 +462,15 @@ bool KochaEngine::Application::Initialize()
 	lightCamera = new Camera();
 	lightCamera->Initialize(dx12->GetWinSize().cx, dx12->GetWinSize().cy, 90, 100, { -100,100,-100 }, { 0,0,0 }, { 0,1,0 });*/
 
-	Texture2D::StaticInit(dx12->GetDevice().Get(), dx12->GetWinSize());
-	PostEffect::StaticInit(dx12->GetDevice().Get(), dx12->GetCmdList().Get(), dx12->GetWinSize());
-	Object::StaticInit(dx12->GetDevice().Get(), dx12->GetWinSize());
+	auto device = dx12->GetDevice().Get();
+	Texture2D::StaticInit(device, dx12->GetWinSize());
+	PostEffect::StaticInit(device, dx12->GetCmdList().Get(), dx12->GetWinSize());
+	Object::StaticInit(device, dx12->GetWinSize());
+	LightManager::StaticInitialize(device);
+	Dx12_Texture::SetDevice(device);
+	Dx12_Object::SetDevice(device);
+
 	//FBXLoader::GetInstance()->Initialize(dx12->GetDevice().Get());
-	LightManager::StaticInitialize(dx12->GetDevice().Get());
 	//FBXObject::SetDevice(dx12->GetDevice().Get());
 	//FBXObject::SetCamera(camera);
 
@@ -496,8 +500,8 @@ bool KochaEngine::Application::Initialize()
 	peraBloom = new PostEffect();
 	peraEffect = new PostEffect();
 	peraDof = new PostEffect();
-	peraEffectType = ShaderType::PERA_SHADER;
-	isDof = false;
+	peraEffectType = ShaderType::VIGNETTE_SHADER;
+	isDof = true;
 
 	effectManager = new EffectManager(*dx12);
 	effectManager->LoadEffect("light.efk", 10.0f);
