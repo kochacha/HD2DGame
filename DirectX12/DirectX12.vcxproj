@@ -217,7 +217,6 @@
     <ClCompile Include="StageSelect.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture2D.cpp" />
-    <ClCompile Include="Texture3D.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="Vector2.cpp" />
@@ -507,7 +506,6 @@
     <ClInclude Include="StageSelect.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Texture2D.h" />
-    <ClInclude Include="Texture3D.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="Vector2.h" />

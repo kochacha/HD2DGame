@@ -9,8 +9,8 @@
 #include "Vector3.h"
 #include "Vector4.h"
 
-#define OBJ_COUNT 25
-#define FBX_COUNT 1
+//#define OBJ_COUNT 1
+//#define FBX_COUNT 1
 
 namespace KochaEngine
 {
@@ -23,10 +23,7 @@ namespace KochaEngine
 	class SceneManager;
 	class Texture2D;
 	class Object;
-	class PMDModel;
 	class Camera;
-	class FBXObject;
-	class FBXModel;
 	class EffectManager;
 	class LightManager;
 
@@ -37,48 +34,57 @@ namespace KochaEngine
 		Application();
 		Application(const Application&) = delete;
 		void operator=(const Application&) = delete;
+
 		Window* window;
 		Dx12_Wrapper* dx12;
 		Dx12_Descriptor* descriptor;
 		Dx12_Blob* blob;
 		Dx12_RootSignature* rootSignature;
 		Dx12_Pipeline* pipeline;
+
+		//FBXModel* fbxModel = nullptr;
+		//FBXObject* fbxObject[FBX_COUNT];
+
 		SceneManager* sceneManager;
+		EffectManager* effectManager;
 
-		Texture2D* texture[2];
+		//エンジンロゴ関連
+		Texture2D* engineLogoTexture[2];
+		bool isLogoFlag;
+		bool isAlphaChange;
+		int alphaCount;
+		float logoAlpha;
 
-		FBXModel* fbxModel = nullptr;
-		FBXObject* fbxObject[FBX_COUNT];
-
+		//ポストエフェクト関連
 		PostEffect* peraBloom;
 		PostEffect* peraEffect;
 		PostEffect* peraDof;
-
-		EffectManager* effectManager;
-
 		ShaderType peraEffectType;
 		bool isDof;
-		bool isLogoFlag;
-		bool isAlphaChange;
-		float logoAlpha;
-		int alphaCount;
-
 		float vignetteScale;
 		float gBoyPixelSize;
 		float mosaicSize;
 		float sepiaScale;
 		float blurScale;
 		float cAbeScale;
-
 		float color[4];
 		Vector4 shaderColor;
 
+		//ライト関連
 		bool isActiveDirLight;
 		Vector3 dirLightDirection;
 		Vector3 dirLightColor;
 		Vector3 pointLightPosition;
 		Vector3 pointLightColor;
 		Vector3 pointLightAtten;
+
+		//フレームレート関連
+		const double MIN_FRAME_TIME = 1.000000f / 60.000000f;
+		double frameTime = 0.000000f;
+		double fps = 0.000000f;
+		LARGE_INTEGER timeStart;
+		LARGE_INTEGER timeEnd;
+		LARGE_INTEGER timeFreq;
 
 		void Load();
 		void LoadScene();
@@ -87,13 +93,6 @@ namespace KochaEngine
 		void MeraMera();
 		void EngineLogo();
 		bool UpdateFPS();
-
-		const double MIN_FRAME_TIME = 1.000000f / 60.000000f;
-		double frameTime = 0.000000f;
-		double fps = 0.000000f;
-		LARGE_INTEGER timeStart;
-		LARGE_INTEGER timeEnd;
-		LARGE_INTEGER timeFreq;
 
 	public:
 		~Application();

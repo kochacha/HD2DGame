@@ -10,7 +10,7 @@ KochaEngine::Text::Text(const char* arg_text, const Vector2& arg_position, const
     //' '‚Æ‚µ‚Ä‚·‚×‚Ä¶¬
     for (int i = 0; i < INCREMENT_SIZE; i++)
     {
-        textures[i] = new Texture2D("Resources/font.png", 10, 7, 68, Vector2(position.x + (fontSize.x + 2.0f) * i, position.y), fontSize, 0);
+        textures[i] = new Texture2D("Resources/Texture/font.png", 10, 7, 68, Vector2(position.x + (fontSize.x + 2.0f) * i, position.y), fontSize, 0);
     }
     
     SetText(text);

@@ -105,9 +105,6 @@
     <ClCompile Include="Texture2D.cpp">
       <Filter>Source\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Texture3D.cpp">
-      <Filter>Source\Object</Filter>
-    </ClCompile>
     <ClCompile Include="Ending.cpp">
       <Filter>Source\Scene</Filter>
     </ClCompile>
@@ -421,9 +418,6 @@
       <Filter>Header\Object</Filter>
     </ClInclude>
     <ClInclude Include="Texture2D.h">
-      <Filter>Header\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture3D.h">
       <Filter>Header\Object</Filter>
     </ClInclude>
     <ClInclude Include="Number.h">

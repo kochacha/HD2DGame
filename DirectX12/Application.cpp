@@ -18,9 +18,9 @@
 #include "Object.h"
 #include "Camera.h"
 #include "Util.h"
-#include "FBXModel.h"
-#include "FBXObject.h"
-#include "FBXLoader.h"
+//#include "FBXModel.h"
+//#include "FBXObject.h"
+//#include "FBXLoader.h"
 #include "CustomGui.h"
 #include "EffectManager.h"
 #include "LightManager.h"
@@ -30,9 +30,6 @@
 #include <omp.h>
 
 #pragma comment(lib,"winmm.lib")
-
-
-using namespace DirectX;
 
 float KochaEngine::Application::clearColor[4] = { 0.0f,0.0f,0.12f,1 };
 
@@ -86,7 +83,7 @@ void KochaEngine::Application::Run()
 		else
 		{
 			EngineLogo();
-			texture[1]->SetColor(Vector4(1, 1, 1, logoAlpha));
+			engineLogoTexture[1]->SetColor(Vector4(1, 1, 1, logoAlpha));
 		}
 		/*camera->Update();
 		auto target = camera->GetTarget();
@@ -105,11 +102,6 @@ void KochaEngine::Application::Run()
 		lightManager->SetPointLightAtten(0, pointLightAtten);
 		lightManager->SetLightCamera(lightCamera);
 		lightManager->Update();*/
-
-		for (int i = 0; i < OBJ_COUNT; ++i)
-		{
-			//obj[i]->MoveRotate({ 0,1.5f,0 });
-		}
 
 		////↑毎フレーム処理↑//
 		
@@ -194,8 +186,8 @@ void KochaEngine::Application::Run()
 			}
 			else
 			{
-				texture[0]->Draw();
-				texture[1]->Draw();
+				engineLogoTexture[0]->Draw();
+				engineLogoTexture[1]->Draw();
 			}
 
 			//↑SpriteDraw↑//
@@ -217,6 +209,7 @@ void KochaEngine::Application::Load()
 	//Textureのロード
 	Dx12_Texture::LoadTexture("Resources/Texture/black.png");
 	Dx12_Texture::LoadTexture("Resources/Texture/white.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/font.png");
 	Dx12_Texture::LoadTexture("Resources/Texture/EngineLogo.png");
 	Dx12_Texture::LoadTexture("Resources/Texture/player0.png");
 	Dx12_Texture::LoadTexture("Resources/Texture/green.png");
@@ -237,6 +230,7 @@ void KochaEngine::Application::Load()
 	Dx12_Texture::LoadTexture("Resources/Texture/tree1.png");
 	Dx12_Texture::LoadTexture("Resources/Texture/tree2.png");
 	Dx12_Texture::LoadTexture("Resources/Texture/grass1.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/titleTexture.png");
 
 	//.objのロード
 	Dx12_Object::LoadObject("LowTree");
@@ -406,11 +400,12 @@ void KochaEngine::Application::MeraMera()
 
 void KochaEngine::Application::EngineLogo()
 {
+	const float MOVE_ALPHA = 0.02f;
 	if (!isAlphaChange)
 	{
-		if (logoAlpha < 1.00f)
+		if (logoAlpha < 1.0f)
 		{
-			logoAlpha += 0.02f;
+			logoAlpha += MOVE_ALPHA;
 		}
 		else
 		{
@@ -423,9 +418,9 @@ void KochaEngine::Application::EngineLogo()
 	}
 	else
 	{
-		if (logoAlpha > -0.80f)
+		if (logoAlpha > -0.8f)
 		{
-			logoAlpha -= 0.02f;
+			logoAlpha -= MOVE_ALPHA;
 		}
 		else
 		{
@@ -512,9 +507,9 @@ bool KochaEngine::Application::Initialize()
 	pointLightAtten = Vector3(1.000f, 0.050f, 0.001f);
 	isActiveDirLight = true;
 
-	texture[0] = new Texture2D("Resources/Texture/white.png", Vector2(0, 0), Vector2(1280, 720), 0);
-	texture[0]->SetColor(Vector4(0, 0, 0.12f, 1));
-	texture[1] = new Texture2D("Resources/Texture/EngineLogo.png", Vector2(0, 0), Vector2(1280, 720), 0);
+	engineLogoTexture[0] = new Texture2D("Resources/Texture/white.png", Vector2(0, 0), Vector2(1280, 720), 0);
+	engineLogoTexture[0]->SetColor(Vector4(0, 0, 0.12f, 1));
+	engineLogoTexture[1] = new Texture2D("Resources/Texture/EngineLogo.png", Vector2(0, 0), Vector2(1280, 720), 0);
 
 	peraBloom = new PostEffect();
 	peraEffect = new PostEffect();
@@ -547,7 +542,7 @@ bool KochaEngine::Application::Initialize()
 	alphaCount = 0;
 	isLogoFlag = false;
 	isAlphaChange = false;
-#ifdef _DEBUG
+#ifdef _DEBUG //Debug時はエンジンロゴを出さない
 	isLogoFlag = true;
 #endif
 
@@ -560,15 +555,14 @@ void KochaEngine::Application::Terminate()
 {
 	sceneManager->Terminate();
 	delete sceneManager;
-	delete texture[0];
-	delete texture[1];
+	delete engineLogoTexture[0];
+	delete engineLogoTexture[1];
 	delete blob;
 	delete descriptor;
 	delete rootSignature;
 	delete pipeline;
 	delete dx12;
 	delete window;
-	delete fbxModel;
 	delete peraBloom;
 	delete peraEffect;
 	delete peraDof;

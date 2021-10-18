@@ -194,6 +194,8 @@ void KochaEngine::GamePlay::FadeUpdate()
 
 void KochaEngine::GamePlay::BattleUpdate()
 {
+
+	//バトルシーン終了
 	if (Input::TriggerKey(DIK_SPACE))
 	{
 		fadeFlag = true;
