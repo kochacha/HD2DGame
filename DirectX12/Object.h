@@ -88,29 +88,29 @@ namespace KochaEngine
 		static SIZE winSize;
 
 	public:
-		Object(std::string objName);
+		Object(const std::string& arg_objName);
 		~Object();
 
-		void Draw(Camera* camera, LightManager* arg_lightManager);
-		void Draw(Camera* camera, LightManager* arg_lightManager, Vector3 position, Vector3 scale, Vector3 rotate);
+		void Draw(Camera* arg_camera, LightManager* arg_lightManager);
+		void Draw(Camera* arg_camera, LightManager* arg_lightManager, const Vector3& arg_position, const Vector3& arg_scale, const Vector3& arg_rotate);
 
-		void SetPosition(const Vector3& position);
-		void SetScale(const Vector3& scale);
-		void SetRotate(const Vector3& rotate);
-		void SetColor(const Vector4& color);
+		void SetPosition(const Vector3& arg_position);
+		void SetScale(const Vector3& arg_scale);
+		void SetRotate(const Vector3& arg_rotate);
+		void SetColor(const Vector4& arg_color);
 		void SetAlpha(const float arg_alpha);
-		void SetTexture(const std::string& textureName);
+		void SetTexture(const std::string& arg_textureName);
 		void SetBillboardType(const BillboardType& arg_type);
 
-		void MovePosition(const Vector3& move);
-		void MoveScale(const Vector3& moveScale);
-		void MoveRotate(const Vector3& moveRotate);
-		void MoveColor(const Vector4& moveColor);
+		void MovePosition(const Vector3& arg_move);
+		void MoveScale(const Vector3& arg_moveScale);
+		void MoveRotate(const Vector3& arg_moveRotate);
+		void MoveColor(const Vector4& arg_moveColor);
 
-		Vector3 GetScale() { return scale; }
+		inline const Vector3 GetScale() { return scale; }
 
 		//static void SetLightManager(LightManager* arg_lightManager);
-		static void StaticInit(ID3D12Device* device, SIZE winSize);
+		static void StaticInit(ID3D12Device* arg_device, SIZE arg_winSize);
 		static void BeginDraw(ID3D12GraphicsCommandList* arg_cmdList);
 		static void BeginAlphaDraw(ID3D12GraphicsCommandList* arg_cmdList);
 		static void BeginDrawFromLight(ID3D12GraphicsCommandList* arg_cmdList);

@@ -27,11 +27,11 @@ void KochaEngine::Number::Init()
 	
 }
 
-void KochaEngine::Number::SetColor(DirectX::XMFLOAT4 color)
+void KochaEngine::Number::SetColor(const Vector4& arg_color)
 {
 	for (int i = 0; i < maxDigit; i++)
 	{
-		numbers[i]->SetColor(color);
+		numbers[i]->SetColor(arg_color);
 	}
 }
 

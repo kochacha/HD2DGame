@@ -580,7 +580,7 @@ KochaEngine::Application& KochaEngine::Application::Instance()
 SIZE KochaEngine::Application::GetWindowSize()const
 {
 	SIZE ret;
-	ret.cx = window->GetWIN_WIDTH();
-	ret.cy = window->GetWIN_HEIGHT();
+	ret.cx = window->GetWinWidth();
+	ret.cy = window->GetWinHeight();
 	return ret;
 }

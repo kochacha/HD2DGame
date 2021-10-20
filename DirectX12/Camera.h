@@ -63,14 +63,14 @@ namespace KochaEngine
 		void UpCamera();
 		void RightCamera();
 
-		Vector3 GetEye() { return eye; }
-		Vector3 GetTarget() { return target; }
-		Vector3 GetUp() { return up; }
+		inline const Vector3 GetEye() { return eye; }
+		inline const Vector3 GetTarget() { return target; }
+		inline const Vector3 GetUp() { return up; }
 		Vector3 GetVelocity();
-		XMMATRIX GetMatProjection() { return matProjection; }
-		XMMATRIX GetMatView() { return matView; }
-		XMMATRIX GetBillboardMatrix() { return matBillboard; }
-		XMMATRIX GetBillboardYMatrix() { return matBillboardY; }
+		inline const XMMATRIX GetMatProjection() { return matProjection; }
+		inline const XMMATRIX GetMatView() { return matView; }
+		inline const XMMATRIX GetBillboardMatrix() { return matBillboard; }
+		inline const XMMATRIX GetBillboardYMatrix() { return matBillboardY; }
 		XMMATRIX GetLightCameraMatrix();
 		float Getangle();
 

@@ -67,7 +67,7 @@ void KochaEngine::LightManager::Update()
 	}
 }
 
-void KochaEngine::LightManager::Draw(ID3D12GraphicsCommandList* arg_cmdList, UINT arg_rootParameterIndex)
+void KochaEngine::LightManager::Draw(ID3D12GraphicsCommandList* arg_cmdList, const UINT arg_rootParameterIndex)
 {
 	if (arg_cmdList == nullptr) return;
 	arg_cmdList->SetGraphicsRootConstantBufferView(arg_rootParameterIndex, constBuff->GetGPUVirtualAddress());
@@ -115,47 +115,47 @@ void KochaEngine::LightManager::TransferConstBuffer()
 	}
 }
 
-void KochaEngine::LightManager::SetDirectionalLightIsActive(int arg_index, bool arg_isActive)
+void KochaEngine::LightManager::SetDirectionalLightIsActive(const int arg_index, const bool arg_isActive)
 {
 	assert(0 <= arg_index && arg_index < DIRECTIONAL_LIGHT_NUM);
 	dirLights[arg_index].SetIsActive(arg_isActive);
 }
 
-void KochaEngine::LightManager::SetDirectionalLightDirection(int arg_index, const Vector3& arg_direction)
+void KochaEngine::LightManager::SetDirectionalLightDirection(const int arg_index, const Vector3& arg_direction)
 {
 	assert(0 <= arg_index && arg_index < DIRECTIONAL_LIGHT_NUM);
 	dirLights[arg_index].SetDirection(arg_direction);
 	isDirty = true;
 }
 
-void KochaEngine::LightManager::SetDirectionalLightColor(int arg_index, const Vector3& arg_lightColor)
+void KochaEngine::LightManager::SetDirectionalLightColor(const int arg_index, const Vector3& arg_lightColor)
 {
 	assert(0 <= arg_index && arg_index < DIRECTIONAL_LIGHT_NUM);
 	dirLights[arg_index].SetLightColor(arg_lightColor);
 	isDirty = true;
 }
 
-void KochaEngine::LightManager::SetPointLightIsActive(int arg_index, bool arg_isActive)
+void KochaEngine::LightManager::SetPointLightIsActive(const int arg_index, const bool arg_isActive)
 {
 	assert(0 <= arg_index && arg_index < POINT_LIGHT_NUM);
 	pointLights[arg_index].SetIsActive(arg_isActive);
 }
 
-void KochaEngine::LightManager::SetPointLightPos(int arg_index, const Vector3& arg_lightPos)
+void KochaEngine::LightManager::SetPointLightPos(const int arg_index, const Vector3& arg_lightPos)
 {
 	assert(0 <= arg_index && arg_index < POINT_LIGHT_NUM);
 	pointLights[arg_index].SetLightPos(arg_lightPos);
 	isDirty = true;
 }
 
-void KochaEngine::LightManager::SetPointLightColor(int arg_index, const Vector3& arg_lightColor)
+void KochaEngine::LightManager::SetPointLightColor(const int arg_index, const Vector3& arg_lightColor)
 {
 	assert(0 <= arg_index && arg_index < POINT_LIGHT_NUM);
 	pointLights[arg_index].SetLightColor(arg_lightColor);
 	isDirty = true;
 }
 
-void KochaEngine::LightManager::SetPointLightAtten(int arg_index, const Vector3& arg_lightAtten)
+void KochaEngine::LightManager::SetPointLightAtten(const int arg_index, const Vector3& arg_lightAtten)
 {
 	assert(0 <= arg_index && arg_index < POINT_LIGHT_NUM);
 	pointLights[arg_index].SetLightAtten(arg_lightAtten);

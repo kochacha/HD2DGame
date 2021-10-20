@@ -17,20 +17,20 @@ KochaEngine::VertexPosNormalUv* vertMap = nullptr;
 unsigned short* indexMap = nullptr;
 ID3D12Device* KochaEngine::Dx12_Object::device{};
 
-void KochaEngine::Dx12_Object::LoadTexture(const std::string& directoryPath, const std::string& filename)
+void KochaEngine::Dx12_Object::LoadTexture(const std::string& arg_directoryPath, const std::string& arg_filename)
 {
 	//ファイルパスを結合
-	std::string filepath = directoryPath + filename;
+	std::string filepath = arg_directoryPath + arg_filename;
 
 	Dx12_Texture::LoadTexture(filepath);
 }
 
-void KochaEngine::Dx12_Object::LoadMaterial(std::string objName, const std::string & directoryPath, const std::string & filename)
+void KochaEngine::Dx12_Object::LoadMaterial(const std::string& arg_objName, const std::string & arg_directoryPath, const std::string & arg_filename)
 {
 	//ファイルストリーム
 	std::ifstream file;
 	//マテリアルファイルを開く
-	file.open(directoryPath + filename);
+	file.open(arg_directoryPath + arg_filename);
 	//ファイルオープン失敗をチェック
 	if (file.fail())
 	{
@@ -57,59 +57,59 @@ void KochaEngine::Dx12_Object::LoadMaterial(std::string objName, const std::stri
 		if (key == "newmtl")
 		{
 			//マテリアル名読み込み
-			line_stream >> material[objName].name;
+			line_stream >> material[arg_objName].name;
 		}
 
 		//先頭文字列がKaならアンビエント色
 		if (key == "Ka")
 		{
-			line_stream >> material[objName].ambient.x;
-			line_stream >> material[objName].ambient.y;
-			line_stream >> material[objName].ambient.z;
+			line_stream >> material[arg_objName].ambient.x;
+			line_stream >> material[arg_objName].ambient.y;
+			line_stream >> material[arg_objName].ambient.z;
 		}
 
 		//先頭文字列がKdならディフューズ色
 		if (key == "Kd")
 		{
-			line_stream >> material[objName].diffuse.x;
-			line_stream >> material[objName].diffuse.y;
-			line_stream >> material[objName].diffuse.z;
+			line_stream >> material[arg_objName].diffuse.x;
+			line_stream >> material[arg_objName].diffuse.y;
+			line_stream >> material[arg_objName].diffuse.z;
 		}
 
 		//先頭文字列がKdならスペキュラー色
 		if (key == "Kd")
 		{
-			line_stream >> material[objName].specular.x;
-			line_stream >> material[objName].specular.y;
-			line_stream >> material[objName].specular.z;
+			line_stream >> material[arg_objName].specular.x;
+			line_stream >> material[arg_objName].specular.y;
+			line_stream >> material[arg_objName].specular.z;
 		}
 
 		//先頭文字列がmap_Kdならテクスチャファイル名
 		if (key == "map_Kd")
 		{
 			//テクスチャのファイル名読み込み
-			line_stream >> material[objName].textureFilename;
-			LoadTexture(directoryPath, material[objName].textureFilename);
+			line_stream >> material[arg_objName].textureFilename;
+			LoadTexture(arg_directoryPath, material[arg_objName].textureFilename);
 		}
 	}
 }
 
-void KochaEngine::Dx12_Object::LoadObject(std::string objName)
+void KochaEngine::Dx12_Object::LoadObject(const std::string& arg_objName)
 {
 	HRESULT result = S_FALSE;
 
-	objNum.emplace(objName, objCount);
-	vbViews.emplace(objName, mesh[objCount].vbView);
-	ibViews.emplace(objName, mesh[objCount].ibView);
+	objNum.emplace(arg_objName, objCount);
+	vbViews.emplace(arg_objName, mesh[objCount].vbView);
+	ibViews.emplace(arg_objName, mesh[objCount].ibView);
 
 	std::ifstream file;
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-	std::wstring ws = converter.from_bytes(objName);
+	std::wstring ws = converter.from_bytes(arg_objName);
 
 	const std::string modelname(ws.begin(), ws.end());
 	const std::string filename = modelname + ".obj";
 	const std::string directoryPath = "Resources/Object/" + modelname + "/";
-	material[objName].objFilename = filename;
+	material[arg_objName].objFilename = filename;
 	file.open(directoryPath + filename);
 
 	if (file.fail())
@@ -134,7 +134,7 @@ void KochaEngine::Dx12_Object::LoadObject(std::string objName)
 			std::string filename;
 			line_stream >> filename;
 
-			LoadMaterial(objName, directoryPath, filename);
+			LoadMaterial(arg_objName, directoryPath, filename);
 		}
 
 		//先頭文字列がvなら頂点座標
@@ -199,33 +199,33 @@ void KochaEngine::Dx12_Object::LoadObject(std::string objName)
 				vertex.pos = positions[indexPosition - 1];
 				vertex.normal = normals[indexNormal - 1];
 				vertex.uv = texcoords[indexTexcoord - 1];
-				mesh[objNum[objName]].vertices.emplace_back(vertex);
+				mesh[objNum[arg_objName]].vertices.emplace_back(vertex);
 
 				//インデックスデータの追加
-				mesh[objNum[objName]].indices.emplace_back((unsigned short)mesh[objNum[objName]].indices.size());
+				mesh[objNum[arg_objName]].indices.emplace_back((unsigned short)mesh[objNum[arg_objName]].indices.size());
 			}
 		}
 	}
 	file.close();
 
-	CreateBufferView(objName);
+	CreateBufferView(arg_objName);
 	if (objCount < 256)
 	{
 		objCount++;
 	}
 }
 
-void KochaEngine::Dx12_Object::CreateBufferView(std::string objName)
+void KochaEngine::Dx12_Object::CreateBufferView(const std::string& arg_objName)
 {
-	auto sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUv) * mesh[objNum[objName]].vertices.size());
-	auto sizeIB = static_cast<UINT>(sizeof(unsigned short) * mesh[objNum[objName]].indices.size());
+	auto sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUv) * mesh[objNum[arg_objName]].vertices.size());
+	auto sizeIB = static_cast<UINT>(sizeof(unsigned short) * mesh[objNum[arg_objName]].indices.size());
 	D3D12_HEAP_PROPERTIES heapprop = {};
 	D3D12_RESOURCE_DESC resdesc = {};
 
 	heapprop.Type = D3D12_HEAP_TYPE_UPLOAD;
 
 	resdesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	resdesc.Width = sizeof(mesh[objNum[objName]].vertices);
+	resdesc.Width = sizeof(mesh[objNum[arg_objName]].vertices);
 	resdesc.Height = 1;
 	resdesc.DepthOrArraySize = 1;
 	resdesc.MipLevels = 1;
@@ -238,9 +238,9 @@ void KochaEngine::Dx12_Object::CreateBufferView(std::string objName)
 		&resdesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&mesh[objNum[objName]].vertBuff));
+		IID_PPV_ARGS(&mesh[objNum[arg_objName]].vertBuff));
 
-	result = mesh[objNum[objName]].vertBuff->Map(0, nullptr, (void**)&vertMap);
+	result = mesh[objNum[arg_objName]].vertBuff->Map(0, nullptr, (void**)&vertMap);
 
 	// 頂点バッファ生成
 	auto heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
@@ -251,7 +251,7 @@ void KochaEngine::Dx12_Object::CreateBufferView(std::string objName)
 		&resDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&mesh[objNum[objName]].vertBuff));
+		IID_PPV_ARGS(&mesh[objNum[arg_objName]].vertBuff));
 
 	if (FAILED(result)) {
 		assert(0);
@@ -267,7 +267,7 @@ void KochaEngine::Dx12_Object::CreateBufferView(std::string objName)
 		&resDesc2,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&mesh[objNum[objName]].indexBuff));
+		IID_PPV_ARGS(&mesh[objNum[arg_objName]].indexBuff));
 
 	if (FAILED(result)) {
 		assert(0);
@@ -275,47 +275,47 @@ void KochaEngine::Dx12_Object::CreateBufferView(std::string objName)
 	}
 
 	// 頂点バッファへのデータ転送
-	result = mesh[objNum[objName]].vertBuff->Map(0, nullptr, (void**)&vertMap);
+	result = mesh[objNum[arg_objName]].vertBuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result)) {
-		std::copy(mesh[objNum[objName]].vertices.begin(), mesh[objNum[objName]].vertices.end(), vertMap);
-		mesh[objNum[objName]].vertBuff->Unmap(0, nullptr);
+		std::copy(mesh[objNum[arg_objName]].vertices.begin(), mesh[objNum[arg_objName]].vertices.end(), vertMap);
+		mesh[objNum[arg_objName]].vertBuff->Unmap(0, nullptr);
 	}
 
 	// インデックスバッファへのデータ転送
-	result = mesh[objNum[objName]].indexBuff->Map(0, nullptr, (void**)&indexMap);
+	result = mesh[objNum[arg_objName]].indexBuff->Map(0, nullptr, (void**)&indexMap);
 	if (SUCCEEDED(result)) {
-		std::copy(mesh[objNum[objName]].indices.begin(), mesh[objNum[objName]].indices.end(), indexMap);
-		mesh[objNum[objName]].indexBuff->Unmap(0, nullptr);
+		std::copy(mesh[objNum[arg_objName]].indices.begin(), mesh[objNum[arg_objName]].indices.end(), indexMap);
+		mesh[objNum[arg_objName]].indexBuff->Unmap(0, nullptr);
 	}
 
 	// 頂点バッファビューの作成
-	vbViews[objName].BufferLocation = mesh[objNum[objName]].vertBuff->GetGPUVirtualAddress();
-	vbViews[objName].SizeInBytes = sizeVB;
-	vbViews[objName].StrideInBytes = sizeof(mesh[objNum[objName]].vertices[0]);
+	vbViews[arg_objName].BufferLocation = mesh[objNum[arg_objName]].vertBuff->GetGPUVirtualAddress();
+	vbViews[arg_objName].SizeInBytes = sizeVB;
+	vbViews[arg_objName].StrideInBytes = sizeof(mesh[objNum[arg_objName]].vertices[0]);
 
 	// インデックスバッファビューの作成
-	ibViews[objName].BufferLocation = mesh[objNum[objName]].indexBuff->GetGPUVirtualAddress();
-	ibViews[objName].Format = DXGI_FORMAT_R16_UINT;
-	ibViews[objName].SizeInBytes = sizeIB;
+	ibViews[arg_objName].BufferLocation = mesh[objNum[arg_objName]].indexBuff->GetGPUVirtualAddress();
+	ibViews[arg_objName].Format = DXGI_FORMAT_R16_UINT;
+	ibViews[arg_objName].SizeInBytes = sizeIB;
 
 }
 
-KochaEngine::Material KochaEngine::Dx12_Object::GetMaterial(const std::string& objName)
+KochaEngine::Material KochaEngine::Dx12_Object::GetMaterial(const std::string& arg_objName)
 {
-	return material[objName];
+	return material[arg_objName];
 }
 
-D3D12_VERTEX_BUFFER_VIEW KochaEngine::Dx12_Object::GetVBView(const std::string& objName)
+D3D12_VERTEX_BUFFER_VIEW KochaEngine::Dx12_Object::GetVBView(const std::string& arg_objName)
 {
-	return vbViews[objName];
+	return vbViews[arg_objName];
 }
 
-D3D12_INDEX_BUFFER_VIEW KochaEngine::Dx12_Object::GetIBView(const std::string& objName)
+D3D12_INDEX_BUFFER_VIEW KochaEngine::Dx12_Object::GetIBView(const std::string& arg_objName)
 {
-	return ibViews[objName];
+	return ibViews[arg_objName];
 }
 
-std::vector<unsigned short> KochaEngine::Dx12_Object::GetIndices(const std::string& objName)
+std::vector<unsigned short> KochaEngine::Dx12_Object::GetIndices(const std::string& arg_objName)
 {
-	return mesh[objNum[objName]].indices;
+	return mesh[objNum[arg_objName]].indices;
 }

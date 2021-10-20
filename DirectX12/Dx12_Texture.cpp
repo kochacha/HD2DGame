@@ -7,7 +7,7 @@ static ComPtr<ID3D12Resource> texBuff[256];
 static D3D12_RESOURCE_DESC texResDesc[256];
 ID3D12Device* KochaEngine::Dx12_Texture::device{};
 
-void KochaEngine::Dx12_Texture::LoadTexture(std::string arg_texName)
+void KochaEngine::Dx12_Texture::LoadTexture(const std::string& arg_texName)
 {
 	//ComPtr<ID3D12Resource> a{};
 	//D3D12_RESOURCE_DESC b{};

@@ -18,6 +18,6 @@ namespace KochaEngine
 		~Sprite();
 
 		void Draw();
-		void Draw(Vector2 position, DirectX::XMFLOAT4 color);
+		void Draw(const Vector2& arg_position, const Vector4& arg_color);
 	};
 }

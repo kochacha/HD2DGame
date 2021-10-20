@@ -5,6 +5,7 @@
 #include <wrl.h>
 #include <string>
 #include "Vector2.h"
+#include "Vector4.h"
 using namespace Microsoft::WRL;
 
 namespace KochaEngine
@@ -52,7 +53,7 @@ namespace KochaEngine
 		float cutSizeY;
 		int maxTex;
 		int animationCount = 0;
-		DirectX::XMFLOAT4 color = { 1,1,1,1 };
+		Vector4 color = { 1,1,1,1 };
 
 		ComPtr<ID3D12Resource> vertBuff;
 		ComPtr<ID3D12Resource> constBuff;
@@ -80,10 +81,10 @@ namespace KochaEngine
 		static UINT descriptorHandleIncrementSize;
 
 	public:
-		Texture2D(const std::string& texName, Vector2 position,
-			Vector2 size, float rotate);
-		Texture2D(const std::string& texName, UINT x, UINT y, UINT texNum, Vector2 position,
-			Vector2 size, float rotate);
+		Texture2D(const std::string& arg_texName, const Vector2& arg_position,
+			const Vector2& arg_size, const float arg_rotate);
+		Texture2D(const std::string& arg_texName, const UINT arg_x, const UINT arg_y, 
+			const UINT arg_texNum, const Vector2& arg_position, const Vector2& arg_size, const float arg_rotate);
 		~Texture2D();
 
 		void Draw();
@@ -91,12 +92,12 @@ namespace KochaEngine
 		void AnimationDraw(UINT animationRate, Vector2 position);
 
 		void SetTexNum(UINT texNum);
-		void SetColor(DirectX::XMFLOAT4 color) { this->color = color; }
-		void SetSize(Vector2 size);
+		void SetColor(const Vector4& arg_color) { this->color = arg_color; }
+		void SetSize(const Vector2& arg_size);
 
-		static void StaticInit(ID3D12Device* device, SIZE winSize);
-		static void BeginDrawAlphaSort(ID3D12GraphicsCommandList* cmdList);
-		static void BeginDraw(ID3D12GraphicsCommandList* cmdList);
+		static void StaticInit(ID3D12Device* arg_device, const SIZE arg_winSize);
+		static void BeginDrawAlphaSort(ID3D12GraphicsCommandList* arg_cmdList);
+		static void BeginDraw(ID3D12GraphicsCommandList* arg_cmdList);
 		static void EndDraw();
 	};
 }

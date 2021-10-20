@@ -20,7 +20,7 @@ namespace KochaEngine
 
 		void Init();
 
-		void SetColor(DirectX::XMFLOAT4 color);
+		void SetColor(const Vector4& arg_color);
 
 		void Draw(int num);
 		void Draw(Vector2 position, int num);

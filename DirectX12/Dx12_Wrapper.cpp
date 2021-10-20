@@ -15,7 +15,7 @@ using namespace std;
 using namespace DirectX;
 using namespace ImGui;
 
-KochaEngine::Dx12_Wrapper::Dx12_Wrapper(HWND hwnd)
+KochaEngine::Dx12_Wrapper::Dx12_Wrapper(const HWND& arg_hwnd)
 {
 #ifdef _DEBUG
 	//デバッグレイヤーをオンに
@@ -39,7 +39,7 @@ KochaEngine::Dx12_Wrapper::Dx12_Wrapper(HWND hwnd)
 		assert(0);
 		return;
 	}
-	if (FAILED(CreateSwapChain(hwnd)))
+	if (FAILED(CreateSwapChain(arg_hwnd)))
 	{
 		assert(0);
 		return;
@@ -73,7 +73,7 @@ KochaEngine::Dx12_Wrapper::Dx12_Wrapper(HWND hwnd)
 		return;
 	}
 
-	if (!ImGui_ImplWin32_Init(hwnd)) {
+	if (!ImGui_ImplWin32_Init(arg_hwnd)) {
 		assert(0);
 		return;
 	}
@@ -228,10 +228,10 @@ HRESULT KochaEngine::Dx12_Wrapper::InitializeDXGIDevice()
 }
 
 ///スワップチェイン生成関数
-HRESULT KochaEngine::Dx12_Wrapper::CreateSwapChain(const HWND& hwnd) 
+HRESULT KochaEngine::Dx12_Wrapper::CreateSwapChain(const HWND& arg_hwnd) 
 {
 	RECT rc = {};
-	::GetWindowRect(hwnd, &rc);
+	::GetWindowRect(arg_hwnd, &rc);
 
 	DXGI_SWAP_CHAIN_DESC1 swapchainDesc = {};
 	swapchainDesc.Width = _winSize.cx;
@@ -248,7 +248,7 @@ HRESULT KochaEngine::Dx12_Wrapper::CreateSwapChain(const HWND& hwnd)
 	swapchainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 	auto result = dxgiFactory->CreateSwapChainForHwnd(_cmdQueue.Get(),
-		hwnd,
+		arg_hwnd,
 		&swapchainDesc,
 		nullptr,
 		nullptr,

@@ -16,7 +16,7 @@ namespace KochaEngine
 		static ID3D12Device* device;
 	public:
 
-		static void LoadTexture(std::string arg_texName);
+		static void LoadTexture(const std::string& arg_texName);
 
 		static UINT GetTexNum(const std::string& arg_texName);
 		static ComPtr<ID3D12Resource> GetTexBuff(const std::string& arg_texName);

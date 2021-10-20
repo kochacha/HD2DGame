@@ -56,15 +56,15 @@ namespace KochaEngine
 		static ID3D12Device* device;
 	public:
 
-		static void LoadTexture(const std::string& directoryPath, const std::string& filename);
-		static void LoadMaterial(std::string objName, const std::string& directoryPath, const std::string& filename);
-		static void LoadObject(std::string objName);
-		static void CreateBufferView(std::string objName);
+		static void LoadTexture(const std::string& arg_directoryPath, const std::string& arg_filename);
+		static void LoadMaterial(const std::string& arg_objName, const std::string& arg_directoryPath, const std::string& arg_filename);
+		static void LoadObject(const std::string& arg_objName);
+		static void CreateBufferView(const std::string& arg_objName);
 
-		static Material GetMaterial(const std::string& objName);
-		static D3D12_VERTEX_BUFFER_VIEW GetVBView(const std::string& objName);
-		static D3D12_INDEX_BUFFER_VIEW GetIBView(const std::string& objName);
-		static std::vector<unsigned short>GetIndices(const std::string& objName);
+		static Material GetMaterial(const std::string& arg_objName);
+		static D3D12_VERTEX_BUFFER_VIEW GetVBView(const std::string& arg_objName);
+		static D3D12_INDEX_BUFFER_VIEW GetIBView(const std::string& arg_objName);
+		static std::vector<unsigned short>GetIndices(const std::string& arg_objName);
 		static void SetDevice(ID3D12Device* arg_device) { device = arg_device; }
 	};
 }

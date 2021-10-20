@@ -15,12 +15,12 @@ namespace KochaEngine
 		bool isDead;
 
 	public:
-		Particle(ParticleParam param);
+		Particle(const ParticleParam& arg_param);
 		~Particle();
 
 		void Update();
-		void Draw(Camera* camera, LightManager* arg_lightManager);
+		void Draw(Camera* arg_camera, LightManager* arg_lightManager);
 
-		bool IsDead() { return isDead; }
+		inline const bool IsDead() { return isDead; }
 	};
 }

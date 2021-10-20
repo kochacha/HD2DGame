@@ -49,13 +49,13 @@ void KochaEngine::EffectManager::Play(const std::string& arg_efkName, const Vect
 	_efkHandle = _efkManager->Play(_effect[efkName], arg_position.x, arg_position.y, arg_position.z);
 }
 
-void KochaEngine::EffectManager::Update(Camera* camera)
+void KochaEngine::EffectManager::Update(Camera* arg_camera)
 {
-	if (camera == nullptr) return;
+	if (arg_camera == nullptr) return;
 
-	auto cameraEye = camera->GetEye();
-	auto cameraTarget = camera->GetTarget();
-	auto cameraUp = camera->GetUp();
+	auto cameraEye = arg_camera->GetEye();
+	auto cameraTarget = arg_camera->GetTarget();
+	auto cameraUp = arg_camera->GetUp();
 
 	auto eye = Effekseer::Vector3D(cameraEye.x, cameraEye.y, cameraEye.z);
 	auto target = Effekseer::Vector3D(cameraTarget.x, cameraTarget.y, cameraTarget.z);

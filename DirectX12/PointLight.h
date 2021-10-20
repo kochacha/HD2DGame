@@ -25,11 +25,11 @@ namespace KochaEngine
 		inline void SetLightPos(const Vector3& arg_lightPos) { lightPos = arg_lightPos; }
 		inline void SetLightColor(const Vector3& arg_lightColor) { lightColor = arg_lightColor; }
 		inline void SetLightAtten(const Vector3& arg_lightAtten) { lightAtten = arg_lightAtten; }
-		inline void SetIsActive(bool arg_isActive) { isActive = arg_isActive; }
+		inline void SetIsActive(const bool arg_isActive) { isActive = arg_isActive; }
 
 		inline const Vector3& GetLightPos() { return lightPos; }
 		inline const Vector3& GetLightColor() { return lightColor; }
 		inline const Vector3& GetLightAtten() { return lightAtten; }
-		inline bool IsActive() { return isActive; }
+		inline const bool IsActive() { return isActive; }
 	};
 }

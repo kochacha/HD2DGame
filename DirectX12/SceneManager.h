@@ -9,9 +9,9 @@ namespace KochaEngine
 	public:
 		SceneManager();
 		~SceneManager();
-		void AddScene(Scenes name, Scene* scene);
-		void ChangeScene(Scenes name);
-		void Load(Scenes name);
+		void AddScene(Scenes arg_name, Scene* arg_scene);
+		void ChangeScene(Scenes arg_name);
+		void Load(Scenes arg_name);
 		void Update();
 		void SpriteDraw();
 		void AlphaObjDraw();

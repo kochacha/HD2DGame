@@ -16,10 +16,10 @@ namespace KochaEngine
 		ParticleManager();
 		~ParticleManager();
 
-		void AddParticle(Particle* particle);
+		void AddParticle(Particle* arg_particle);
 
 		void Update();
-		void Draw(Camera* camera, LightManager* arg_lightManager);
+		void Draw(Camera* arg_camera, LightManager* arg_lightManager);
 
 		void RemoveAll();
 		void Remove();

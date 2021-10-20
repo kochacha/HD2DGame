@@ -85,18 +85,3 @@ bool KochaEngine::Window::Show()
 	ShowWindow(this->hwnd, SW_SHOW);
 	return true;
 }
-
-HWND KochaEngine::Window::GetHwnd()
-{
-	return hwnd;
-}
-
-const unsigned int KochaEngine::Window::GetWIN_WIDTH()
-{
-	return WIN_WIDTH;
-}
-
-const unsigned int KochaEngine::Window::GetWIN_HEIGHT()
-{
-	return WIN_HEIGHT;
-}

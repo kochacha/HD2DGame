@@ -40,12 +40,12 @@ void KochaEngine::Audio::Init()
 	pSourceVoice = nullptr;
 }
 
-void KochaEngine::Audio::PlayWave(const char* strFileName, float volume)
+void KochaEngine::Audio::PlayWave(const char* arg_strFileName, const float arg_volume)
 {
 
 	// Open the file
 	HANDLE hFile = CreateFileA(
-		strFileName,
+		arg_strFileName,
 		GENERIC_READ,
 		FILE_SHARE_READ,
 		NULL,
@@ -85,17 +85,17 @@ void KochaEngine::Audio::PlayWave(const char* strFileName, float volume)
 
 	pSourceVoice->SubmitSourceBuffer(&buffer);
 
-	pSourceVoice->SetVolume(volume);
+	pSourceVoice->SetVolume(arg_volume);
 	pSourceVoice->Start(0);
 		
 }
 
-void KochaEngine::Audio::LoopPlayWave(const char * strFileName, float volume)
+void KochaEngine::Audio::LoopPlayWave(const char* arg_strFileName, const float arg_volume)
 {
 
 	// Open the file
 	HANDLE hFile = CreateFileA(
-		strFileName,
+		arg_strFileName,
 		GENERIC_READ,
 		FILE_SHARE_READ,
 		NULL,
@@ -135,7 +135,7 @@ void KochaEngine::Audio::LoopPlayWave(const char * strFileName, float volume)
 
 	pSourceVoice->SubmitSourceBuffer(&buffer);
 
-	pSourceVoice->SetVolume(volume);
+	pSourceVoice->SetVolume(arg_volume);
 	pSourceVoice->Start(0);
 
 }
@@ -160,19 +160,19 @@ void KochaEngine::Audio::ReStart()
 	pSourceVoice->Start(0);
 }
 
-void KochaEngine::Audio::SetVolume(float volume)
+void KochaEngine::Audio::SetVolume(const float arg_volume)
 {
 	if (pSourceVoice != nullptr)
 	{
-		pSourceVoice->SetVolume(volume);
+		pSourceVoice->SetVolume(arg_volume);
 	}
 }
 
-void KochaEngine::Audio::SetPlaySpeed(float speed)
+void KochaEngine::Audio::SetPlaySpeed(const float arg_speed)
 {
 	if (pSourceVoice != nullptr)
 	{
-		pSourceVoice->SetFrequencyRatio(speed);
+		pSourceVoice->SetFrequencyRatio(arg_speed);
 	}
 }
 

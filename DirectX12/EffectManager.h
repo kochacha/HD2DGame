@@ -37,7 +37,7 @@ namespace KochaEngine
 
 		void LoadEffect(const std::string& arg_efkPath, const float arg_scale);
 		void Play(const std::string& arg_efkName, const Vector3& arg_position);
-		void Update(Camera* camera);
+		void Update(Camera* arg_camera);
 
 		void SetPosition(const Vector3& arg_position);
 		void SetScale(const float arg_scale);

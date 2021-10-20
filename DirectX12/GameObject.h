@@ -62,20 +62,20 @@ namespace KochaEngine
 		virtual float GetSpeed();
 		virtual float GetCameraDistance(Camera* arg_camera);
 
-		bool IsDead() { return isDead; }
-		bool IsDelete() { return isDelete; }
-		bool IsTrigger() { return isTrigger; }
-		bool IsAlphaObject() { return isAlpha; }
+		inline const bool IsDead() { return isDead; }
+		inline const bool IsDelete() { return isDelete; }
+		inline const bool IsTrigger() { return isTrigger; }
+		inline const bool IsAlphaObject() { return isAlpha; }
 
 
-		Vector3 GetPosition() { return position; }
-		Vector3 GetVelocity() { return velocity; }
-		_Sphere GetSphere() { return sphere; }
-		_Box GetBox() { return box; }
-		void SetFaceX(CollisionFace arg_faceX) { this->faceX = arg_faceX; }
-		void SetFaceZ(CollisionFace arg_faceZ) { this->faceZ = arg_faceZ; }
-		void SetPosition(const Vector3& arg_position) { this->position = arg_position; }
-		void SetMaxPos(const Vector3& arg_position) { this->maxPos = arg_position; }
-		void SetMinPos(const Vector3& arg_position) { this->minPos = arg_position; }
+		inline const Vector3 GetPosition() { return position; }
+		inline const Vector3 GetVelocity() { return velocity; }
+		inline const _Sphere GetSphere() { return sphere; }
+		inline const _Box GetBox() { return box; }
+		inline void SetFaceX(const CollisionFace& arg_faceX) { this->faceX = arg_faceX; }
+		inline void SetFaceZ(const CollisionFace& arg_faceZ) { this->faceZ = arg_faceZ; }
+		inline void SetPosition(const Vector3& arg_position) { this->position = arg_position; }
+		inline void SetMaxPos(const Vector3& arg_position) { this->maxPos = arg_position; }
+		inline void SetMinPos(const Vector3& arg_position) { this->minPos = arg_position; }
 	};
 }

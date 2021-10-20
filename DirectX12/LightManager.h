@@ -31,17 +31,17 @@ namespace KochaEngine
 		static LightManager* Create();
 
 		void Update();
-		void Draw(ID3D12GraphicsCommandList* arg_cmdList, UINT arg_rootParameterIndex);
+		void Draw(ID3D12GraphicsCommandList* arg_cmdList, const UINT arg_rootParameterIndex);
 		void TransferConstBuffer();
 
-		void SetDirectionalLightIsActive(int arg_index, bool arg_isActive);
-		void SetDirectionalLightDirection(int arg_index, const Vector3& arg_direction);
-		void SetDirectionalLightColor(int arg_index, const Vector3& arg_lightColor);
+		void SetDirectionalLightIsActive(const int arg_index, const bool arg_isActive);
+		void SetDirectionalLightDirection(const int arg_index, const Vector3& arg_direction);
+		void SetDirectionalLightColor(const int arg_index, const Vector3& arg_lightColor);
 
-		void SetPointLightIsActive(int arg_index, bool arg_isActive);
-		void SetPointLightPos(int arg_index, const Vector3& arg_lightPos);
-		void SetPointLightColor(int arg_index, const Vector3& arg_lightColor);
-		void SetPointLightAtten(int arg_index, const Vector3& arg_lightAtten);
+		void SetPointLightIsActive(const int arg_index, const bool arg_isActive);
+		void SetPointLightPos(const int arg_index, const Vector3& arg_lightPos);
+		void SetPointLightColor(const int arg_index, const Vector3& arg_lightColor);
+		void SetPointLightAtten(const int arg_index, const Vector3& arg_lightAtten);
 		void SetLightCamera(Camera* arg_lightCamera);
 
 	private:
