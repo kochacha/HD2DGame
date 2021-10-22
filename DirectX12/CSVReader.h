@@ -15,8 +15,8 @@ namespace KochaEngine
 
 		std::map<int, std::vector<std::vector<int>>> mapList;
 
-		void LoadCSV(int num, std::string fileName);
-		std::vector<std::vector<int>> GetMapData(int num);
+		void LoadCSV(const int arg_num, const std::string& arg_fileName);
+		std::vector<std::vector<int>> GetMapData(const int arg_num);
 		void Clear();
 	};
 }

@@ -12,9 +12,9 @@ KochaEngine::CSVReader::~CSVReader()
 {
 }
 
-void KochaEngine::CSVReader::LoadCSV(int num, std::string fileName)
+void KochaEngine::CSVReader::LoadCSV(const int arg_num, const std::string& arg_fileName)
 {
-	std::ifstream ifs(fileName);
+	std::ifstream ifs(arg_fileName);
 	if (ifs.fail())
 	{
 		OutputDebugStringA("CSVファイルを開けませんでした");
@@ -43,7 +43,7 @@ void KochaEngine::CSVReader::LoadCSV(int num, std::string fileName)
 		}
 	}
 
-	mapList.emplace(num, m_map);
+	mapList.emplace(arg_num, m_map);
 }
 
 std::vector<std::vector<int>> KochaEngine::CSVReader::GetMapData(int num)

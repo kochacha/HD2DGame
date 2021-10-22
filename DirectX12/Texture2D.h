@@ -88,10 +88,10 @@ namespace KochaEngine
 		~Texture2D();
 
 		void Draw();
-		void Draw(Vector2 position);
-		void AnimationDraw(UINT animationRate, Vector2 position);
+		void Draw(const Vector2& arg_position);
+		void AnimationDraw(const UINT arg_animationRate, const Vector2& arg_position);
 
-		void SetTexNum(UINT texNum);
+		void SetTexNum(const UINT arg_texNum);
 		void SetColor(const Vector4& arg_color) { this->color = arg_color; }
 		void SetSize(const Vector2& arg_size);
 

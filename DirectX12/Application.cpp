@@ -210,6 +210,7 @@ void KochaEngine::Application::Load()
 	Dx12_Texture::LoadTexture("Resources/Texture/black.png");
 	Dx12_Texture::LoadTexture("Resources/Texture/white.png");
 	Dx12_Texture::LoadTexture("Resources/Texture/font.png");
+	Dx12_Texture::LoadTexture("Resources/Texture/font_japanese.png");
 	Dx12_Texture::LoadTexture("Resources/Texture/EngineLogo.png");
 	Dx12_Texture::LoadTexture("Resources/Texture/player0.png");
 	Dx12_Texture::LoadTexture("Resources/Texture/green.png");

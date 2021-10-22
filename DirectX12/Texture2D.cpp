@@ -240,14 +240,14 @@ void KochaEngine::Texture2D::Draw()
 	cmdList->DrawInstanced(4, 1, 0, 0);
 }
 
-void KochaEngine::Texture2D::Draw(Vector2 position)
+void KochaEngine::Texture2D::Draw(const Vector2& arg_position)
 {
 	auto result = constBuff->Map(0, nullptr, (void**)&constMap);
 
 	matWorld = DirectX::XMMatrixIdentity();
 
 	matWorld *= DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(rotate));
-	matWorld *= DirectX::XMMatrixTranslation(position.x, position.y, 0);
+	matWorld *= DirectX::XMMatrixTranslation(arg_position.x, arg_position.y, 0);
 	constMap->mat = matWorld * matProjection;
 
 	constBuff->Unmap(0, nullptr);
@@ -266,10 +266,10 @@ void KochaEngine::Texture2D::Draw(Vector2 position)
 	cmdList->DrawInstanced(4, 1, 0, 0);
 }
 
-void KochaEngine::Texture2D::AnimationDraw(UINT animationRate, Vector2 position)
+void KochaEngine::Texture2D::AnimationDraw(const UINT arg_animationRate, const Vector2& arg_position)
 {
 
-	if (animationCount >= animationRate)
+	if (animationCount >= arg_animationRate)
 	{
 		if (texNum > maxTex)
 		{
@@ -293,7 +293,7 @@ void KochaEngine::Texture2D::AnimationDraw(UINT animationRate, Vector2 position)
 	matWorld = DirectX::XMMatrixIdentity();
 
 	matWorld *= DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(rotate));
-	matWorld *= DirectX::XMMatrixTranslation(position.x, position.y, 0);
+	matWorld *= DirectX::XMMatrixTranslation(arg_position.x, arg_position.y, 0);
 	constMap->mat = matWorld * matProjection;
 
 	constBuff->Unmap(0, nullptr);
@@ -312,7 +312,7 @@ void KochaEngine::Texture2D::AnimationDraw(UINT animationRate, Vector2 position)
 	cmdList->DrawInstanced(4, 1, 0, 0);
 }
 
-void KochaEngine::Texture2D::SetTexNum(UINT texNum)
+void KochaEngine::Texture2D::SetTexNum(const UINT arg_texNum)
 {
 	int a = 0;
 	int b, c;
@@ -322,7 +322,7 @@ void KochaEngine::Texture2D::SetTexNum(UINT texNum)
 		for (UINT x = 0; x < cutX; x++)
 		{
 			a++;
-			if (a == texNum)
+			if (a == arg_texNum)
 			{
 				b = x;
 				c = y;
