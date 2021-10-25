@@ -12,6 +12,7 @@ namespace KochaEngine
 {
 	class Map;
 	class LightManager;
+	class Text;
 
 	class GamePlay : public Scene
 	{
@@ -27,6 +28,7 @@ namespace KochaEngine
 		Object* skyObj;
 
 		Texture2D* fadeTexture;
+		Text* text;
 
 		bool fadeFlag;
 		bool isBattle;

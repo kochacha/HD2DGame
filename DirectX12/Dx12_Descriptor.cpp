@@ -38,7 +38,7 @@ HRESULT KochaEngine::Dx12_Descriptor::CreateHeap()
 		descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 		descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 		descHeapDesc.NodeMask = 0;
-		descHeapDesc.NumDescriptors = 512;
+		descHeapDesc.NumDescriptors = 128;
 		//ƒq[ƒv‚Ì¶¬
 		result = dx12.GetDevice().Get()->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&fbxHeap));
 	}

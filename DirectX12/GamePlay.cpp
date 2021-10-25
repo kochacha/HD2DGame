@@ -4,6 +4,7 @@
 #include "Map.h"
 #include "LightManager.h"
 #include "Player.h"
+#include "Text.h"
 
 KochaEngine::GamePlay::GamePlay()
 {
@@ -20,6 +21,8 @@ KochaEngine::GamePlay::GamePlay()
 	skyObj = new Object("skydome");
 
 	fadeTexture = new Texture2D("Resources/Texture/white.png", Vector2(0, 0), Vector2(1280, 720), 0);
+
+	text = new Text("Resources/Text/Sample.txt", Vector2(100, 100), Vector2(32, 32));
 }
 
 KochaEngine::GamePlay::~GamePlay()
@@ -34,6 +37,7 @@ KochaEngine::GamePlay::~GamePlay()
 	delete floor;
 	delete skyObj;
 	delete fadeTexture;
+	delete text;
 }
 
 void KochaEngine::GamePlay::Initialize()
@@ -104,6 +108,8 @@ void KochaEngine::GamePlay::SpriteDraw()
 	{
 		FieldSpriteDraw();
 	}
+
+	text->Draw(5);
 
 	fadeTexture->Draw();
 }

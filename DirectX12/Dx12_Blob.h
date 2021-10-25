@@ -17,7 +17,6 @@ namespace KochaEngine
 	class Dx12_Blob
 	{
 	private:
-
 		Blob basicBlob;
 		Blob texBlob;
 		Blob pmdBlob;

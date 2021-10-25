@@ -186,6 +186,8 @@
     <ClCompile Include="FieldAlphaObject.cpp" />
     <ClCompile Include="FieldObject.cpp" />
     <ClCompile Include="Figure2D.cpp" />
+    <ClCompile Include="Font.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="GameOver.cpp" />
@@ -215,7 +217,6 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="StageSelect.cpp" />
-    <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Util.cpp" />
@@ -473,6 +474,8 @@
     <ClInclude Include="FieldAlphaObject.h" />
     <ClInclude Include="FieldObject.h" />
     <ClInclude Include="Figure2D.h" />
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="GameOver.h" />
@@ -504,7 +507,6 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="StageSelect.h" />
-    <ClInclude Include="Text.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Util.h" />

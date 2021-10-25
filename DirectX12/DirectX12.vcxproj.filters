@@ -243,6 +243,9 @@
     <ClCompile Include="FieldAlphaObject.cpp">
       <Filter>Source\Object\GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
     <ClCompile Include="Text.cpp">
       <Filter>Source\UI</Filter>
     </ClCompile>
@@ -518,6 +521,9 @@
     </ClInclude>
     <ClInclude Include="FieldAlphaObject.h">
       <Filter>Header\Object\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Header\UI</Filter>
     </ClInclude>
     <ClInclude Include="Text.h">
       <Filter>Header\UI</Filter>

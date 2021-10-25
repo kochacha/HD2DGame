@@ -4,6 +4,11 @@
 
 KochaEngine::Text::Text(const std::string& arg_textName, const Vector2& arg_position, const Vector2& arg_fontSize, const unsigned int arg_addSpeed)
 {
+	position = arg_position;
+	fontSize = arg_fontSize;
+
+	Initialize();
+
 	CSVReader reader;
 	reader.LoadCSV(0, arg_textName);
 	std::vector<std::vector<int>> tmp = reader.GetMapData(0);
@@ -13,27 +18,41 @@ KochaEngine::Text::Text(const std::string& arg_textName, const Vector2& arg_posi
 	{
 		textData[i] = tmp[0][i];
 	}
-	Initialize();
 }
 
 void KochaEngine::Text::Initialize()
 {
+	textDataSize = 0;
 	addTextCount = 0;
 	count = 0;
 }
 
 void KochaEngine::Text::AddFont(Font* arg_font)
 {
+	//フォントを一文字追加
+	if (arg_font == nullptr) return;
 	fonts.push_back(arg_font);
+}
+
+void KochaEngine::Text::RemoveAll()
+{
+	auto end = fonts.end();
+	for (auto it = fonts.begin(); it != end; ++it)
+	{
+		delete (*it);
+	}
+	fonts.clear();
 }
 
 KochaEngine::Text::~Text()
 {
+	RemoveAll();
 }
 
-void KochaEngine::Text::Draw()
+void KochaEngine::Text::Draw(const int arg_addSpeed)
 {
-	if (count < 5)
+	//addSpeedフレーム毎にフォントを追加していく
+	if (count < arg_addSpeed)
 	{
 		count++;
 	}
@@ -41,8 +60,9 @@ void KochaEngine::Text::Draw()
 	{
 		if (addTextCount < textDataSize)
 		{
-			AddFont(new Font(textData[addTextCount], position + Vector2(32 * addTextCount, 0), Vector2(32, 32)));
+			AddFont(new Font(textData[addTextCount], position + Vector2(fontSize.x * addTextCount, 0), fontSize));
 		}
+		addTextCount++;
 		count = 0;
 	}
 

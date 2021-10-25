@@ -54,6 +54,7 @@ void KochaEngine::Dx12_Blob::Init()
 		"VSmain", "vs_5_0", //エントリーポイント名、シェーダーモデル指定
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, //デバッグ用設定
 		0, &basicBlob.vsBlob, &basicBlob.errorBlob);
+	//auto result = CompileShader("BasicVertexShader.hlsl", "VSmain", "vs_5_0", basicBlob);
 	ErrorBlob(result, basicBlob);
 
 	result = D3DCompileFromFile(

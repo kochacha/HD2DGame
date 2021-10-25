@@ -24,7 +24,7 @@ namespace KochaEngine
 		//•¶š—ñŒ^•ÏŠ·ŠÖ”
 		static std::string WstringToString(std::wstring wstring);
 		static std::wstring StringToWstring(std::string string);
-		static wchar_t* StringToWchar_t(std::string string);
+		static wchar_t* StringToWchar_t(const std::string& string);
 
 		static float Length(DirectX::XMFLOAT3 a);
 		static DirectX::XMFLOAT3 Normalize(DirectX::XMFLOAT3 a);

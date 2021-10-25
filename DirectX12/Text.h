@@ -15,7 +15,6 @@ namespace KochaEngine
 
 		Vector2 position;
 		Vector2 fontSize;
-		unsigned int addSpeed;
 		unsigned int count;
 		unsigned int textDataSize;
 		unsigned int addTextCount;
@@ -24,13 +23,14 @@ namespace KochaEngine
 
 		void Initialize();
 		void AddFont(Font* arg_font);
+		void RemoveAll();
 
 	public:
 		Text(const std::string& arg_textName, const Vector2& arg_position,
 			const Vector2& arg_fontSize, const unsigned int arg_addSpeed = 5);
 		~Text();
 
-		void Draw();
+		void Draw(const int arg_addSpeed);
 
 		inline void SetPosition(const Vector2& arg_position) { position = arg_position; }
 	};
