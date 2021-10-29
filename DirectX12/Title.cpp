@@ -6,8 +6,8 @@
 
 KochaEngine::Title::Title()
 {
-	backTexture = new Texture2D("Resources/Texture/titleTexture.png", Vector2(0, 0), Vector2(1280, 720), 0);
-	fadeTexture = new Texture2D("Resources/Texture/white.png", Vector2(0, 0), Vector2(1280, 720), 0);
+	backTexture = new Texture2D("Resources/Texture/Engine/titleTexture.png", Vector2(0, 0), Vector2(1280, 720), 0);
+	fadeTexture = new Texture2D("Resources/Texture/Color/white.png", Vector2(0, 0), Vector2(1280, 720), 0);
 }
 
 KochaEngine::Title::~Title()

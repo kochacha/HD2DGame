@@ -24,23 +24,23 @@ void KochaEngine::FieldAlphaObject::Initialize()
 	switch (fieldAlphaObjType)
 	{
 	case KochaEngine::ROCK1:
-		obj->SetTexture("Resources/Texture/rock1.png");
+		obj->SetTexture("Resources/Texture/Object/rock1.png");
 		obj->SetScale(Vector3(16, 16, 16));
 		break;
 	case KochaEngine::ROCK3:
-		obj->SetTexture("Resources/Texture/rock3.png");
+		obj->SetTexture("Resources/Texture/Object/rock3.png");
 		obj->SetScale(Vector3(20, 20, 20));
 		break;
 	case KochaEngine::TREE1:
-		obj->SetTexture("Resources/Texture/tree1.png");
+		obj->SetTexture("Resources/Texture/Object/tree1.png");
 		obj->SetScale(Vector3(30, 30, 30));
 		break;
 	case KochaEngine::TREE2:
-		obj->SetTexture("Resources/Texture/tree2.png");
+		obj->SetTexture("Resources/Texture/Object/tree2.png");
 		obj->SetScale(Vector3(30, 30, 30));
 		break;
 	case KochaEngine::GRASS1:
-		obj->SetTexture("Resources/Texture/grass1.png");
+		obj->SetTexture("Resources/Texture/Object/grass1.png");
 		obj->SetScale(Vector3(6, 6, 6));
 		break;
 	default:

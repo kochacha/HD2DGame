@@ -52,18 +52,25 @@ KochaEngine::Text::~Text()
 void KochaEngine::Text::Draw(const int arg_addSpeed)
 {
 	//addSpeedフレーム毎にフォントを追加していく
-	if (count < arg_addSpeed)
+	if (arg_addSpeed > 0)
 	{
-		count++;
+		if (count < arg_addSpeed)
+		{
+			count++;
+		}
+		else if (addTextCount < textDataSize)
+		{
+			AddFont(new Font(textData[addTextCount], position + Vector2(fontSize.x * addTextCount, 0), fontSize));
+			addTextCount++;
+			count = 0;
+		}
 	}
 	else
 	{
-		if (addTextCount < textDataSize)
+		for (; addTextCount < textDataSize; addTextCount++)
 		{
 			AddFont(new Font(textData[addTextCount], position + Vector2(fontSize.x * addTextCount, 0), fontSize));
 		}
-		addTextCount++;
-		count = 0;
 	}
 
 	auto end = fonts.end();

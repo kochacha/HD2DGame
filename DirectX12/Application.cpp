@@ -207,31 +207,52 @@ void KochaEngine::Application::Run()
 void KochaEngine::Application::Load()
 {
 	//Textureのロード
-	Dx12_Texture::LoadTexture("Resources/Texture/black.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/white.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/font.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/font_japanese.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/EngineLogo.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/player0.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/green.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/PIEN.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/kaku4.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/number.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/stone.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/tiling_grass.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/tiling_grass1.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/tiling_rock1.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/tiling_rock2.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/tiling_water1.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/tiling_water2.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/water_ball1.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/rock1.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/rock2.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/rock3.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/tree1.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/tree2.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/grass1.png");
-	Dx12_Texture::LoadTexture("Resources/Texture/titleTexture.png");
+	{
+		//Colorフォルダ
+		Dx12_Texture::LoadTexture("Resources/Texture/Color/black.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Color/white.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Color/red.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Color/green.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Color/blue.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Color/yellow.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Color/pink.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Color/lightBlue.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Color/orange.png");
+
+		//Engineフォルダ
+		Dx12_Texture::LoadTexture("Resources/Texture/Engine/EngineLogo.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Engine/PIEN.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Engine/kaku4.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Engine/titleTexture.png");
+
+		//Fontフォルダ
+		Dx12_Texture::LoadTexture("Resources/Texture/Font/font.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Font/font_japanese.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Font/number.png");
+
+		//Characterフォルダ
+		Dx12_Texture::LoadTexture("Resources/Texture/Character/player0.png");
+
+		//Objectフォルダ
+		Dx12_Texture::LoadTexture("Resources/Texture/Object/rock1.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Object/rock2.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Object/rock3.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Object/tree1.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Object/tree2.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Object/grass1.png");
+
+		//Tilingフォルダ
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_stone1.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_stone2.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_grass.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_grass1.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_rock1.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_rock2.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_water1.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_water2.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/water_ball1.png");
+	}
+
 
 	//.objのロード
 	Dx12_Object::LoadObject("LowTree");
@@ -508,9 +529,9 @@ bool KochaEngine::Application::Initialize()
 	pointLightAtten = Vector3(1.000f, 0.050f, 0.001f);
 	isActiveDirLight = true;
 
-	engineLogoTexture[0] = new Texture2D("Resources/Texture/white.png", Vector2(0, 0), Vector2(1280, 720), 0);
+	engineLogoTexture[0] = new Texture2D("Resources/Texture/Color/white.png", Vector2(0, 0), Vector2(1280, 720), 0);
 	engineLogoTexture[0]->SetColor(Vector4(0, 0, 0.12f, 1));
-	engineLogoTexture[1] = new Texture2D("Resources/Texture/EngineLogo.png", Vector2(0, 0), Vector2(1280, 720), 0);
+	engineLogoTexture[1] = new Texture2D("Resources/Texture/Engine/EngineLogo.png", Vector2(0, 0), Vector2(1280, 720), 0);
 
 	peraBloom = new PostEffect();
 	peraEffect = new PostEffect();

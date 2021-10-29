@@ -20,7 +20,7 @@ void KochaEngine::ParticleEmitter::MoveParticle(const Vector3& arg_position)
 	param.moveRotate = Vector3(0, 0, 0);
 	param.moveScale = Vector3(-0.2f, -0.2f, 0);
 	param.scale = Vector3(4, 4, 1);
-	param.textureName = "Resources/white.png";
+	param.textureName = "Resources/Texture/Color/white.png";
 	param.velocity = Vector3(0, 0, 0);
 	param.color = Vector4(0, 0, 0, 1);
 	//auto rand = Util::GetIntRand(0, 360);
@@ -41,7 +41,7 @@ void KochaEngine::ParticleEmitter::SmashStar(const Vector3& arg_position)
 	param.moveRotate = Vector3(0, 0, randY);
 	param.moveScale = Vector3(-randScale / (float)param.life, -randScale / (float)param.life, 0);
 	param.scale = Vector3(randScale, randScale, 1);
-	param.textureName = "Resources/white.png";
+	param.textureName = "Resources/Texture/Color/white.png";
 	param.velocity = Vector3(0, randY, 0);
 	param.color = Vector4(0, 0, 0, 1);
 	param.rotate = Vector3(0, 0, 0);

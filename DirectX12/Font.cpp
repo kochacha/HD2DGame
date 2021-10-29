@@ -7,7 +7,7 @@ KochaEngine::Font::Font(const unsigned int arg_texNum, const Vector2& arg_positi
     position = arg_position;
     fontSize = arg_fontSize;
 
-    texture = new Texture2D("Resources/Texture/font_japanese.png", 10, 18, texNum, position, fontSize, 0);
+    texture = new Texture2D("Resources/Texture/Font/font_japanese.png", 10, 18, texNum, position, fontSize, 0);
 }
 
 KochaEngine::Font::~Font()

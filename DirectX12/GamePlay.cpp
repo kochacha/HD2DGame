@@ -20,9 +20,9 @@ KochaEngine::GamePlay::GamePlay()
 	floor = new Object("graund");
 	skyObj = new Object("skydome");
 
-	fadeTexture = new Texture2D("Resources/Texture/white.png", Vector2(0, 0), Vector2(1280, 720), 0);
+	fadeTexture = new Texture2D("Resources/Texture/Color/white.png", Vector2(0, 0), Vector2(1280, 720), 0);
 
-	text = new Text("Resources/Text/Sample.txt", Vector2(100, 100), Vector2(32, 32));
+	text = new Text("Resources/Text/Sample.txt", Vector2(0, 100), Vector2(64, 64));
 }
 
 KochaEngine::GamePlay::~GamePlay()
@@ -57,7 +57,7 @@ void KochaEngine::GamePlay::Initialize()
 	map->CreateMap(0);
 
 	floor->SetPosition(Vector3(0, 0, 0));
-	floor->SetTexture("Resources/Texture/stone.png");
+	floor->SetTexture("Resources/Texture/Tiling/tiling_stone1.png");
 
 	skyObj->SetScale(Vector3(8, 8, 8));
 	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
@@ -200,6 +200,7 @@ void KochaEngine::GamePlay::FadeUpdate()
 
 void KochaEngine::GamePlay::BattleUpdate()
 {
+
 
 	//バトルシーン終了
 	if (Input::TriggerKey(DIK_SPACE))
