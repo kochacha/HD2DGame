@@ -60,16 +60,37 @@ void KochaEngine::Text::Draw(const int arg_addSpeed)
 		}
 		else if (addTextCount < textDataSize)
 		{
-			AddFont(new Font(textData[addTextCount], position + Vector2(fontSize.x * addTextCount, 0), fontSize));
+			Vector2 fixPosition;
+			if (addTextCount < MAX_ONE_LINE_FONTS)
+			{
+				fixPosition = Vector2(fontSize.x * addTextCount, 0);
+			}
+			else
+			{
+				fixPosition = Vector2(fontSize.x * (addTextCount - MAX_ONE_LINE_FONTS), fontSize.y);
+			}
+
+			AddFont(new Font(textData[addTextCount], position + fixPosition, fontSize));
 			addTextCount++;
 			count = 0;
 		}
 	}
 	else
 	{
+		//addSpeed‚ª0‚È‚ç“¯Žž‚É‘S•”•`‰æ‚·‚é
 		for (; addTextCount < textDataSize; addTextCount++)
 		{
-			AddFont(new Font(textData[addTextCount], position + Vector2(fontSize.x * addTextCount, 0), fontSize));
+			Vector2 fixPosition;
+			if (addTextCount < MAX_ONE_LINE_FONTS)
+			{
+				fixPosition = Vector2(fontSize.x * addTextCount, 0);
+			}
+			else
+			{
+				fixPosition = Vector2(fontSize.x * (addTextCount - MAX_ONE_LINE_FONTS), fontSize.y);
+			}
+			
+			AddFont(new Font(textData[addTextCount], position + fixPosition, fontSize));
 		}
 	}
 

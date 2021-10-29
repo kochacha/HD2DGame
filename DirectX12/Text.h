@@ -19,7 +19,7 @@ namespace KochaEngine
 		unsigned int textDataSize;
 		unsigned int addTextCount;
 
-		const unsigned short MAX_TEXT_DATA = 60;
+		const unsigned short MAX_ONE_LINE_FONTS = 30;
 
 		void Initialize();
 		void AddFont(Font* arg_font);

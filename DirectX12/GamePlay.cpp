@@ -22,7 +22,7 @@ KochaEngine::GamePlay::GamePlay()
 
 	fadeTexture = new Texture2D("Resources/Texture/Color/white.png", Vector2(0, 0), Vector2(1280, 720), 0);
 
-	text = new Text("Resources/Text/Sample.txt", Vector2(0, 100), Vector2(64, 64));
+	text = new Text("Resources/Text/Sample.txt", Vector2(0, 100), Vector2(32, 32));
 }
 
 KochaEngine::GamePlay::~GamePlay()
