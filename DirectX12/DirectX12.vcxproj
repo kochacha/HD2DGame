@@ -187,6 +187,7 @@
     <ClCompile Include="FieldObject.cpp" />
     <ClCompile Include="Figure2D.cpp" />
     <ClCompile Include="Font.cpp" />
+    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
@@ -476,6 +477,7 @@
     <ClInclude Include="Figure2D.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameSetting.h" />
+    <ClInclude Include="InputManager.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectManager.h" />

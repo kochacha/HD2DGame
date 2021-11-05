@@ -233,6 +233,7 @@ void KochaEngine::Application::Load()
 		//UIフォルダ
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/command_0.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/command_1.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/UI/command_2.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/waku_0.png");
 
 		//Characterフォルダ

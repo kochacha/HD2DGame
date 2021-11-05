@@ -21,11 +21,12 @@ KochaEngine::GamePlay::GamePlay()
 	floor = new Object("graund");
 	skyObj = new Object("skydome");
 
-	fadeTexture = new Texture2D("Resources/Texture/Color/white.png", Vector2(0, 0), Vector2(1280, 720), 0);
-	waku_0_Texture = new Texture2D("Resources/Texture/UI/waku_0.png", Vector2(450, 550), Vector2(768, 96), 0);
-	command_1_Texture = new Texture2D("Resources/Texture/UI/command_1.png", Vector2(250, 450), Vector2(168, 240), 0);
+	fadeTexture = new Texture2D("Resources/Texture/Color/white.png", Vector2(0, 0), SCREEN_SIZE, 0);
+	defaultWakuTexture = new Texture2D("Resources/Texture/UI/waku_0.png", DEFAULT_WAKU_POS, DEFAULT_WAKU_SIZE, 0);
+	defaultCommandTexture = new Texture2D("Resources/Texture/UI/command_1.png", DEFAULT_COMMAND_POS, DEFAULT_COMMAND_SIZE, 0);
+	battleStatusTexture = new Texture2D("Resources/Texture/UI/command_2.png", BATTLE_STATUS_POS, BATTLE_STATUS_SIZE, 0);
 
-	text = new Text("Resources/Text/Sample.txt", Vector2(460, 565), Vector2(32, 32));
+	text = new Text("Resources/Text/Sample0.txt", TALK_TEXT_POS, Vector2(32, 32));
 }
 
 KochaEngine::GamePlay::~GamePlay()
@@ -40,8 +41,9 @@ KochaEngine::GamePlay::~GamePlay()
 	delete floor;
 	delete skyObj;
 	delete fadeTexture;
-	delete waku_0_Texture;
-	delete command_1_Texture;
+	delete defaultWakuTexture;
+	delete battleStatusTexture;
+	delete defaultCommandTexture;
 	delete text;
 }
 
@@ -53,7 +55,7 @@ void KochaEngine::GamePlay::Initialize()
 	isBattleEnd = false;
 
 	gManager->RemoveAll();
-	camera->Initialize(1280, 720, 90, 100, { 0,1,0 }, { 0,0,0 }, { 0,1,0 });
+	camera->Initialize(SCREEN_SIZE.x, SCREEN_SIZE.y, 90, 100, { 0,1,0 }, { 0,0,0 }, { 0,1,0 });
 	lightManager->SetDirectionalLightColor(0, Vector3(1, 1, 1));
 	lightManager->SetDirectionalLightDirection(0, Vector3(1, 1, -1));
 	lightManager->SetDirectionalLightIsActive(0, true);
@@ -205,9 +207,11 @@ void KochaEngine::GamePlay::FadeUpdate()
 void KochaEngine::GamePlay::BattleUpdate()
 {
 	//バトルシーン開始
+
+
 	if (Input::TriggerKey(DIK_T))
 	{
-		text->ReText("Resources/Text/Sample.txt");
+		text->ReText("Resources/Text/Sample0.txt");
 	}
 
 
@@ -236,8 +240,9 @@ void KochaEngine::GamePlay::BattleAlphaObjDraw()
 
 void KochaEngine::GamePlay::BattleSpriteDraw()
 {
-	waku_0_Texture->Draw();
-	command_1_Texture->Draw();
+	defaultWakuTexture->Draw();
+	battleStatusTexture->Draw();
+	defaultCommandTexture->Draw();
 	text->Draw(KochaEngine::GameSetting::talkSpeed);
 }
 

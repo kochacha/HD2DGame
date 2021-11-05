@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "GameObjectManager.h"
 #include "Util.h"
+#include "InputManager.h"
 
 KochaEngine::Player::Player(Camera* arg_camera, GameObjectManager* arg_gManager, const Vector3& arg_position)
 {
@@ -109,25 +110,25 @@ void KochaEngine::Player::InputMove()
 
 	bool isDash = false;
 
-	if (Input::CheckKey(DIK_W))
+	if (InputManager::MoveUp())
 	{
 		velocity.z = 1;
 		isDash = true;
 		encountCount--;
 	}
-	else if (Input::CheckKey(DIK_S))
+	else if (InputManager::MoveDown())
 	{
 		velocity.z = -1;
 		isDash = true;
 		encountCount--;
 	}
-	if (Input::CheckKey(DIK_A))
+	if (InputManager::MoveLeft())
 	{
 		velocity.x = -1;
 		isDash = true;
 		encountCount--;
 	}
-	else if (Input::CheckKey(DIK_D))
+	else if (InputManager::MoveRight())
 	{
 		velocity.x = 1;
 		isDash = true;
@@ -137,7 +138,7 @@ void KochaEngine::Player::InputMove()
 
 	if (isDash)
 	{
-		if (Input::CheckKey(DIK_LSHIFT))
+		if (InputManager::MoveDash())
 		{
 			speed = 0.8f;
 			encountCount--;
