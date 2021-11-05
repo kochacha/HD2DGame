@@ -230,6 +230,11 @@ void KochaEngine::Application::Load()
 		Dx12_Texture::LoadTexture("Resources/Texture/Font/font_japanese.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Font/number.png");
 
+		//UIフォルダ
+		Dx12_Texture::LoadTexture("Resources/Texture/UI/command_0.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/UI/command_1.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/UI/waku_0.png");
+
 		//Characterフォルダ
 		Dx12_Texture::LoadTexture("Resources/Texture/Character/player0.png");
 

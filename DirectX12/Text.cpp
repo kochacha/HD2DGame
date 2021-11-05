@@ -7,17 +7,7 @@ KochaEngine::Text::Text(const std::string& arg_textName, const Vector2& arg_posi
 	position = arg_position;
 	fontSize = arg_fontSize;
 
-	Initialize();
-
-	CSVReader reader;
-	reader.LoadCSV(0, arg_textName);
-	std::vector<std::vector<int>> tmp = reader.GetMapData(0);
-	textDataSize = tmp[0].size();
-	textData.resize(textDataSize);
-	for (int i = 0; i != textDataSize; i++)
-	{
-		textData[i] = tmp[0][i];
-	}
+	ReText(arg_textName);
 }
 
 void KochaEngine::Text::Initialize()
@@ -98,5 +88,21 @@ void KochaEngine::Text::Draw(const int arg_addSpeed)
 	for (auto it = fonts.begin(); it != end; ++it)
 	{
 		(*it)->Draw();
+	}
+}
+
+void KochaEngine::Text::ReText(const std::string& arg_textName)
+{
+	Initialize();
+	RemoveAll();
+
+	CSVReader reader;
+	reader.LoadCSV(0, arg_textName);
+	std::vector<std::vector<int>> tmp = reader.GetMapData(0);
+	textDataSize = tmp[0].size();
+	textData.resize(textDataSize);
+	for (int i = 0; i != textDataSize; i++)
+	{
+		textData[i] = tmp[0][i];
 	}
 }

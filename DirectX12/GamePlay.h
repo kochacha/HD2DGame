@@ -28,6 +28,8 @@ namespace KochaEngine
 		Object* skyObj;
 
 		Texture2D* fadeTexture;
+		Texture2D* waku_0_Texture;
+		Texture2D* command_1_Texture;
 		Text* text;
 
 		bool fadeFlag;

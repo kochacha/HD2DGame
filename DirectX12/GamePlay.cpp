@@ -5,6 +5,7 @@
 #include "LightManager.h"
 #include "Player.h"
 #include "Text.h"
+#include "GameSetting.h"
 
 KochaEngine::GamePlay::GamePlay()
 {
@@ -21,8 +22,10 @@ KochaEngine::GamePlay::GamePlay()
 	skyObj = new Object("skydome");
 
 	fadeTexture = new Texture2D("Resources/Texture/Color/white.png", Vector2(0, 0), Vector2(1280, 720), 0);
+	waku_0_Texture = new Texture2D("Resources/Texture/UI/waku_0.png", Vector2(450, 550), Vector2(768, 96), 0);
+	command_1_Texture = new Texture2D("Resources/Texture/UI/command_1.png", Vector2(250, 450), Vector2(168, 240), 0);
 
-	text = new Text("Resources/Text/Sample.txt", Vector2(0, 100), Vector2(32, 32));
+	text = new Text("Resources/Text/Sample.txt", Vector2(460, 565), Vector2(32, 32));
 }
 
 KochaEngine::GamePlay::~GamePlay()
@@ -37,6 +40,8 @@ KochaEngine::GamePlay::~GamePlay()
 	delete floor;
 	delete skyObj;
 	delete fadeTexture;
+	delete waku_0_Texture;
+	delete command_1_Texture;
 	delete text;
 }
 
@@ -109,8 +114,6 @@ void KochaEngine::GamePlay::SpriteDraw()
 		FieldSpriteDraw();
 	}
 
-	text->Draw(5);
-
 	fadeTexture->Draw();
 }
 
@@ -152,6 +155,7 @@ void KochaEngine::GamePlay::DrawGUI()
 	{
 		ImGui::Text("GamePlay_Field");
 	}
+	ImGui::InputInt("#TalkSpeed", &KochaEngine::GameSetting::talkSpeed, 1);
 }
 
 void KochaEngine::GamePlay::Load()
@@ -200,6 +204,11 @@ void KochaEngine::GamePlay::FadeUpdate()
 
 void KochaEngine::GamePlay::BattleUpdate()
 {
+	//バトルシーン開始
+	if (Input::TriggerKey(DIK_T))
+	{
+		text->ReText("Resources/Text/Sample.txt");
+	}
 
 
 	//バトルシーン終了
@@ -227,6 +236,9 @@ void KochaEngine::GamePlay::BattleAlphaObjDraw()
 
 void KochaEngine::GamePlay::BattleSpriteDraw()
 {
+	waku_0_Texture->Draw();
+	command_1_Texture->Draw();
+	text->Draw(KochaEngine::GameSetting::talkSpeed);
 }
 
 void KochaEngine::GamePlay::FieldUpdate()

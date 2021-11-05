@@ -528,5 +528,8 @@
     <ClInclude Include="Text.h">
       <Filter>Header\UI</Filter>
     </ClInclude>
+    <ClInclude Include="GameSetting.h">
+      <Filter>Header\Util</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

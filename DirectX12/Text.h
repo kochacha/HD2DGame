@@ -19,7 +19,7 @@ namespace KochaEngine
 		unsigned int textDataSize;
 		unsigned int addTextCount;
 
-		const unsigned short MAX_ONE_LINE_FONTS = 30;
+		const unsigned short MAX_ONE_LINE_FONTS = 23;
 
 		void Initialize();
 		void AddFont(Font* arg_font);
@@ -31,6 +31,7 @@ namespace KochaEngine
 		~Text();
 
 		void Draw(const int arg_addSpeed);
+		void ReText(const std::string& arg_textName);
 
 		inline void SetPosition(const Vector2& arg_position) { position = arg_position; }
 	};
