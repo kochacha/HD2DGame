@@ -20,6 +20,7 @@ namespace KochaEngine
 		Map* map;
 		Camera* camera;
 		GameObjectManager* gManager;
+		GameObjectManager* battle_gManager;
 		ParticleManager* pManager;
 		ParticleEmitter* emitter;
 		LightManager* lightManager;
@@ -31,11 +32,13 @@ namespace KochaEngine
 		Texture2D* defaultWakuTexture;
 		Texture2D* battleStatusTexture;
 		Texture2D* defaultCommandTexture;
+		Texture2D* cursorTexture;
 		Text* text;
 
 		bool fadeFlag;
 		bool isBattle;
 		bool isBattleEnd;
+		bool isBattleStart;
 		float fadeAlpha;
 
 		int frameCount;

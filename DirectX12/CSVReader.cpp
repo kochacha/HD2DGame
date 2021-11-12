@@ -14,11 +14,13 @@ KochaEngine::CSVReader::~CSVReader()
 
 void KochaEngine::CSVReader::LoadCSV(const int arg_num, const std::string& arg_fileName)
 {
-	std::ifstream ifs(arg_fileName);
+	std::ifstream ifs;
+
+	ifs.open(arg_fileName);
+
 	if (ifs.fail())
 	{
-		OutputDebugStringA("CSVファイルを開けませんでした");
-		return;
+		ifs.open("Resources/Text/fail.txt");
 	}
 
 	std::vector<std::vector<int>> m_map;
@@ -42,6 +44,7 @@ void KochaEngine::CSVReader::LoadCSV(const int arg_num, const std::string& arg_f
 			row.resize(0);
 		}
 	}
+	ifs.close();
 
 	mapList.emplace(arg_num, m_map);
 }

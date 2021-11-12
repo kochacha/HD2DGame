@@ -19,7 +19,7 @@ namespace KochaEngine
 		FieldAlphaObjType fieldAlphaObjType;
 
 	public:
-		FieldAlphaObject(Camera* arg_camera, const FieldAlphaObjType& arg_fieldAlphaObjType, const Vector3& arg_position);
+		FieldAlphaObject(const FieldAlphaObjType& arg_fieldAlphaObjType, const Vector3& arg_position);
 		~FieldAlphaObject() override;
 
 		void Initialize() override;

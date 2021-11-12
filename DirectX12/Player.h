@@ -32,7 +32,7 @@ namespace KochaEngine
 		void Hit()override;
 		void HitBlock(_Box box)override;
 		void ObjDraw(Camera* arg_camera, LightManager* arg_lightManager) override;
-		GameObjectType GetType();
+		GameObjectType GetType() override;
 
 		void SetIsBattle(const bool arg_isBattle) { isBattle = arg_isBattle; }
 		void EncountReset();

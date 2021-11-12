@@ -47,47 +47,47 @@ void KochaEngine::Map::CreateMap(const int arg_mapNum)
 				gManager->AddObject(new Block(KochaEngine::BlockType::SOIL_BLOCK, Vector3(posX, 8, posZ)));
 				break;
 			case 30:
-				gManager->AddObject(new FieldObject(camera, KochaEngine::FieldObjType::TREE, Vector3(posX, 0, posZ)));
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::TREE, Vector3(posX, 0, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 8));
 				break;
 			case 31:
-				gManager->AddObject(new FieldObject(camera, KochaEngine::FieldObjType::SAKU_WOODEN_SIDEWAYS_UP, Vector3(posX, 0, posZ)));
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SAKU_WOODEN_SIDEWAYS_UP, Vector3(posX, 0, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10));
 				break;
 			case 32:
-				gManager->AddObject(new FieldObject(camera, KochaEngine::FieldObjType::SAKU_WOODEN_SIDEWAYS_DOWN, Vector3(posX, 0, posZ)));
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SAKU_WOODEN_SIDEWAYS_DOWN, Vector3(posX, 0, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10));
 				break;
 			case 33:
-				gManager->AddObject(new FieldObject(camera, KochaEngine::FieldObjType::SAKU_WOODEN_VERTICAL_LEFT, Vector3(posX, 0, posZ)));
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SAKU_WOODEN_VERTICAL_LEFT, Vector3(posX, 0, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10));
 				break;
 			case 34:
-				gManager->AddObject(new FieldObject(camera, KochaEngine::FieldObjType::SAKU_WOODEN_VERTICAL_RIGHT, Vector3(posX, 0, posZ)));
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SAKU_WOODEN_VERTICAL_RIGHT, Vector3(posX, 0, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10));
 				break;
 			case 60:
-				gManager->AddObject(new FieldAlphaObject(camera, KochaEngine::FieldAlphaObjType::ROCK1, Vector3(posX, 8, posZ)));
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::ROCK1, Vector3(posX, 8, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 8));
 				break;
 			case 61:
-				gManager->AddObject(new FieldAlphaObject(camera, KochaEngine::FieldAlphaObjType::ROCK2, Vector3(posX, 10, posZ)));
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::ROCK2, Vector3(posX, 10, posZ)));
 				break;
 			case 62:
-				gManager->AddObject(new FieldAlphaObject(camera, KochaEngine::FieldAlphaObjType::ROCK3, Vector3(posX, 4, posZ)));
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::ROCK3, Vector3(posX, 4, posZ)));
 				break;
 			case 63:
-				gManager->AddObject(new FieldAlphaObject(camera, KochaEngine::FieldAlphaObjType::TREE1, Vector3(posX, 15, posZ)));
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::TREE1, Vector3(posX, 15, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 8));
 				break;
 			case 64:
-				gManager->AddObject(new FieldAlphaObject(camera, KochaEngine::FieldAlphaObjType::TREE2, Vector3(posX, 15, posZ)));
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::TREE2, Vector3(posX, 15, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 8));
 				break;
 			case 65:
 				break;
 			case 66:
-				gManager->AddObject(new FieldAlphaObject(camera, KochaEngine::FieldAlphaObjType::GRASS1, Vector3(posX, 2, posZ)));
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::GRASS1, Vector3(posX, 2, posZ)));
 				break;
 			case 99:
 				gManager->AddObject(new Player(camera, gManager, Vector3(posX, 5, posZ)));

@@ -1,10 +1,7 @@
 #include "FieldAlphaObject.h"
 
-KochaEngine::FieldAlphaObject::FieldAlphaObject(Camera* arg_camera, const FieldAlphaObjType& arg_fieldAlphaObjType, const Vector3& arg_position)
+KochaEngine::FieldAlphaObject::FieldAlphaObject(const FieldAlphaObjType& arg_fieldAlphaObjType, const Vector3& arg_position)
 {
-	if (arg_camera == nullptr) return;
-
-	camera = arg_camera;
 	fieldAlphaObjType = arg_fieldAlphaObjType;
 	position = arg_position;
 

@@ -1,11 +1,8 @@
 #include "FieldObject.h"
 
 
-KochaEngine::FieldObject::FieldObject(Camera* arg_camera, const FieldObjType arg_fieldObjType, const Vector3& arg_position)
+KochaEngine::FieldObject::FieldObject(const FieldObjType arg_fieldObjType, const Vector3& arg_position)
 {
-	if (arg_camera == nullptr) return;
-
-	camera = arg_camera;
 	fieldObjType = arg_fieldObjType;
 	position = arg_position;
 
@@ -59,7 +56,7 @@ void KochaEngine::FieldObject::Update()
 {
 }
 
-void KochaEngine::FieldObject::ObjDraw(Camera* camera, LightManager* arg_ligtManager)
+void KochaEngine::FieldObject::ObjDraw(Camera* arg_camera, LightManager* arg_ligtManager)
 {
-	obj->Draw(camera, arg_ligtManager);
+	obj->Draw(arg_camera, arg_ligtManager);
 }

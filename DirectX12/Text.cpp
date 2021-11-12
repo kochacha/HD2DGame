@@ -96,8 +96,10 @@ void KochaEngine::Text::ReText(const std::string& arg_textName)
 	Initialize();
 	RemoveAll();
 
+	auto textName = "Resources/Text/" + arg_textName;
+
 	CSVReader reader;
-	reader.LoadCSV(0, arg_textName);
+	reader.LoadCSV(0, textName);
 	std::vector<std::vector<int>> tmp = reader.GetMapData(0);
 	textDataSize = tmp[0].size();
 	textData.resize(textDataSize);

@@ -19,10 +19,12 @@ namespace KochaEngine
 	struct ActorParam
 	{
 		std::string name;
+		std::string texName;
 		Attribute attribute;
+		Vector3 size;
 		unsigned int level;
 		int hp;
-		int mp;
+		int sp;
 		int attack;
 		int diffence;
 		int intelligence;

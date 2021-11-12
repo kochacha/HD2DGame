@@ -8,16 +8,19 @@ KochaEngine::GameObjectManager::GameObjectManager()
 
 KochaEngine::GameObjectManager::~GameObjectManager()
 {
+	//ゲームオブジェクトの全削除
 	RemoveAll();
 }
 
 void KochaEngine::GameObjectManager::AddObject(GameObject* arg_gameObject)
 {
+	//ゲームオブジェクトの追加
 	gameObjects.push_back(arg_gameObject);
 }
 
 void KochaEngine::GameObjectManager::Initialize()
 {
+	//全てのゲームオブジェクトの初期化
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
 	{
@@ -27,24 +30,18 @@ void KochaEngine::GameObjectManager::Initialize()
 
 void KochaEngine::GameObjectManager::Update()
 {
+	//全てのゲームオブジェクトの更新
 	for (int i = 0; i != gameObjects.size(); i++)
 	{
 		gameObjects[i]->Update();
 	}
+	//IsDeleteがtrueならそのオブジェクトを削除
 	Remove();
-}
-
-void KochaEngine::GameObjectManager::Zsort(const int arg_count)
-{
-	int sortCount = 0;
-	while (sortCount == arg_count)
-	{
-
-	}
 }
 
 void KochaEngine::GameObjectManager::AlphaObjDraw(Camera* arg_camera, LightManager* arg_lightManager)
 {
+	//フィールドシーン用の透明オブジェクトの描画
 	if (arg_camera == nullptr) return;
 	if (arg_lightManager == nullptr) return;
 
@@ -58,20 +55,69 @@ void KochaEngine::GameObjectManager::AlphaObjDraw(Camera* arg_camera, LightManag
 	{
 		if (!(*it)->IsAlphaObject()) continue; //AlphaObjectじゃない場合は描画しない
 		if ((*it)->IsDead()) continue;
-		if ((*it)->GetPosition().z < cameraPosZ) continue; //AlphaObjectがCameraよりも後ろにあったら描画しない
+		if ((*it)->GetPosition().z < cameraPosZ) continue; //AlphaObjectがCameraよりも手前にあったら描画しない
 
 		(*it)->ObjDraw(this->camera, this->lightManager);
 	}
 
 }
 
-void KochaEngine::GameObjectManager::ObjDraw(Camera* arg_camera, LightManager* arg_lightManager)
+void KochaEngine::GameObjectManager::AlphaObjDraw2(Camera* arg_camera, LightManager* arg_lightManager)
 {
+	//バトルシーン用の透明オブジェクトの描画
 	if (arg_camera == nullptr) return;
 	if (arg_lightManager == nullptr) return;
 
 	this->camera = arg_camera;
 	this->lightManager = arg_lightManager;
+
+	float cameraPosZ = camera->GetEye().z + 100;
+
+	auto end = gameObjects.end();
+	for (auto it = gameObjects.begin(); it != end; ++it)
+	{
+		auto type = (*it)->GetType();
+		if (!(*it)->IsAlphaObject()) continue; //AlphaObjectじゃない場合は描画しない
+		if ((*it)->IsDead()) continue;
+		if (type != ENEMY && type != BATTLE_PLAYER)
+		{
+			if ((*it)->GetPosition().z < cameraPosZ) continue; //AlphaObjectが画面の少し奥よりも更に奥にあったら描画しない
+		}
+
+		(*it)->ObjDraw(this->camera, this->lightManager);
+	}
+}
+
+void KochaEngine::GameObjectManager::ObjDraw(Camera* arg_camera, LightManager* arg_lightManager)
+{
+	//フィールドシーン用の不透明オブジェクトの描画
+	if (arg_camera == nullptr) return;
+	if (arg_lightManager == nullptr) return;
+
+	this->camera = arg_camera;
+	this->lightManager = arg_lightManager;
+
+	auto end = gameObjects.end();
+	for (auto it = gameObjects.begin(); it != end; ++it)
+	{
+		if ((*it)->IsAlphaObject()) continue; //AlphaObjectの場合は描画しない
+		if ((*it)->IsDead()) continue;
+
+		(*it)->ObjDraw(this->camera, this->lightManager);
+	}
+}
+
+void KochaEngine::GameObjectManager::ObjDraw2(Camera* arg_camera, LightManager* arg_lightManager)
+{
+	//バトルシーン用の不透明オブジェクトの描画
+	if (arg_camera == nullptr) return;
+	if (arg_lightManager == nullptr) return;
+
+	camera = arg_camera;
+	lightManager = arg_lightManager;
+
+	float cameraPosZ = camera->GetEye().z + 100;
+
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
 	{
@@ -84,6 +130,7 @@ void KochaEngine::GameObjectManager::ObjDraw(Camera* arg_camera, LightManager* a
 
 void KochaEngine::GameObjectManager::SpriteDraw()
 {
+	//平行投影テクスチャの描画
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
 	{
@@ -97,6 +144,7 @@ void KochaEngine::GameObjectManager::SpriteDraw()
 
 void KochaEngine::GameObjectManager::CheckBlock(GameObject* arg_obj, const GameObjectType& arg_otherType)
 {
+	//自分以外のオブジェクトと当たっていないかのチェック
 	_Sphere objSphere = arg_obj->GetSphere();
 	GameObjectType objType = arg_obj->GetType();
 	XMFLOAT3 objPos = arg_obj->GetPosition();
@@ -118,6 +166,7 @@ void KochaEngine::GameObjectManager::CheckBlock(GameObject* arg_obj, const GameO
 
 int KochaEngine::GameObjectManager::GetEnemyCount()
 {
+	//エネミーの数を数えて返す
 	int count = 0;
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
@@ -132,6 +181,7 @@ int KochaEngine::GameObjectManager::GetEnemyCount()
 
 void KochaEngine::GameObjectManager::Remove()
 {
+	//isDeleteフラグがtrueのオブジェクトは削除
 	for (auto it = gameObjects.begin(); it != gameObjects.end();)
 	{
 		if (!(*it)->IsDelete()) { ++it; continue; }
@@ -142,6 +192,7 @@ void KochaEngine::GameObjectManager::Remove()
 
 void KochaEngine::GameObjectManager::RemoveAll()
 {
+	//ゲームオブジェクトの全削除
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
 	{
@@ -150,12 +201,32 @@ void KochaEngine::GameObjectManager::RemoveAll()
 	gameObjects.clear();
 }
 
+void KochaEngine::GameObjectManager::RemoveBattleObject()
+{
+	//バトルシーン用のオブジェクトの削除
+	//バトル終了時に呼ぶ
+	for (auto it = gameObjects.begin(); it != gameObjects.end();)
+	{
+		auto type = (*it)->GetType();
+		if (!(*it)->IsDelete() &&
+			type != ENEMY &&
+			type != BATTLE_PLAYER)
+		{
+			++it; 
+			continue; 
+		}
+		delete* it;
+		it = gameObjects.erase(it);
+	}
+}
+
 KochaEngine::Player* KochaEngine::GameObjectManager::GetPlayer()
 {
+	//プレイヤーを探して返す
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
 	{
-		if ((*it)->GetType() == PLAYER)
+		if ((*it)->GetType() == FIELD_PLAYER)
 		{
 			Player* player = static_cast<Player*>(static_cast<void*>(*it));
 			return player;

@@ -252,6 +252,13 @@
     <ClCompile Include="InputManager.cpp">
       <Filter>Source\Device</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source\Object\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="BattleCharacter.cpp">
+      <Filter>Source\Object\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShaderHeader.hlsli">
@@ -537,5 +544,15 @@
     <ClInclude Include="InputManager.h">
       <Filter>Header\Device</Filter>
     </ClInclude>
+    <ClInclude Include="ActorParam.h">
+      <Filter>Header\Object\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Header\Object\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="BattleCharacter.h">
+      <Filter>Header\Object\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyData.h" />
   </ItemGroup>
 </Project>

@@ -3,8 +3,8 @@
 
 static UINT count = 0;
 static std::map<std::string, UINT> texNum;
-static ComPtr<ID3D12Resource> texBuff[256];
-static D3D12_RESOURCE_DESC texResDesc[256];
+static ComPtr<ID3D12Resource> texBuff[512];
+static D3D12_RESOURCE_DESC texResDesc[512];
 ID3D12Device* KochaEngine::Dx12_Texture::device{};
 
 void KochaEngine::Dx12_Texture::LoadTexture(const std::string& arg_texName)
@@ -15,7 +15,7 @@ void KochaEngine::Dx12_Texture::LoadTexture(const std::string& arg_texName)
 
 	texNum.emplace(arg_texName, count);
 
-	if (count < 256) { count++; }
+	if (count < 512) { count++; }
 
 	wchar_t wfilepath[128];
 	int iBufferSize = MultiByteToWideChar(CP_ACP, 0, arg_texName.c_str(), -1, wfilepath, _countof(wfilepath));

@@ -235,9 +235,26 @@ void KochaEngine::Application::Load()
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/command_1.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/command_2.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/waku_0.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/UI/cursor.png");
 
 		//Characterフォルダ
-		Dx12_Texture::LoadTexture("Resources/Texture/Character/player0.png");
+		for (int i = 0; i < 1; i++)
+		{
+			std::string extension = std::to_string(i) + ".png";
+
+			Dx12_Texture::LoadTexture("Resources/Texture/Character/player/player_" + extension);
+		}
+
+
+		//Enemyフォルダ
+		for (int i = 0; i < 1; i++)
+		{
+			std::string extension = std::to_string(i) + ".png";
+
+			Dx12_Texture::LoadTexture("Resources/Texture/Enemy/nihuteriza/nihuteriza_" + extension);
+			Dx12_Texture::LoadTexture("Resources/Texture/Enemy/babydoragon/babydoragon_" + extension);
+		}
+
 
 		//Objectフォルダ
 		Dx12_Texture::LoadTexture("Resources/Texture/Object/rock1.png");
@@ -557,7 +574,7 @@ bool KochaEngine::Application::Initialize()
 	/*lightManager->SetPointLightColor(0, pointLightColor);
 	lightManager->SetPointLightAtten(0, pointLightAtten);*/
 
-	vignetteScale = 0.2f;
+	vignetteScale = 0.25f;
 	gBoyPixelSize = 4.0f;
 	mosaicSize = 4.0f;
 	sepiaScale = 0.2f;

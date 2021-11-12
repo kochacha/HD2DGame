@@ -13,24 +13,25 @@ namespace KochaEngine
 		LightManager* lightManager;
 		std::vector<GameObject*> gameObjects;
 
-		void Zsort(const int arg_count);
-
 	public:
 		GameObjectManager();
 		~GameObjectManager();
 
-		void AddObject(GameObject* gameObject);
+		void AddObject(GameObject* arg_gameObject);
 		void Initialize();
 		void Update();
-		void AlphaObjDraw(Camera* camera, LightManager* arg_lightManager);
-		void ObjDraw(Camera* camera, LightManager* arg_lightManager);
+		void AlphaObjDraw(Camera* arg_camera, LightManager* arg_lightManager);
+		void AlphaObjDraw2(Camera* arg_camera, LightManager* arg_lightManager);
+		void ObjDraw(Camera* arg_camera, LightManager* arg_lightManager);
+		void ObjDraw2(Camera* arg_camera, LightManager* arg_lightManager);
 		void SpriteDraw();
-		void CheckBlock(GameObject* obj, const GameObjectType& otherType);
+		void CheckBlock(GameObject* arg_obj, const GameObjectType& arg_otherType);
 		int GetEnemyCount();
 
 		Player* GetPlayer();
 
 		void Remove();
 		void RemoveAll();
+		void RemoveBattleObject();
 	};
 }

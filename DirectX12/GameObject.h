@@ -13,7 +13,9 @@ namespace KochaEngine
 	enum GameObjectType
 	{
 		DEFAULT,
-		PLAYER,
+		FIELD_PLAYER,
+		BATTLE_PLAYER,
+		ENEMY,
 		BLOCK,
 		COLLISION_BLOCK,
 	};

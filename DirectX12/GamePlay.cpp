@@ -6,17 +6,21 @@
 #include "Player.h"
 #include "Text.h"
 #include "GameSetting.h"
+#include "EnemyData.h"
+#include "Enemy.h"
 
 KochaEngine::GamePlay::GamePlay()
 {
 	camera = new Camera();
 	gManager = new GameObjectManager();
+	battle_gManager = new GameObjectManager();
 
 	pManager = new ParticleManager();
 	emitter = new ParticleEmitter(pManager);
 	map = new Map(gManager, camera);
 	lightManager = new LightManager();
 	lightManager = LightManager::Create();
+	EnemyData::StaticInit();
 
 	floor = new Object("graund");
 	skyObj = new Object("skydome");
@@ -26,7 +30,9 @@ KochaEngine::GamePlay::GamePlay()
 	defaultCommandTexture = new Texture2D("Resources/Texture/UI/command_1.png", DEFAULT_COMMAND_POS, DEFAULT_COMMAND_SIZE, 0);
 	battleStatusTexture = new Texture2D("Resources/Texture/UI/command_2.png", BATTLE_STATUS_POS, BATTLE_STATUS_SIZE, 0);
 
-	text = new Text("Resources/Text/Sample0.txt", TALK_TEXT_POS, Vector2(32, 32));
+	cursorTexture = new Texture2D("Resources/Texture/UI/cursor.png", DEFAULT_COMMAND_POS + Vector2(10,52), Vector2(16, 16), 0);
+
+	text = new Text("Talk/Field/Sample1.txt", TALK_TEXT_POS, Vector2(32, 32));
 }
 
 KochaEngine::GamePlay::~GamePlay()
@@ -44,6 +50,7 @@ KochaEngine::GamePlay::~GamePlay()
 	delete defaultWakuTexture;
 	delete battleStatusTexture;
 	delete defaultCommandTexture;
+	delete cursorTexture;
 	delete text;
 }
 
@@ -53,6 +60,7 @@ void KochaEngine::GamePlay::Initialize()
 	isGameOver = false;
 	isBattle = false;
 	isBattleEnd = false;
+	isBattleStart = false;
 
 	gManager->RemoveAll();
 	camera->Initialize(SCREEN_SIZE.x, SCREEN_SIZE.y, 90, 100, { 0,1,0 }, { 0,0,0 }, { 0,1,0 });
@@ -207,11 +215,32 @@ void KochaEngine::GamePlay::FadeUpdate()
 void KochaEngine::GamePlay::BattleUpdate()
 {
 	//バトルシーン開始
+	if (!isBattleStart)
+	{
+		isBattleStart = true;
 
+		text->ReText("Talk/Field/Sample1.txt");
+
+		int aaa = Util::GetIntRand(0, 1);
+		//ここにエネミー追加クラス的なの作って呼び出す
+		/*今は仮でエネミー追加*/
+		if (aaa == 0)
+		{
+			gManager->AddObject(new Enemy(camera->GetEye() + Vector3(-30, -15, 70), EnemyData::GetEnemyParam(NIHUTERIZA)));
+			gManager->AddObject(new Enemy(camera->GetEye() + Vector3(-35, -15, 50), EnemyData::GetEnemyParam(NIHUTERIZA)));
+			gManager->AddObject(new Enemy(camera->GetEye() + Vector3(-20, -20, 60), EnemyData::GetEnemyParam(BABYDORAGON)));
+		}
+		else
+		{
+			gManager->AddObject(new Enemy(camera->GetEye() + Vector3(-30, -20, 70), EnemyData::GetEnemyParam(BABYDORAGON)));
+			gManager->AddObject(new Enemy(camera->GetEye() + Vector3(-30, -20, 50), EnemyData::GetEnemyParam(BABYDORAGON)));
+		}
+
+	}
 
 	if (Input::TriggerKey(DIK_T))
 	{
-		text->ReText("Resources/Text/Sample0.txt");
+		text->ReText("Talk/Field/Sample1.txt");
 	}
 
 
@@ -225,17 +254,28 @@ void KochaEngine::GamePlay::BattleUpdate()
 	{
 		isBattle = false;
 		isBattleEnd = false;
+		gManager->RemoveBattleObject();
 	}
+
+	gManager->Update();
+	pManager->Update();
+	camera->Update();
+	lightManager->Update();
+
+	skyObj->MoveRotate(Vector3(0, 0.005f, 0));
+	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
 }
 
 void KochaEngine::GamePlay::BattleObjDraw()
 {
-
+	gManager->ObjDraw(camera, lightManager);
+	floor->Draw(camera, lightManager);
+	skyObj->Draw(camera, lightManager);
 }
 
 void KochaEngine::GamePlay::BattleAlphaObjDraw()
 {
-
+	gManager->AlphaObjDraw2(camera, lightManager);
 }
 
 void KochaEngine::GamePlay::BattleSpriteDraw()
@@ -243,6 +283,7 @@ void KochaEngine::GamePlay::BattleSpriteDraw()
 	defaultWakuTexture->Draw();
 	battleStatusTexture->Draw();
 	defaultCommandTexture->Draw();
+	cursorTexture->Draw();
 	text->Draw(KochaEngine::GameSetting::talkSpeed);
 }
 
@@ -252,6 +293,8 @@ void KochaEngine::GamePlay::FieldUpdate()
 	pManager->Update();
 	camera->Update();
 	lightManager->Update();
+
+	isBattleStart = false;
 
 	skyObj->MoveRotate(Vector3(0, 0.005f, 0));
 	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));

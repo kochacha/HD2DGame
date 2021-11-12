@@ -38,7 +38,8 @@ void KochaEngine::Player::Initialize()
 	obj->SetPosition(position);
 	obj->SetRotate(Vector3(0, 0, 0));
 	obj->SetScale(Vector3(10, 10, 10));
-	obj->SetTexture("Resources/Texture/Character/player0.png");
+	obj->SetTexture("Resources/Texture/Character/player/player_0.png");
+	obj->SetBillboardType(Object::BILLBOARD_Y);
 }
 
 void KochaEngine::Player::Update()
@@ -92,13 +93,12 @@ void KochaEngine::Player::HitBlock(_Box arg_box)
 
 void KochaEngine::Player::ObjDraw(Camera* arg_camera, LightManager* arg_lightManager)
 {
-	if (arg_camera == nullptr) return;
 	obj->Draw(arg_camera, arg_lightManager);
 }
 
 KochaEngine::GameObjectType KochaEngine::Player::GetType()
 {
-	return PLAYER;
+	return FIELD_PLAYER;
 }
 
 void KochaEngine::Player::InputMove()

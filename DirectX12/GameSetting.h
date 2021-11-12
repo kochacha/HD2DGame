@@ -32,7 +32,7 @@ namespace KochaEngine
 	const Vector2 BATTLE_STATUS_SIZE = Vector2(256, 178);
 
 	//画面中央下の会話テキスト
-	const Vector2 TALK_TEXT_POS = Vector2(220, 565);
+	const Vector2 TALK_TEXT_POS = Vector2(225, 565);
 
 	int KochaEngine::GameSetting::talkSpeed = 5;
 	bool KochaEngine::GameSetting::isBattleField = false;
