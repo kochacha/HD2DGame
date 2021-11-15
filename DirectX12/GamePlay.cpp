@@ -217,24 +217,31 @@ void KochaEngine::GamePlay::BattleUpdate()
 	//バトルシーン開始
 	if (!isBattleStart)
 	{
+		//バトル開始時に一度だけ通る処理
 		isBattleStart = true;
 
+		//敵出現テキスト再生
 		text->ReText("Talk/Field/Sample1.txt");
 
+		Vector3 cameraPos = camera->GetEye();
+
+		//ここにエネミーエミッタークラス的なの作って呼び出す
 		int aaa = Util::GetIntRand(0, 1);
-		//ここにエネミー追加クラス的なの作って呼び出す
 		/*今は仮でエネミー追加*/
 		if (aaa == 0)
 		{
-			gManager->AddObject(new Enemy(camera->GetEye() + Vector3(-30, -15, 70), EnemyData::GetEnemyParam(NIHUTERIZA)));
-			gManager->AddObject(new Enemy(camera->GetEye() + Vector3(-35, -15, 50), EnemyData::GetEnemyParam(NIHUTERIZA)));
-			gManager->AddObject(new Enemy(camera->GetEye() + Vector3(-20, -20, 60), EnemyData::GetEnemyParam(BABYDORAGON)));
+			gManager->AddObject(new Enemy(cameraPos + MEDIUM_ENEMY_POS[0], EnemyData::GetEnemyParam(NIHUTERIZA)));
+			gManager->AddObject(new Enemy(cameraPos + SMALL_ENEMY_POS[1], EnemyData::GetEnemyParam(BABYDORAGON)));
+			gManager->AddObject(new Enemy(cameraPos + MEDIUM_ENEMY_POS[2], EnemyData::GetEnemyParam(NIHUTERIZA)));
+			gManager->AddObject(new Enemy(cameraPos + MEDIUM_ENEMY_POS[3], EnemyData::GetEnemyParam(NIHUTERIZA)));
 		}
 		else
 		{
-			gManager->AddObject(new Enemy(camera->GetEye() + Vector3(-30, -20, 70), EnemyData::GetEnemyParam(BABYDORAGON)));
-			gManager->AddObject(new Enemy(camera->GetEye() + Vector3(-30, -20, 50), EnemyData::GetEnemyParam(BABYDORAGON)));
+			gManager->AddObject(new Enemy(cameraPos + SMALL_ENEMY_POS[0], EnemyData::GetEnemyParam(BABYDORAGON)));
+			gManager->AddObject(new Enemy(cameraPos + SMALL_ENEMY_POS[1], EnemyData::GetEnemyParam(BABYDORAGON)));
 		}
+
+		//キャラクター追加
 
 	}
 

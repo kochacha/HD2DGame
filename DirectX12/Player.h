@@ -1,13 +1,17 @@
 #pragma once
 #include "GameObject.h"
+#include "ActorParam.h"
 
 namespace KochaEngine
 {
 	class GameObjectManager;
+
 	class Player : public GameObject
 	{
 	private:
 		GameObjectManager* gManager;
+
+		ActorParam param;
 
 		bool isEncount;
 		bool isBattle;
@@ -36,6 +40,8 @@ namespace KochaEngine
 
 		void SetIsBattle(const bool arg_isBattle) { isBattle = arg_isBattle; }
 		void EncountReset();
-		bool IsEncount() { return isEncount; }
+
+		const ActorParam GetParam() { return param; }
+		inline const bool IsEncount() { return isEncount; }
 	};
 }

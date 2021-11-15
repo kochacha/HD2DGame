@@ -1,4 +1,5 @@
 #include "EnemyData.h"
+#include "GameSetting.h"
 
 std::map<KochaEngine::EnemyVol, KochaEngine::ActorParam> KochaEngine::EnemyData::params = {};
 
@@ -37,6 +38,6 @@ void KochaEngine::EnemyData::AddEnemyParam(const EnemyVol& arg_enemyVol, const s
 
 void KochaEngine::EnemyData::StaticInit()
 {
-    AddEnemyParam(NIHUTERIZA, "nihuteriza", DARK, Vector3(10, 10, 10), 1, 10, 5, 5, 5, 5, 5, 5, 50, 5, 5);
-    AddEnemyParam(BABYDORAGON, "babydoragon", FIRE, Vector3(10, 10, 10), 1, 10, 5, 5, 5, 5, 5, 5, 50, 5, 5);
+    AddEnemyParam(NIHUTERIZA, "nihuteriza", DARK, SMALL_ENEMY_SIZE, 1, 10, 5, 5, 5, 5, 5, 5, 50, 5, 5);
+    AddEnemyParam(BABYDORAGON, "babydoragon", FIRE, SMALL_ENEMY_SIZE, 1, 10, 5, 5, 5, 5, 5, 5, 50, 5, 5);
 }

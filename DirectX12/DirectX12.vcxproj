@@ -190,6 +190,7 @@
     <ClCompile Include="FieldObject.cpp" />
     <ClCompile Include="Figure2D.cpp" />
     <ClCompile Include="Font.cpp" />
+    <ClCompile Include="GameSetting.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="GameObject.cpp" />

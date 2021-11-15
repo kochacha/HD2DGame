@@ -259,6 +259,9 @@
       <Filter>Source\Object\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="EnemyData.cpp" />
+    <ClCompile Include="GameSetting.cpp">
+      <Filter>Source\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShaderHeader.hlsli">
