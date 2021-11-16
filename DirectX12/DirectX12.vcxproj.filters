@@ -262,6 +262,9 @@
     <ClCompile Include="GameSetting.cpp">
       <Filter>Source\Util</Filter>
     </ClCompile>
+    <ClCompile Include="Fighter.cpp">
+      <Filter>Source\Object\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShaderHeader.hlsli">
@@ -557,5 +560,8 @@
       <Filter>Header\Object\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="EnemyData.h" />
+    <ClInclude Include="Fighter.h">
+      <Filter>Header\Object\GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

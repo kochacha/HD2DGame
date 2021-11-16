@@ -4,6 +4,7 @@
 #include "FieldObject.h"
 #include "FieldAlphaObject.h"
 #include "Player.h"
+#include "Fighter.h"
 #include "CollisionBlock.h"
 
 KochaEngine::Map::Map(GameObjectManager* arg_gManager, Camera* arg_camera)
@@ -91,6 +92,7 @@ void KochaEngine::Map::CreateMap(const int arg_mapNum)
 				break;
 			case 99:
 				gManager->AddObject(new Player(camera, gManager, Vector3(posX, 5, posZ)));
+				gManager->AddObject(new Fighter(camera, Vector3(posX, 5, posZ)));
 				break;
 			default:
 				break;

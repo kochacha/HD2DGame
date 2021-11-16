@@ -8,11 +8,12 @@ namespace KochaEngine
 	//属性
 	enum Attribute
 	{
-		FIRE,
-		WATER,
-		NATURE,
-		LIGHT,
-		DARK,
+		TYPE_FIRE,
+		TYPE_WATER,
+		TYPE_NATURE,
+		TYPE_LIGHT,
+		TYPE_DARK,
+		TYPE_NORMAL,
 	};
 
 	//キャラ・エネミーのパラメータ

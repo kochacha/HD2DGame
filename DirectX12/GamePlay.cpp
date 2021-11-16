@@ -4,10 +4,12 @@
 #include "Map.h"
 #include "LightManager.h"
 #include "Player.h"
+#include "Fighter.h"
 #include "Text.h"
 #include "GameSetting.h"
 #include "EnemyData.h"
 #include "Enemy.h"
+#include "BattleCharacter.h"
 
 KochaEngine::GamePlay::GamePlay()
 {
@@ -69,7 +71,8 @@ void KochaEngine::GamePlay::Initialize()
 	lightManager->SetDirectionalLightIsActive(0, true);
 	lightManager->SetLightCamera(camera);
 
-	map->CreateMap(0);
+	//最初のフィールドのマップデータロード
+	map->CreateMap(GameSetting::HAZIMARINOTI);
 
 	floor->SetPosition(Vector3(0, 0, 0));
 	floor->SetTexture("Resources/Texture/Tiling/tiling_stone1.png");
@@ -214,34 +217,46 @@ void KochaEngine::GamePlay::FadeUpdate()
 
 void KochaEngine::GamePlay::BattleUpdate()
 {
-	//バトルシーン開始
+	//バトルシーン開始//
+
+	//バトル開始時に一度だけ通る処理
 	if (!isBattleStart)
 	{
-		//バトル開始時に一度だけ通る処理
 		isBattleStart = true;
 
 		//敵出現テキスト再生
 		text->ReText("Talk/Field/Sample1.txt");
 
-		Vector3 cameraPos = camera->GetEye();
+		const Vector3 cameraPos = camera->GetEye();
 
 		//ここにエネミーエミッタークラス的なの作って呼び出す
-		int aaa = Util::GetIntRand(0, 1);
-		/*今は仮でエネミー追加*/
-		if (aaa == 0)
 		{
-			gManager->AddObject(new Enemy(cameraPos + MEDIUM_ENEMY_POS[0], EnemyData::GetEnemyParam(NIHUTERIZA)));
-			gManager->AddObject(new Enemy(cameraPos + SMALL_ENEMY_POS[1], EnemyData::GetEnemyParam(BABYDORAGON)));
-			gManager->AddObject(new Enemy(cameraPos + MEDIUM_ENEMY_POS[2], EnemyData::GetEnemyParam(NIHUTERIZA)));
-			gManager->AddObject(new Enemy(cameraPos + MEDIUM_ENEMY_POS[3], EnemyData::GetEnemyParam(NIHUTERIZA)));
-		}
-		else
-		{
-			gManager->AddObject(new Enemy(cameraPos + SMALL_ENEMY_POS[0], EnemyData::GetEnemyParam(BABYDORAGON)));
-			gManager->AddObject(new Enemy(cameraPos + SMALL_ENEMY_POS[1], EnemyData::GetEnemyParam(BABYDORAGON)));
+			/*今は仮でエネミー追加*/
+			int aaa = Util::GetIntRand(0, 1);
+			if (aaa == 0)
+			{
+				gManager->AddObject(new Enemy(cameraPos + MEDIUM_ENEMY_POS[0], EnemyData::GetEnemyParam(NIHUTERIZA)));
+				gManager->AddObject(new Enemy(cameraPos + SMALL_ENEMY_POS[1], EnemyData::GetEnemyParam(BABYDORAGON)));
+				gManager->AddObject(new Enemy(cameraPos + MEDIUM_ENEMY_POS[2], EnemyData::GetEnemyParam(NIHUTERIZA)));
+				gManager->AddObject(new Enemy(cameraPos + MEDIUM_ENEMY_POS[3], EnemyData::GetEnemyParam(NIHUTERIZA)));
+			}
+			else
+			{
+				gManager->AddObject(new Enemy(cameraPos + SMALL_ENEMY_POS[0], EnemyData::GetEnemyParam(BABYDORAGON)));
+				gManager->AddObject(new Enemy(cameraPos + SMALL_ENEMY_POS[1], EnemyData::GetEnemyParam(BABYDORAGON)));
+			}
 		}
 
-		//キャラクター追加
+		//バトルキャラクターの追加処理
+		{
+			//キャラのパラメーターをもらう
+			auto playerParam = gManager->GetPlayer()->GetParam();
+			auto fighterParam = gManager->GetFighter()->GetParam();
+
+			//パラメーターをセットしてバトルキャラクター生成
+			gManager->AddObject(new BattleCharacter(BATTLE_PLAYER, cameraPos + BATTLE_CHARACTOR_POS[0], playerParam));
+			gManager->AddObject(new BattleCharacter(BATTLE_FIGHTER, cameraPos + BATTLE_CHARACTOR_POS[2], fighterParam));
+		}
 
 	}
 
@@ -249,6 +264,10 @@ void KochaEngine::GamePlay::BattleUpdate()
 	{
 		text->ReText("Talk/Field/Sample1.txt");
 	}
+
+	//ここからコマンド操作等の処理
+
+
 
 
 	//バトルシーン終了

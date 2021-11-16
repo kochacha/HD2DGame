@@ -1,11 +1,13 @@
 #pragma once
 #include "GameObject.h"
 #include "Camera.h"
-#include "Player.h"
 #include <vector>
 
 namespace KochaEngine
 {
+	class Player;
+	class Fighter;
+
 	class GameObjectManager
 	{
 	private:
@@ -29,6 +31,7 @@ namespace KochaEngine
 		int GetEnemyCount();
 
 		Player* GetPlayer();
+		Fighter* GetFighter();
 
 		void Remove();
 		void RemoveAll();

@@ -4,19 +4,14 @@
 
 namespace KochaEngine
 {
-	class BattleCharacter : public GameObject
+	class Fighter : public GameObject
 	{
 	private:
-		GameObjectType gameObjectType;
 		ActorParam param;
 
-		float prePosX;
-
-		void SetParam();
-
 	public:
-		BattleCharacter(const GameObjectType& arg_gameObjectType, const Vector3& arg_position, const ActorParam& arg_param);
-		~BattleCharacter() override;
+		Fighter(Camera* arg_camera, const Vector3& arg_position);
+		~Fighter() override;
 
 		void Initialize() override;
 		void Update() override;
@@ -24,6 +19,6 @@ namespace KochaEngine
 		void ObjDraw(Camera* arg_camera, LightManager* arg_lightManager) override;
 		GameObjectType GetType() override;
 
+		const ActorParam GetParam() { return param; }
 	};
-
 }

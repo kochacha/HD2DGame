@@ -1,5 +1,7 @@
 #include "GameObjectManager.h"
 #include "Collision.h"
+#include "Player.h"
+#include "Fighter.h"
 #include <map>
 
 KochaEngine::GameObjectManager::GameObjectManager()
@@ -79,7 +81,9 @@ void KochaEngine::GameObjectManager::AlphaObjDraw2(Camera* arg_camera, LightMana
 		auto type = (*it)->GetType();
 		if (!(*it)->IsAlphaObject()) continue; //AlphaObject‚¶‚á‚È‚¢ê‡‚Í•`‰æ‚µ‚È‚¢
 		if ((*it)->IsDead()) continue;
-		if (type != ENEMY && type != BATTLE_PLAYER)
+		if (type != ENEMY && 
+			type != BATTLE_PLAYER &&
+			type != BATTLE_FIGHTER)
 		{
 			if ((*it)->GetPosition().z < cameraPosZ) continue; //AlphaObject‚ª‰æ–Ê‚Ì­‚µ‰œ‚æ‚è‚àX‚É‰œ‚É‚ ‚Á‚½‚ç•`‰æ‚µ‚È‚¢
 		}
@@ -210,7 +214,8 @@ void KochaEngine::GameObjectManager::RemoveBattleObject()
 		auto type = (*it)->GetType();
 		if (!(*it)->IsDelete() &&
 			type != ENEMY &&
-			type != BATTLE_PLAYER)
+			type != BATTLE_PLAYER && 
+			type != BATTLE_FIGHTER)
 		{
 			++it; 
 			continue; 
@@ -230,6 +235,21 @@ KochaEngine::Player* KochaEngine::GameObjectManager::GetPlayer()
 		{
 			Player* player = static_cast<Player*>(static_cast<void*>(*it));
 			return player;
+		}
+	}
+	return nullptr;
+}
+
+KochaEngine::Fighter* KochaEngine::GameObjectManager::GetFighter()
+{
+	//ƒtƒ@ƒCƒ^[‚ð’T‚µ‚Ä•Ô‚·
+	auto end = gameObjects.end();
+	for (auto it = gameObjects.begin(); it != end; ++it)
+	{
+		if ((*it)->GetType() == FIELD_FIGHTER)
+		{
+			Fighter* fighter = static_cast<Fighter*>(static_cast<void*>(*it));
+			return fighter;
 		}
 	}
 	return nullptr;

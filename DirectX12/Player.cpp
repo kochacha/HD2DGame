@@ -40,6 +40,23 @@ void KochaEngine::Player::Initialize()
 	obj->SetScale(Vector3(10, 10, 10));
 	obj->SetTexture("Resources/Texture/Character/player/player_0.png");
 	obj->SetBillboardType(Object::BILLBOARD_Y);
+
+	//パラメーターのセット(後々テキストデータから読み込めるようにする(セーブ機能))
+	param.name = "Resources/Text/Character/player.txt";
+	param.texName = "player";
+	param.attribute = TYPE_LIGHT;
+	param.size = Vector3(10, 10, 10);
+	param.level = 1;
+	param.hp = 10;
+	param.sp = 10;
+	param.attack = 10;
+	param.diffence = 10;
+	param.intelligence = 10;
+	param.speed = 10;
+	param.skillful = 10;
+	param.luck = 10;
+	param.exp = 0;
+	param.money = 10;
 }
 
 void KochaEngine::Player::Update()

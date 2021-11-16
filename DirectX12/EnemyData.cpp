@@ -17,10 +17,10 @@ void KochaEngine::EnemyData::AddEnemyParam(const EnemyVol& arg_enemyVol, const s
     auto name = "Resources/Text/Enemy/" + arg_name + ".txt";
 
     ActorParam param;
-    param.name = name;
-    param.texName = arg_name;
-    param.attribute = arg_attribute;
-    param.size = arg_size;
+    param.name = name; //表示用の名前のテキストデータ
+    param.texName = arg_name; //textureの名前(パスは必要なし)
+    param.attribute = arg_attribute; //属性
+    param.size = arg_size; //大きさ
     param.level = arg_level;
     param.hp = arg_hp;
     param.sp = arg_sp;
@@ -38,6 +38,6 @@ void KochaEngine::EnemyData::AddEnemyParam(const EnemyVol& arg_enemyVol, const s
 
 void KochaEngine::EnemyData::StaticInit()
 {
-    AddEnemyParam(NIHUTERIZA, "nihuteriza", DARK, SMALL_ENEMY_SIZE, 1, 10, 5, 5, 5, 5, 5, 5, 50, 5, 5);
-    AddEnemyParam(BABYDORAGON, "babydoragon", FIRE, SMALL_ENEMY_SIZE, 1, 10, 5, 5, 5, 5, 5, 5, 50, 5, 5);
+    AddEnemyParam(NIHUTERIZA, "nihuteriza", TYPE_DARK, SMALL_ENEMY_SIZE, 1, 10, 5, 5, 5, 5, 5, 5, 50, 5, 5);
+    AddEnemyParam(BABYDORAGON, "babydoragon", TYPE_FIRE, SMALL_ENEMY_SIZE, 1, 10, 5, 5, 5, 5, 5, 5, 50, 5, 5);
 }

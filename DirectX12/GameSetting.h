@@ -7,13 +7,21 @@ namespace KochaEngine
 	class GameSetting
 	{
 	public:
+
+		//マップデータロード用番号
 		enum
 		{
+			//最初のフィールド
 			HAZIMARINOTI,
+			//最初の町
 			HAZIMARINOMATI,
 		};
+
+		//会話の流れるスピード
 		static int talkSpeed;
+		//敵とエンカウントするフィールドにいるかどうか
 		static bool isBattleField;
+		//現在のフィールド
 		static int nowField;
 	};
 
@@ -21,7 +29,7 @@ namespace KochaEngine
 	const Vector2 SCREEN_SIZE = Vector2(1280, 720);
 
 	//画面中央下の会話テキストの枠
-	const Vector2 DEFAULT_WAKU_POS = Vector2(210, 550);
+	const Vector2 DEFAULT_WAKU_POS = Vector2(210, 570);
 	const Vector2 DEFAULT_WAKU_SIZE = Vector2(768, 96);
 
 	//バトル中コマンド
@@ -33,7 +41,7 @@ namespace KochaEngine
 	const Vector2 BATTLE_STATUS_SIZE = Vector2(256, 178);
 
 	//画面中央下の会話テキスト
-	const Vector2 TALK_TEXT_POS = Vector2(225, 565);
+	const Vector2 TALK_TEXT_POS = Vector2(225, 585);
 
 	//バトル時エネミーのサイズ
 	const Vector3 SMALL_ENEMY_SIZE = Vector3(10, 10, 10);
@@ -53,5 +61,5 @@ namespace KochaEngine
 
 	//バトル時キャラクター出現ポジション
 	const Vector3 BATTLE_CHARACTOR_POS[4] =
-	{ Vector3(50, -20, 60),Vector3(50, -20, 60),Vector3(50, -20, 60),Vector3(50, -20, 60) };
+	{ Vector3(80, -20, 50),Vector3(80, -20, 60),Vector3(80, -20, 70),Vector3(80, -20, 80) };
 }

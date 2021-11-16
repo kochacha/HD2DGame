@@ -188,6 +188,7 @@
     <ClCompile Include="FBXObject.cpp" />
     <ClCompile Include="FieldAlphaObject.cpp" />
     <ClCompile Include="FieldObject.cpp" />
+    <ClCompile Include="Fighter.cpp" />
     <ClCompile Include="Figure2D.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="GameSetting.cpp" />
@@ -482,6 +483,7 @@
     <ClInclude Include="FBXObject.h" />
     <ClInclude Include="FieldAlphaObject.h" />
     <ClInclude Include="FieldObject.h" />
+    <ClInclude Include="Fighter.h" />
     <ClInclude Include="Figure2D.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameSetting.h" />

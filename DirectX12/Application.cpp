@@ -243,6 +243,7 @@ void KochaEngine::Application::Load()
 			std::string extension = std::to_string(i) + ".png";
 
 			Dx12_Texture::LoadTexture("Resources/Texture/Character/player/player_" + extension);
+			Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_" + extension);
 		}
 
 
