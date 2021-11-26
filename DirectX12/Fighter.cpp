@@ -18,7 +18,7 @@ KochaEngine::Fighter::~Fighter()
 void KochaEngine::Fighter::Initialize()
 {
 	//パラメーターのセット(後々テキストデータから読み込めるようにする(セーブ機能))
-	param.name = "Resources/Text/Character/fighter.txt";
+	param.name = "Character/fighter.txt";
 	param.texName = "fighter";
 	param.attribute = TYPE_NORMAL;
 	param.size = Vector3(10, 10, 10);

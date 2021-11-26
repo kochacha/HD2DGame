@@ -166,6 +166,8 @@
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Battle.cpp" />
     <ClCompile Include="BattleCharacter.cpp" />
+    <ClCompile Include="BattleObject.cpp" />
+    <ClCompile Include="BattleObjectManager.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
@@ -460,6 +462,8 @@
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Battle.h" />
     <ClInclude Include="BattleCharacter.h" />
+    <ClInclude Include="BattleObject.h" />
+    <ClInclude Include="BattleObjectManager.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />

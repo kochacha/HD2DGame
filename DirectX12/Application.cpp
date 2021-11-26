@@ -234,6 +234,7 @@ void KochaEngine::Application::Load()
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/command_0.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/command_1.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/command_2.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/UI/command_3.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/waku_0.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/cursor.png");
 
@@ -246,7 +247,6 @@ void KochaEngine::Application::Load()
 			Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_" + extension);
 		}
 
-
 		//Enemyフォルダ
 		for (int i = 0; i < 1; i++)
 		{
@@ -255,7 +255,6 @@ void KochaEngine::Application::Load()
 			Dx12_Texture::LoadTexture("Resources/Texture/Enemy/nihuteriza/nihuteriza_" + extension);
 			Dx12_Texture::LoadTexture("Resources/Texture/Enemy/babydoragon/babydoragon_" + extension);
 		}
-
 
 		//Objectフォルダ
 		Dx12_Texture::LoadTexture("Resources/Texture/Object/rock1.png");
@@ -277,13 +276,12 @@ void KochaEngine::Application::Load()
 		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/water_ball1.png");
 	}
 
-
 	//.objのロード
 	Dx12_Object::LoadObject("LowTree");
 	Dx12_Object::LoadObject("Yukidaruma");
 	Dx12_Object::LoadObject("box");
 	Dx12_Object::LoadObject("plane");
-	Dx12_Object::LoadObject("graund");
+	Dx12_Object::LoadObject("ground");
 	Dx12_Object::LoadObject("taimatu");
 	Dx12_Object::LoadObject("sphere");
 	Dx12_Object::LoadObject("Ground1");

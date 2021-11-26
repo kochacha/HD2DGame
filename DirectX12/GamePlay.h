@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "GameObjectManager.h"
+#include "BattleObjectManager.h"
 #include "ParticleEmitter.h"
 #include "ParticleManager.h"
 #include "Number.h"
@@ -20,7 +21,7 @@ namespace KochaEngine
 		Map* map;
 		Camera* camera;
 		GameObjectManager* gManager;
-		GameObjectManager* battle_gManager;
+		BattleObjectManager* bManager;
 		ParticleManager* pManager;
 		ParticleEmitter* emitter;
 		LightManager* lightManager;
@@ -32,18 +33,26 @@ namespace KochaEngine
 		Texture2D* defaultWakuTexture;
 		Texture2D* battleStatusTexture;
 		Texture2D* defaultCommandTexture;
+		Texture2D* attackCommandTexture;
 		Texture2D* cursorTexture;
-		Text* text;
+		Text* battleText;
+		Text* commandTitleText;
+		Text* enemyNameText[4];
+
+		Vector2 cursorPos;
 
 		bool fadeFlag;
 		bool isBattle;
 		bool isBattleEnd;
 		bool isBattleStart;
+		bool isTextUpdate;
 		float fadeAlpha;
 
 		int frameCount;
 		int seconds;
 		int endCount;
+
+		unsigned int commandNum;
 
 		void BattleUpdate();
 		void BattleObjDraw();
@@ -54,6 +63,8 @@ namespace KochaEngine
 		void FieldObjDraw();
 		void FieldAlphaObjDraw();
 		void FieldSpriteDraw();
+
+		void MoveCursor();
 	public:
 		GamePlay();
 		~GamePlay() override;

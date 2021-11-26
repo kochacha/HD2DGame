@@ -35,6 +35,5 @@ namespace KochaEngine
 
 		void Remove();
 		void RemoveAll();
-		void RemoveBattleObject();
 	};
 }

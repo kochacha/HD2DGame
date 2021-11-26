@@ -2,12 +2,22 @@
 #include "Font.h"
 #include "CSVReader.h"
 
+KochaEngine::Text::Text(const Vector2& arg_position, const Vector2& arg_fontSize, const unsigned int arg_addSpeed)
+{
+	position = arg_position;
+	fontSize = arg_fontSize;
+
+	ReText("default.txt");
+	Initialize();
+}
+
 KochaEngine::Text::Text(const std::string& arg_textName, const Vector2& arg_position, const Vector2& arg_fontSize, const unsigned int arg_addSpeed)
 {
 	position = arg_position;
 	fontSize = arg_fontSize;
 
 	ReText(arg_textName);
+	Initialize();
 }
 
 void KochaEngine::Text::Initialize()
@@ -15,6 +25,7 @@ void KochaEngine::Text::Initialize()
 	textDataSize = 0;
 	addTextCount = 0;
 	count = 0;
+	isSkip = false;
 }
 
 void KochaEngine::Text::AddFont(Font* arg_font)
@@ -42,7 +53,7 @@ KochaEngine::Text::~Text()
 void KochaEngine::Text::Draw(const int arg_addSpeed)
 {
 	//addSpeedフレーム毎にフォントを追加していく
-	if (arg_addSpeed > 0)
+	if (arg_addSpeed > 0 && !isSkip)
 	{
 		if (count < arg_addSpeed)
 		{
@@ -83,6 +94,7 @@ void KochaEngine::Text::Draw(const int arg_addSpeed)
 			AddFont(new Font(textData[addTextCount], position + fixPosition, fontSize));
 		}
 	}
+	isSkip = false;
 
 	auto end = fonts.end();
 	for (auto it = fonts.begin(); it != end; ++it)
@@ -107,4 +119,9 @@ void KochaEngine::Text::ReText(const std::string& arg_textName)
 	{
 		textData[i] = tmp[0][i];
 	}
+}
+
+void KochaEngine::Text::Skip()
+{
+	isSkip = true;
 }

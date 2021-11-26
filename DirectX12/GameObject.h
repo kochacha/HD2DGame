@@ -1,5 +1,4 @@
 #pragma once
-#include <DirectXMath.h>
 #include "Camera.h"
 #include "Collision.h"
 #include "ParticleManager.h"
@@ -12,12 +11,9 @@ namespace KochaEngine
 {
 	enum GameObjectType
 	{
-		DEFAULT,
+		GAME_OBJECT_TYPE_DEFAULT,
 		FIELD_PLAYER,
 		FIELD_FIGHTER,
-		BATTLE_PLAYER,
-		BATTLE_FIGHTER,
-		ENEMY,
 		BLOCK,
 		COLLISION_BLOCK,
 	};

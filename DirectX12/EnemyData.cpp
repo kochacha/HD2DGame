@@ -14,7 +14,7 @@ void KochaEngine::EnemyData::AddEnemyParam(const EnemyVol& arg_enemyVol, const s
     const int arg_intelligence, const int arg_speed, const int arg_skillful, const int arg_luck, 
     const int arg_exp, const int arg_money)
 {
-    auto name = "Resources/Text/Enemy/" + arg_name + ".txt";
+    auto name = "Enemy/" + arg_name + ".txt";
 
     ActorParam param;
     param.name = name; //表示用の名前のテキストデータ
@@ -38,6 +38,7 @@ void KochaEngine::EnemyData::AddEnemyParam(const EnemyVol& arg_enemyVol, const s
 
 void KochaEngine::EnemyData::StaticInit()
 {
+    //ここにエネミーのデータを登録していく
     AddEnemyParam(NIHUTERIZA, "nihuteriza", TYPE_DARK, SMALL_ENEMY_SIZE, 1, 10, 5, 5, 5, 5, 5, 5, 50, 5, 5);
     AddEnemyParam(BABYDORAGON, "babydoragon", TYPE_FIRE, SMALL_ENEMY_SIZE, 1, 10, 5, 5, 5, 5, 5, 5, 50, 5, 5);
 }

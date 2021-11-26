@@ -1,13 +1,13 @@
 #include "BattleCharacter.h"
 #include "Util.h"
 
-KochaEngine::BattleCharacter::BattleCharacter(const GameObjectType& arg_gameObjectType, const Vector3& arg_position, const ActorParam& arg_param)
+KochaEngine::BattleCharacter::BattleCharacter(const BattleObjectType& arg_battleObjectType, const Vector3& arg_position, const ActorParam& arg_param)
 {
-	gameObjectType = arg_gameObjectType;
+	battleObjectType = arg_battleObjectType;
 	position = arg_position;
 	param = arg_param;
 
-	isAlpha = true;
+	isActive = false;
 
 	obj = new Object("plane");
 
@@ -26,7 +26,7 @@ void KochaEngine::BattleCharacter::Initialize()
 	obj->SetScale(param.size);
 	obj->SetTexture("Resources/Texture/Character/" + param.texName + "/" + param.texName + "_0.png");
 
-	switch (gameObjectType)
+	switch (battleObjectType)
 	{
 	case KochaEngine::BATTLE_PLAYER:
 		
@@ -52,18 +52,19 @@ void KochaEngine::BattleCharacter::Update()
 	SetParam();
 }
 
-void KochaEngine::BattleCharacter::Hit()
-{
-}
-
 void KochaEngine::BattleCharacter::ObjDraw(Camera* arg_camera, LightManager* arg_lightManager)
 {
 	obj->Draw(arg_camera, arg_lightManager);
 }
 
-KochaEngine::GameObjectType KochaEngine::BattleCharacter::GetType()
+KochaEngine::BattleObjectType KochaEngine::BattleCharacter::GetType()
 {
-	return gameObjectType;
+	return battleObjectType;
+}
+
+void KochaEngine::BattleCharacter::ActiveReset()
+{
+	isActive = false;
 }
 
 void KochaEngine::BattleCharacter::SetParam()

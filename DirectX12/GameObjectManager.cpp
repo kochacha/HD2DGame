@@ -73,7 +73,7 @@ void KochaEngine::GameObjectManager::AlphaObjDraw2(Camera* arg_camera, LightMana
 	this->camera = arg_camera;
 	this->lightManager = arg_lightManager;
 
-	float cameraPosZ = camera->GetEye().z + 100;
+	float cameraPosZ = camera->GetEye().z + 90;
 
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
@@ -81,12 +81,7 @@ void KochaEngine::GameObjectManager::AlphaObjDraw2(Camera* arg_camera, LightMana
 		auto type = (*it)->GetType();
 		if (!(*it)->IsAlphaObject()) continue; //AlphaObjectじゃない場合は描画しない
 		if ((*it)->IsDead()) continue;
-		if (type != ENEMY && 
-			type != BATTLE_PLAYER &&
-			type != BATTLE_FIGHTER)
-		{
-			if ((*it)->GetPosition().z < cameraPosZ) continue; //AlphaObjectが画面の少し奥よりも更に奥にあったら描画しない
-		}
+		if ((*it)->GetPosition().z < cameraPosZ) continue; //AlphaObjectが画面の少し奥よりも更に奥にあったら描画しない
 
 		(*it)->ObjDraw(this->camera, this->lightManager);
 	}
@@ -138,10 +133,8 @@ void KochaEngine::GameObjectManager::SpriteDraw()
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
 	{
-		if ((*it)->IsDead())
-		{
-			continue;
-		}
+		if ((*it)->IsDead()) continue;
+
 		(*it)->SpriteDraw();
 	}
 }
@@ -205,25 +198,25 @@ void KochaEngine::GameObjectManager::RemoveAll()
 	gameObjects.clear();
 }
 
-void KochaEngine::GameObjectManager::RemoveBattleObject()
-{
-	//バトルシーン用のオブジェクトの削除
-	//バトル終了時に呼ぶ
-	for (auto it = gameObjects.begin(); it != gameObjects.end();)
-	{
-		auto type = (*it)->GetType();
-		if (!(*it)->IsDelete() &&
-			type != ENEMY &&
-			type != BATTLE_PLAYER && 
-			type != BATTLE_FIGHTER)
-		{
-			++it; 
-			continue; 
-		}
-		delete* it;
-		it = gameObjects.erase(it);
-	}
-}
+//void KochaEngine::GameObjectManager::RemoveBattleObject()
+//{
+//	//バトルシーン用のオブジェクトの削除
+//	//バトル終了時に呼ぶ
+//	for (auto it = gameObjects.begin(); it != gameObjects.end();)
+//	{
+//		auto type = (*it)->GetType();
+//		if (!(*it)->IsDelete() &&
+//			type != ENEMY &&
+//			type != BATTLE_PLAYER && 
+//			type != BATTLE_FIGHTER)
+//		{
+//			++it; 
+//			continue; 
+//		}
+//		delete* it;
+//		it = gameObjects.erase(it);
+//	}
+//}
 
 KochaEngine::Player* KochaEngine::GameObjectManager::GetPlayer()
 {

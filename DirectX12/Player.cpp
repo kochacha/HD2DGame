@@ -42,7 +42,7 @@ void KochaEngine::Player::Initialize()
 	obj->SetBillboardType(Object::BILLBOARD_Y);
 
 	//パラメーターのセット(後々テキストデータから読み込めるようにする(セーブ機能))
-	param.name = "Resources/Text/Character/player.txt";
+	param.name = "Character/player.txt";
 	param.texName = "player";
 	param.attribute = TYPE_LIGHT;
 	param.size = Vector3(10, 10, 10);
@@ -52,7 +52,7 @@ void KochaEngine::Player::Initialize()
 	param.attack = 10;
 	param.diffence = 10;
 	param.intelligence = 10;
-	param.speed = 10;
+	param.speed = 100;
 	param.skillful = 10;
 	param.luck = 10;
 	param.exp = 0;

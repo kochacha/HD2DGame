@@ -1,5 +1,5 @@
 #include "GamePlay.h"
-#include "Input.h"
+#include "InputManager.h"
 #include "Util.h"
 #include "Map.h"
 #include "LightManager.h"
@@ -15,7 +15,7 @@ KochaEngine::GamePlay::GamePlay()
 {
 	camera = new Camera();
 	gManager = new GameObjectManager();
-	battle_gManager = new GameObjectManager();
+	bManager = new BattleObjectManager();
 
 	pManager = new ParticleManager();
 	emitter = new ParticleEmitter(pManager);
@@ -24,17 +24,24 @@ KochaEngine::GamePlay::GamePlay()
 	lightManager = LightManager::Create();
 	EnemyData::StaticInit();
 
-	floor = new Object("graund");
+	floor = new Object("ground");
 	skyObj = new Object("skydome");
 
 	fadeTexture = new Texture2D("Resources/Texture/Color/white.png", Vector2(0, 0), SCREEN_SIZE, 0);
 	defaultWakuTexture = new Texture2D("Resources/Texture/UI/waku_0.png", DEFAULT_WAKU_POS, DEFAULT_WAKU_SIZE, 0);
 	defaultCommandTexture = new Texture2D("Resources/Texture/UI/command_1.png", DEFAULT_COMMAND_POS, DEFAULT_COMMAND_SIZE, 0);
 	battleStatusTexture = new Texture2D("Resources/Texture/UI/command_2.png", BATTLE_STATUS_POS, BATTLE_STATUS_SIZE, 0);
+	attackCommandTexture = new Texture2D("Resources/Texture/UI/command_3.png", DEFAULT_COMMAND_POS, ATTACK_COMMAND_SIZE, 0);
 
-	cursorTexture = new Texture2D("Resources/Texture/UI/cursor.png", DEFAULT_COMMAND_POS + Vector2(10,52), Vector2(16, 16), 0);
+	cursorPos = DEFAULT_COMMAND_POS + Vector2(10, 52);
+	cursorTexture = new Texture2D("Resources/Texture/UI/cursor.png", cursorPos, Vector2(16, 16), 0);
 
-	text = new Text("Talk/Field/Sample1.txt", TALK_TEXT_POS, Vector2(32, 32));
+	battleText = new Text(TALK_TEXT_POS, Vector2(32, 32));
+	commandTitleText = new Text(DEFAULT_COMMAND_POS + Vector2(5, 5), Vector2(32, 32));
+	for (int i = 0; i < 4; i++)
+	{
+		enemyNameText[i] = new Text(TALK_TEXT_POS, Vector2(32, 32));
+	}
 }
 
 KochaEngine::GamePlay::~GamePlay()
@@ -43,6 +50,7 @@ KochaEngine::GamePlay::~GamePlay()
 	delete camera;
 	delete lightManager;
 	delete gManager;
+	delete bManager;
 	delete pManager;
 	delete emitter;
 	delete map;
@@ -52,8 +60,14 @@ KochaEngine::GamePlay::~GamePlay()
 	delete defaultWakuTexture;
 	delete battleStatusTexture;
 	delete defaultCommandTexture;
+	delete attackCommandTexture;
 	delete cursorTexture;
-	delete text;
+	delete battleText;
+	delete commandTitleText;
+	for (int i = 0; i < 4; i++)
+	{
+		delete enemyNameText[i];
+	}
 }
 
 void KochaEngine::GamePlay::Initialize()
@@ -63,8 +77,13 @@ void KochaEngine::GamePlay::Initialize()
 	isBattle = false;
 	isBattleEnd = false;
 	isBattleStart = false;
+	isTextUpdate = false;
 
 	gManager->RemoveAll();
+	bManager->RemoveAll();
+	gManager->Initialize();
+	bManager->Initialize();
+
 	camera->Initialize(SCREEN_SIZE.x, SCREEN_SIZE.y, 90, 100, { 0,1,0 }, { 0,0,0 }, { 0,1,0 });
 	lightManager->SetDirectionalLightColor(0, Vector3(1, 1, 1));
 	lightManager->SetDirectionalLightDirection(0, Vector3(1, 1, -1));
@@ -84,6 +103,7 @@ void KochaEngine::GamePlay::Initialize()
 
 	frameCount = 0;
 	seconds = 0;
+	commandNum = 0;
 	
 	fadeFlag = false;
 	fadeAlpha = 1.0f;
@@ -225,7 +245,7 @@ void KochaEngine::GamePlay::BattleUpdate()
 		isBattleStart = true;
 
 		//敵出現テキスト再生
-		text->ReText("Talk/Field/Sample1.txt");
+		battleText->ReText("Talk/Field/Sample1.txt");
 
 		const Vector3 cameraPos = camera->GetEye();
 
@@ -235,42 +255,83 @@ void KochaEngine::GamePlay::BattleUpdate()
 			int aaa = Util::GetIntRand(0, 1);
 			if (aaa == 0)
 			{
-				gManager->AddObject(new Enemy(cameraPos + MEDIUM_ENEMY_POS[0], EnemyData::GetEnemyParam(NIHUTERIZA)));
-				gManager->AddObject(new Enemy(cameraPos + SMALL_ENEMY_POS[1], EnemyData::GetEnemyParam(BABYDORAGON)));
-				gManager->AddObject(new Enemy(cameraPos + MEDIUM_ENEMY_POS[2], EnemyData::GetEnemyParam(NIHUTERIZA)));
-				gManager->AddObject(new Enemy(cameraPos + MEDIUM_ENEMY_POS[3], EnemyData::GetEnemyParam(NIHUTERIZA)));
+				bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[0], EnemyData::GetEnemyParam(NIHUTERIZA)));
+				bManager->AddObject(new Enemy(bManager, cameraPos + SMALL_ENEMY_POS[1], EnemyData::GetEnemyParam(BABYDORAGON)));
+				bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[2], EnemyData::GetEnemyParam(NIHUTERIZA)));
+				bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[3], EnemyData::GetEnemyParam(NIHUTERIZA)));
 			}
 			else
 			{
-				gManager->AddObject(new Enemy(cameraPos + SMALL_ENEMY_POS[0], EnemyData::GetEnemyParam(BABYDORAGON)));
-				gManager->AddObject(new Enemy(cameraPos + SMALL_ENEMY_POS[1], EnemyData::GetEnemyParam(BABYDORAGON)));
+				bManager->AddObject(new Enemy(bManager, cameraPos + SMALL_ENEMY_POS[0], EnemyData::GetEnemyParam(BABYDORAGON)));
+				bManager->AddObject(new Enemy(bManager, cameraPos + SMALL_ENEMY_POS[1], EnemyData::GetEnemyParam(BABYDORAGON)));
 			}
 		}
 
 		//バトルキャラクターの追加処理
 		{
-			//キャラのパラメーターをもらう
+			//キャラのパラメーターを持ってくる
 			auto playerParam = gManager->GetPlayer()->GetParam();
 			auto fighterParam = gManager->GetFighter()->GetParam();
 
 			//パラメーターをセットしてバトルキャラクター生成
-			gManager->AddObject(new BattleCharacter(BATTLE_PLAYER, cameraPos + BATTLE_CHARACTOR_POS[0], playerParam));
-			gManager->AddObject(new BattleCharacter(BATTLE_FIGHTER, cameraPos + BATTLE_CHARACTOR_POS[2], fighterParam));
+			bManager->AddObject(new BattleCharacter(BATTLE_PLAYER, cameraPos + BATTLE_CHARACTOR_POS[0], playerParam));
+			bManager->AddObject(new BattleCharacter(BATTLE_FIGHTER, cameraPos + BATTLE_CHARACTOR_POS[2], fighterParam));
 		}
 
 	}
 
+	//デバッグ用
 	if (Input::TriggerKey(DIK_T))
 	{
-		text->ReText("Talk/Field/Sample1.txt");
+		battleText->ReText("Talk/Field/Sample1.txt");
+	}
+	if (Input::TriggerKey(DIK_E))
+	{
+		battleText->Skip();
+	}
+	if (Input::TriggerKey(DIK_Q))
+	{
+		auto enemy = bManager->GetEnemy(1);
+		if (enemy != nullptr)
+		{
+			battleText->ReText(enemy->GetParam().name);
+		}
 	}
 
-	//ここからコマンド操作等の処理
+
+	//ここからコマンド操作等の処理//
+
+	auto object = bManager->GetNowActive();
+
+	if (object == nullptr)
+	{
+
+	}
+
+	auto objectType = object->GetType();
+
+	if (objectType == BATTLE_PLAYER ||
+		objectType == BATTLE_FIGHTER)
+	{
+		if (!isTextUpdate)
+		{
+			isTextUpdate = true;
+			commandTitleText->ReText(object->GetParam().name);
+		}
+
+		//コマンドのカーソル操作
+		MoveCursor();
+
+	}
+	else
+	{
+
+	}
 
 
 
 
-	//バトルシーン終了
+	//バトルシーン終了//
 	if (Input::TriggerKey(DIK_SPACE))
 	{
 		fadeFlag = true;
@@ -280,10 +341,11 @@ void KochaEngine::GamePlay::BattleUpdate()
 	{
 		isBattle = false;
 		isBattleEnd = false;
-		gManager->RemoveBattleObject();
+		bManager->RemoveAll();
 	}
 
 	gManager->Update();
+	bManager->Update();
 	pManager->Update();
 	camera->Update();
 	lightManager->Update();
@@ -302,6 +364,7 @@ void KochaEngine::GamePlay::BattleObjDraw()
 void KochaEngine::GamePlay::BattleAlphaObjDraw()
 {
 	gManager->AlphaObjDraw2(camera, lightManager);
+	bManager->ObjDraw(camera, lightManager);
 }
 
 void KochaEngine::GamePlay::BattleSpriteDraw()
@@ -309,8 +372,12 @@ void KochaEngine::GamePlay::BattleSpriteDraw()
 	defaultWakuTexture->Draw();
 	battleStatusTexture->Draw();
 	defaultCommandTexture->Draw();
-	cursorTexture->Draw();
-	text->Draw(KochaEngine::GameSetting::talkSpeed);
+
+
+	cursorTexture->Draw(cursorPos);
+
+	commandTitleText->Draw(0);
+	battleText->Draw(KochaEngine::GameSetting::talkSpeed);
 }
 
 void KochaEngine::GamePlay::FieldUpdate()
@@ -342,4 +409,54 @@ void KochaEngine::GamePlay::FieldAlphaObjDraw()
 void KochaEngine::GamePlay::FieldSpriteDraw()
 {
 	gManager->SpriteDraw();
+}
+
+void KochaEngine::GamePlay::MoveCursor()
+{
+	if (InputManager::TriggerUp())
+	{
+		if (commandNum > 0)
+		{
+			commandNum--;
+		}
+		else
+		{
+			commandNum = MAX_COMMAND_NUM;
+		}
+	}
+	else if (InputManager::TriggerDown())
+	{
+		if (commandNum < MAX_COMMAND_NUM)
+		{
+			commandNum++;
+		}
+		else
+		{
+			commandNum = 0;
+		}
+	}
+
+	switch (commandNum)
+	{
+	case 0:
+		cursorPos = DEFAULT_COMMAND_POS + Vector2(10, 52);
+		break;
+	case 1:
+		cursorPos = DEFAULT_COMMAND_POS + Vector2(10, 84);
+		break;
+	case 2:
+		cursorPos = DEFAULT_COMMAND_POS + Vector2(10, 116);
+		break;
+	case 3:
+		cursorPos = DEFAULT_COMMAND_POS + Vector2(10, 148);
+		break;
+	case 4:
+		cursorPos = DEFAULT_COMMAND_POS + Vector2(10, 180);
+		break;
+	case 5:
+		cursorPos = DEFAULT_COMMAND_POS + Vector2(10, 212);
+		break;
+	default:
+		break;
+	}
 }

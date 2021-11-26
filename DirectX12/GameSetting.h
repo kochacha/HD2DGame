@@ -35,6 +35,9 @@ namespace KochaEngine
 	//バトル中コマンド
 	const Vector2 DEFAULT_COMMAND_POS = Vector2(20, 450);
 	const Vector2 DEFAULT_COMMAND_SIZE = Vector2(168, 240);
+	const Vector2 ATTACK_COMMAND_SIZE = Vector2(256, 240);
+
+	const unsigned int MAX_COMMAND_NUM = 5;
 
 	//バトル中ステータス
 	const Vector2 BATTLE_STATUS_POS = Vector2(1000, 500);
