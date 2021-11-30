@@ -24,10 +24,12 @@ namespace KochaEngine
 		Attribute attribute;
 		Vector3 size;
 		unsigned int level;
+		int maxHP;
 		int hp;
+		int maxSP;
 		int sp;
 		int attack;
-		int diffence;
+		int defence;
 		int intelligence;
 		int speed;
 		int skillful;

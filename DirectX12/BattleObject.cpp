@@ -34,6 +34,16 @@ void KochaEngine::BattleObject::Reward()
 
 void KochaEngine::BattleObject::ActiveReset()
 {
+	isActive = false;
+}
+
+void KochaEngine::BattleObject::ActiveDone()
+{
+	isActive = true;
+}
+
+void KochaEngine::BattleObject::SetDamage(const int arg_damage)
+{
 }
 
 KochaEngine::BattleObjectType KochaEngine::BattleObject::GetType()

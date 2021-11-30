@@ -18,5 +18,6 @@ namespace KochaEngine
 		static bool TriggerRight();
 		static bool TriggerLeft();
 		static bool TriggerDecision(); //決定ボタン
+		static bool TriggerCancel(); //キャンセルボタン
 	};
 }

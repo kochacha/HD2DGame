@@ -7,8 +7,8 @@ KochaEngine::Text::Text(const Vector2& arg_position, const Vector2& arg_fontSize
 	position = arg_position;
 	fontSize = arg_fontSize;
 
-	ReText("default.txt");
 	Initialize();
+	ReText("default.txt");
 }
 
 KochaEngine::Text::Text(const std::string& arg_textName, const Vector2& arg_position, const Vector2& arg_fontSize, const unsigned int arg_addSpeed)
@@ -16,8 +16,8 @@ KochaEngine::Text::Text(const std::string& arg_textName, const Vector2& arg_posi
 	position = arg_position;
 	fontSize = arg_fontSize;
 
-	ReText(arg_textName);
 	Initialize();
+	ReText(arg_textName);
 }
 
 void KochaEngine::Text::Initialize()

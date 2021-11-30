@@ -6,7 +6,7 @@ KochaEngine::Number::Number(Vector2 position, Vector2 size, int maxDigit)
 	this->maxDigit = maxDigit;
 	for (int i = 0; i < maxDigit; i++)
 	{
-		numbers[i] = new Texture2D("Resources/Texture/Font/number.png", 10, 1, 1, Vector2(position.x + (size.x + 5.0f) * i,position.y), size, 0);
+		numbers[i] = new Texture2D("Resources/Texture/Font/number.png", 10, 1, 1, Vector2(position.x + (size.x + 2.0f) * i,position.y), size, 0);
 	}
 }
 
@@ -37,6 +37,7 @@ void KochaEngine::Number::SetColor(const Vector4& arg_color)
 
 void KochaEngine::Number::Draw(int num)
 {
+	Init();
 	int digits = Util::GetDigit(num) - 1;
 	int hoge = (int)std::pow(10, digits);
 	int baka = num;
@@ -56,6 +57,7 @@ void KochaEngine::Number::Draw(int num)
 
 void KochaEngine::Number::Draw(Vector2 position, int num)
 {
+	Init();
 	int digits = Util::GetDigit(num) - 1;
 	int hoge = (int)std::pow(10, digits);
 	int baka = num;

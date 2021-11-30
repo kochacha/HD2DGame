@@ -212,11 +212,14 @@ void KochaEngine::Application::Load()
 		Dx12_Texture::LoadTexture("Resources/Texture/Color/black.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Color/white.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Color/red.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Color/darkRed.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Color/green.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Color/darkGreen.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Color/blue.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Color/yellow.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Color/pink.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Color/lightBlue.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Color/darkLightBlue.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Color/orange.png");
 
 		//Engineフォルダ
@@ -236,7 +239,9 @@ void KochaEngine::Application::Load()
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/command_2.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/command_3.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/waku_0.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/UI/waku_1.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/cursor.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/UI/slash.png");
 
 		//Characterフォルダ
 		for (int i = 0; i < 1; i++)

@@ -32,10 +32,12 @@ namespace KochaEngine
 		int GetEnemyCount();
 		Enemy* GetEnemy(const int arg_enemyNum);
 		BattleObject* GetNowActive();
+		BattleObject* GetCharacter(const KochaEngine::BattleObjectType& arg_type);
 
 		void Remove();
 		void RemoveAll();
-		void Reward();
+		void Reward(); //ïÒèVåvéZ
+		void ActiveReset();
 
 		inline const int GetTotalMoney() { return totalMoney; }
 		inline const int GetTotalExp() { return totalExp; }

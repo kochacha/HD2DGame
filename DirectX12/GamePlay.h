@@ -8,6 +8,7 @@
 #include "Number.h"
 #include "Audio.h"
 #include "Texture2D.h"
+#include "GameSetting.h"
 
 namespace KochaEngine
 {
@@ -17,6 +18,15 @@ namespace KochaEngine
 
 	class GamePlay : public Scene
 	{
+		enum CommandTab
+		{
+			DEFAULT_TAB,
+			ATTACK_TAB,
+			SPELL_TAB,
+			SKILL_TAB,
+			ITEM_TAB,
+		};
+
 	private:
 		Map* map;
 		Camera* camera;
@@ -25,19 +35,24 @@ namespace KochaEngine
 		ParticleManager* pManager;
 		ParticleEmitter* emitter;
 		LightManager* lightManager;
+		BattleObject* nowActiveActor;
+		BattleObject* targetActor;
 
 		Object* floor;
 		Object* skyObj;
 
 		Texture2D* fadeTexture;
 		Texture2D* defaultWakuTexture;
-		Texture2D* battleStatusTexture;
+		Texture2D* anotherWakuTexture;
 		Texture2D* defaultCommandTexture;
-		Texture2D* attackCommandTexture;
+		Texture2D* waitCommandTexture;
+		Texture2D* anotherCommandTexture;
 		Texture2D* cursorTexture;
 		Text* battleText;
 		Text* commandTitleText;
-		Text* enemyNameText[4];
+		Text* enemyNameText[MAX_BATTLE_ENEMY];
+
+		CommandTab nowTab;
 
 		Vector2 cursorPos;
 
@@ -46,14 +61,24 @@ namespace KochaEngine
 		bool isBattleEnd;
 		bool isBattleStart;
 		bool isTextUpdate;
+		bool isTurnUpdate;
+		bool isAttackMotion;
+		bool isDefenceMotion;
+		bool isEnemyTurn;
 		float fadeAlpha;
 
+		int motionTime;
 		int frameCount;
 		int seconds;
 		int endCount;
+		int battleCharaCount;
+		int battleStartWait;
 
 		unsigned int commandNum;
+		unsigned int preCommandNum[5];
 
+
+		void BattleInitialize();
 		void BattleUpdate();
 		void BattleObjDraw();
 		void BattleAlphaObjDraw();
@@ -64,7 +89,17 @@ namespace KochaEngine
 		void FieldAlphaObjDraw();
 		void FieldSpriteDraw();
 
+		void AttackMotionUpdate();
+		void DefenceMotionUpdate();
+		void EnemyNameUpdate();
+		void CommandDraw();
 		void MoveCursor();
+		void CursorPosSetting();
+		void DefaultTab();
+		void AttackTab();
+		unsigned int CommandNumUp(const unsigned int arg_commandNum);
+		unsigned int CommandNumDown(const unsigned int arg_commandNum);
+
 	public:
 		GamePlay();
 		~GamePlay() override;

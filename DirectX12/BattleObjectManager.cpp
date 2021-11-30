@@ -86,6 +86,7 @@ int KochaEngine::BattleObjectManager::GetEnemyCount()
 	for (auto it = battleObjects.begin(); it != end; ++it)
 	{
 		if ((*it)->IsDead()) continue;
+		if ((*it)->IsKnockDown()) continue;
 		if ((*it)->GetType() == ENEMY) count++;
 	}
 	return count;
@@ -103,6 +104,7 @@ KochaEngine::Enemy* KochaEngine::BattleObjectManager::GetEnemy(const int arg_ene
 	for (auto it = battleObjects.begin(); it != end; ++it)
 	{
 		if ((*it)->IsDead()) continue;
+		if ((*it)->IsKnockDown()) continue;
 		if ((*it)->GetType() == ENEMY)
 		{
 			if (count == arg_enemyNum)
@@ -135,6 +137,21 @@ KochaEngine::BattleObject* KochaEngine::BattleObjectManager::GetNowActive()
 			object = *it;
 		}	
 	}
+	return object;
+}
+
+KochaEngine::BattleObject* KochaEngine::BattleObjectManager::GetCharacter(const KochaEngine::BattleObjectType& arg_type)
+{
+	BattleObject* object = nullptr;
+	auto end = battleObjects.end();
+	for (auto it = battleObjects.begin(); it != end; ++it)
+	{
+		if ((*it)->IsDead()) continue;
+		if ((*it)->GetType() != arg_type) continue;
+
+		object = *it;
+	}
+
 	return object;
 }
 
@@ -176,5 +193,16 @@ void KochaEngine::BattleObjectManager::Reward()
 	{
 		if ((*it)->GetType() != ENEMY) continue;
 		(*it)->Reward();
+	}
+}
+
+void KochaEngine::BattleObjectManager::ActiveReset()
+{
+	auto end = battleObjects.end();
+	for (auto it = battleObjects.begin(); it != end; ++it)
+	{
+		if ((*it)->IsDead()) continue;
+		if ((*it)->IsKnockDown()) continue;
+		(*it)->ActiveReset();
 	}
 }

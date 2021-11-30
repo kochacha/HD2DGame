@@ -32,6 +32,7 @@ namespace KochaEngine
 		bool isDelete = false; //íœ‚·‚é‚©‚Ç‚¤‚©
 		bool isTrigger = false; //“–‚½‚è”»’è‚ğ•t‚¯‚é‚©‚Ç‚¤‚©
 
+		bool isKnockDown = false; //HP‚ª0‚©‚Ç‚¤‚©
 		bool isActive = false; //s“®Ï‚İ‚©‚Ç‚¤‚©
 
 		Vector3 position = { 0,0,0 };
@@ -53,10 +54,13 @@ namespace KochaEngine
 		virtual void Dead();
 		virtual void Reward();
 		virtual void ActiveReset();
+		virtual void ActiveDone();
+		virtual void SetDamage(const int arg_damage);
 
 		inline const bool IsDead() { return isDead; }
 		inline const bool IsDelete() { return isDelete; }
 		inline const bool IsTrigger() { return isTrigger; }
+		inline const bool IsKnockDown() { return isKnockDown; }
 		inline const bool IsActive() { return isActive; }
 
 		inline const Vector3 GetPosition() { return position; }

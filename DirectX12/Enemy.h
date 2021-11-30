@@ -17,8 +17,11 @@ namespace KochaEngine
 		void Initialize() override;
 		void Update() override;
 		void ObjDraw(Camera* arg_camera, LightManager* arg_lightManager) override;
+
+		void SetDamage(const int arg_damage) override;
 		void Reward() override;
 		void ActiveReset() override;
+		void ActiveDone() override;
 		BattleObjectType GetType() override;
 	};
 }

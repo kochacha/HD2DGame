@@ -70,3 +70,10 @@ bool KochaEngine::InputManager::TriggerDecision()
         || Input::TriggerKey(DIK_SPACE)
         || Input::TriggerPadButton(XINPUT_GAMEPAD_A);
 }
+
+bool KochaEngine::InputManager::TriggerCancel()
+{
+    return Input::TriggerKey(DIK_X)
+        || Input::TriggerKey(DIK_BACKSPACE)
+        || Input::TriggerPadButton(XINPUT_GAMEPAD_B);
+}
