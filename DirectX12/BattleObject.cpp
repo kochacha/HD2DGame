@@ -42,6 +42,16 @@ void KochaEngine::BattleObject::ActiveDone()
 	isActive = true;
 }
 
+void KochaEngine::BattleObject::CurrentActive()
+{
+	isCurrentActive = true;
+}
+
+void KochaEngine::BattleObject::CurrentActiveReset()
+{
+	isCurrentActive = false;
+}
+
 void KochaEngine::BattleObject::SetDamage(const int arg_damage)
 {
 }

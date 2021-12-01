@@ -39,6 +39,7 @@ namespace KochaEngine
 		GameObjectType GetType() override;
 
 		void SetIsBattle(const bool arg_isBattle) { isBattle = arg_isBattle; }
+		void SetParam(const ActorParam& arg_param) { param = arg_param; }
 		void EncountReset();
 
 		const ActorParam GetParam() { return param; }

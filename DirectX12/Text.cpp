@@ -25,7 +25,9 @@ void KochaEngine::Text::Initialize()
 	textDataSize = 0;
 	addTextCount = 0;
 	count = 0;
+	oneLineFonts = 23;
 	isSkip = false;
+	isPlayEndText = false;
 }
 
 void KochaEngine::Text::AddFont(Font* arg_font)
@@ -62,33 +64,38 @@ void KochaEngine::Text::Draw(const int arg_addSpeed)
 		else if (addTextCount < textDataSize)
 		{
 			Vector2 fixPosition;
-			if (addTextCount < MAX_ONE_LINE_FONTS)
+			if (addTextCount < oneLineFonts)
 			{
 				fixPosition = Vector2(fontSize.x * addTextCount, 0);
 			}
 			else
 			{
-				fixPosition = Vector2(fontSize.x * (addTextCount - MAX_ONE_LINE_FONTS), fontSize.y);
+				fixPosition = Vector2(fontSize.x * (addTextCount - oneLineFonts), fontSize.y);
 			}
 
 			AddFont(new Font(textData[addTextCount], position + fixPosition, fontSize));
 			addTextCount++;
 			count = 0;
+			if (addTextCount >= textDataSize)
+			{
+				isPlayEndText = true;
+			}
 		}
 	}
 	else
 	{
+		isPlayEndText = true;
 		//addSpeed‚ª0‚È‚ç“¯Žž‚É‘S•”•`‰æ‚·‚é
 		for (; addTextCount < textDataSize; addTextCount++)
 		{
 			Vector2 fixPosition;
-			if (addTextCount < MAX_ONE_LINE_FONTS)
+			if (addTextCount < oneLineFonts)
 			{
 				fixPosition = Vector2(fontSize.x * addTextCount, 0);
 			}
 			else
 			{
-				fixPosition = Vector2(fontSize.x * (addTextCount - MAX_ONE_LINE_FONTS), fontSize.y);
+				fixPosition = Vector2(fontSize.x * (addTextCount - oneLineFonts), fontSize.y);
 			}
 			
 			AddFont(new Font(textData[addTextCount], position + fixPosition, fontSize));

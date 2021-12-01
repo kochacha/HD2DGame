@@ -17,10 +17,14 @@ namespace KochaEngine
 		Number* paramTex[5];
 		BattleObjectType battleObjectType;
 
+		int knockBackTime;
+
 		float hpBarSize;
 		float spBarSize;
 		float prePosX;
+		float activePosX;
 
+		void EasingPosition();
 		void FixParam();
 		void SetGauge();
 		void SetObjParam();
@@ -38,6 +42,8 @@ namespace KochaEngine
 		void SetDamage(const int arg_damage) override;
 		void ActiveReset() override;
 		void ActiveDone() override;
+		void CurrentActive() override;
+		void CurrentActiveReset() override;
 	};
 
 }

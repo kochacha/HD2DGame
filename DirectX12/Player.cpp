@@ -47,10 +47,10 @@ void KochaEngine::Player::Initialize()
 	param.attribute = TYPE_LIGHT;
 	param.size = Vector3(10, 10, 10);
 	param.level = 1;
-	param.maxHP = 1247;
-	param.hp = 300;
-	param.maxSP = 4754;
-	param.sp = 900;
+	param.maxHP = 124;
+	param.hp = 18;
+	param.maxSP = 475;
+	param.sp = 74;
 	param.attack = 10;
 	param.defence = 10;
 	param.intelligence = 10;

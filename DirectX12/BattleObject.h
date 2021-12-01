@@ -34,6 +34,7 @@ namespace KochaEngine
 
 		bool isKnockDown = false; //HPÇ™0Ç©Ç«Ç§Ç©
 		bool isActive = false; //çsìÆçœÇ›Ç©Ç«Ç§Ç©
+		bool isCurrentActive = false; //åªç›çsìÆíÜÇ©Ç«Ç§Ç©
 
 		Vector3 position = { 0,0,0 };
 		Vector3 prePosition = { 0,0,0 };
@@ -55,6 +56,8 @@ namespace KochaEngine
 		virtual void Reward();
 		virtual void ActiveReset();
 		virtual void ActiveDone();
+		virtual void CurrentActive();
+		virtual void CurrentActiveReset();
 		virtual void SetDamage(const int arg_damage);
 
 		inline const bool IsDead() { return isDead; }
@@ -62,6 +65,7 @@ namespace KochaEngine
 		inline const bool IsTrigger() { return isTrigger; }
 		inline const bool IsKnockDown() { return isKnockDown; }
 		inline const bool IsActive() { return isActive; }
+		inline const bool IsCurrentActive() { return isCurrentActive; }
 
 		inline const Vector3 GetPosition() { return position; }
 		inline const Vector3 GetVelocity() { return velocity; }

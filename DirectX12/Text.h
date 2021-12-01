@@ -19,8 +19,9 @@ namespace KochaEngine
 		unsigned int textDataSize;
 		unsigned int addTextCount;
 		bool isSkip;
+		bool isPlayEndText;
 
-		const unsigned short MAX_ONE_LINE_FONTS = 23;
+		unsigned short oneLineFonts;
 
 		void Initialize();
 		void AddFont(Font* arg_font);
@@ -37,7 +38,9 @@ namespace KochaEngine
 		void ReText(const std::string& arg_textName);
 		void Skip();
 
+		inline const bool IsPlayEnd() { return isPlayEndText; }
 		inline void SetPosition(const Vector2& arg_position) { position = arg_position; }
+		inline void SetOneLineFonts(const unsigned short arg_oneLineFonts) { oneLineFonts = arg_oneLineFonts; }
 	};
 
 }

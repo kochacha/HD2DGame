@@ -19,6 +19,8 @@ namespace KochaEngine
 		void ObjDraw(Camera* arg_camera, LightManager* arg_lightManager) override;
 		GameObjectType GetType() override;
 
+		void SetParam(const ActorParam& arg_param) { param = arg_param; }
+
 		const ActorParam GetParam() { return param; }
 	};
 }

@@ -51,7 +51,8 @@ namespace KochaEngine
 	const Vector2 MAX_GAUGE_SIZE = Vector2(235, 5);
 
 	//画面中央下の会話テキスト
-	const Vector2 TALK_TEXT_POS = Vector2(225, 585);
+	const Vector2 TALK_LONG_TEXT_POS = Vector2(225, 585);
+	const Vector2 TALK_SHORT_TEXT_POS = Vector2(313, 585);
 
 	//バトル時エネミーのサイズ
 	const Vector3 SMALL_ENEMY_SIZE = Vector3(10, 10, 10);
@@ -62,6 +63,9 @@ namespace KochaEngine
 	const int ATTACK_MOTION_TIME = 180;
 	const int SPELL_MOTION_TIME = 300;
 	const int SKILL_MOTION_TIME = 240;
+
+	//リザルト時ボタン入力待ち時間
+	const int RESULT_INPUT_WAIT = 60;
 
 	//バトル時敵出現ポジション
 	//小サイズの敵

@@ -9,6 +9,15 @@ namespace KochaEngine
 	{
 	private:
 		BattleObjectManager* bManager;
+		
+		int knockBackTime;
+
+		float prePosX;
+		float activePosX;
+
+		void EasingPosition();
+		void FixParam();
+		void SetObjParam();
 
 	public:
 		Enemy(BattleObjectManager* arg_bManager, const Vector3& arg_position, const ActorParam& arg_param);
@@ -22,6 +31,8 @@ namespace KochaEngine
 		void Reward() override;
 		void ActiveReset() override;
 		void ActiveDone() override;
+		void CurrentActive() override;
+		void CurrentActiveReset() override;
 		BattleObjectType GetType() override;
 	};
 }

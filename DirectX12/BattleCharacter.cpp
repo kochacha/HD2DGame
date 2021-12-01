@@ -96,14 +96,28 @@ void KochaEngine::BattleCharacter::Initialize()
 		break;
 	}
 
-	prePosX = position.x - 60 + (Util::GetIntRand(0, 15) - 5);
+	knockBackTime = 0;
+
+	prePosX = position.x - 60 + (Util::GetIntRand(0, 10));
+	activePosX = prePosX - 15;
 }
 
 void KochaEngine::BattleCharacter::Update()
 {
-	if (position.x > prePosX)
+	//if (position.x > prePosX)
+	//{
+	//	position.x -= 1.3f;
+	//}
+
+	EasingPosition();
+
+	if (knockBackTime > 0)
 	{
-		position.x -= 1.2f;
+		if (knockBackTime > 10)
+		{
+			position.x += knockBackTime * 0.1f;
+		}
+		knockBackTime--;
 	}
 
 	FixParam();
@@ -148,6 +162,7 @@ KochaEngine::BattleObjectType KochaEngine::BattleCharacter::GetType()
 
 void KochaEngine::BattleCharacter::SetDamage(const int arg_damage)
 {
+	knockBackTime = 15;
 	param.hp -= arg_damage;
 }
 
@@ -159,6 +174,30 @@ void KochaEngine::BattleCharacter::ActiveReset()
 void KochaEngine::BattleCharacter::ActiveDone()
 {
 	isActive = true;
+}
+
+void KochaEngine::BattleCharacter::CurrentActive()
+{
+	isCurrentActive = true;
+}
+
+void KochaEngine::BattleCharacter::CurrentActiveReset()
+{
+	isCurrentActive = false;
+}
+
+void KochaEngine::BattleCharacter::EasingPosition()
+{
+	if (knockBackTime != 0) return;
+	const float EASING_RATE = 0.4f;
+	if (isCurrentActive)
+	{
+		position.x = Util::EaseIn(position.x, activePosX, EASING_RATE);
+	}
+	else
+	{
+		position.x = Util::EaseIn(position.x, prePosX, EASING_RATE);
+	}
 }
 
 void KochaEngine::BattleCharacter::FixParam()

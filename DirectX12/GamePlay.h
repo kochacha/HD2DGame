@@ -35,7 +35,7 @@ namespace KochaEngine
 		ParticleManager* pManager;
 		ParticleEmitter* emitter;
 		LightManager* lightManager;
-		BattleObject* nowActiveActor;
+		BattleObject* currentActiveActor;
 		BattleObject* targetActor;
 
 		Object* floor;
@@ -48,38 +48,69 @@ namespace KochaEngine
 		Texture2D* waitCommandTexture;
 		Texture2D* anotherCommandTexture;
 		Texture2D* cursorTexture;
-		Text* battleText;
+		Text* battleLongText;
+		Text* battleShortText;
+		Text* battleNameText;
 		Text* commandTitleText;
 		Text* enemyNameText[MAX_BATTLE_ENEMY];
 
-		CommandTab nowTab;
+		//現在のコマンドタブ
+		CommandTab currentTab;
 
+		//カーソルのポジション
 		Vector2 cursorPos;
 
+		//フェードアウトするかどうか
 		bool fadeFlag;
+		//バトル中かどうか
 		bool isBattle;
+		//バトルが終わっているかどうか
 		bool isBattleEnd;
+		//バトル開始の瞬間かどうか
 		bool isBattleStart;
-		bool isTextUpdate;
+		//コマンド上の表示名を更新するかどうか
+		bool isCommandTitleUpdate;
+		//次のターンに行くかどうか
 		bool isTurnUpdate;
+		//こうげき・じゅもん・とくぎモーション中かどうか
 		bool isAttackMotion;
+		//ぼうぎょモーション中かどうか
 		bool isDefenceMotion;
+		//敵のターンかどうか
 		bool isEnemyTurn;
+		//キャラクターが全滅しているかどうか
+		bool isCharacterDestroy;
+		//敵が全滅しているかどうか
+		bool isEnemyDestroy;
+		//リザルト時に一度だけ行う処理用フラグ
+		bool isResultOnce;
+
+		//フェードの透明度
 		float fadeAlpha;
 
-		int motionTime;
 		int frameCount;
 		int seconds;
 		int endCount;
+		//行動時のアニメーションの時間	
+		int motionTime;
+		//バトル参加キャラの数
 		int battleCharaCount;
+		//バトルスタート時の硬直時間
 		int battleStartWait;
+		//リザルト進行の番号
+		int resultFlowNum;
+		//リザルトでボタンを押したときの待ち時間
+		int resultFlowWait;
 
+		//コマンド番号
 		unsigned int commandNum;
+		//コマンド番号保存用 : 0,デフォルト 1,こうげき 2,じゅもん 3,とくぎ 4,どうぐ
 		unsigned int preCommandNum[5];
 
 
 		void BattleInitialize();
 		void BattleUpdate();
+		void BattleFlowUpdate();
 		void BattleObjDraw();
 		void BattleAlphaObjDraw();
 		void BattleSpriteDraw();
@@ -89,8 +120,12 @@ namespace KochaEngine
 		void FieldAlphaObjDraw();
 		void FieldSpriteDraw();
 
+		void BattleEnd();
+		void TurnInitialize();
+		void ActiveActorUpdate();
 		void AttackMotionUpdate();
 		void DefenceMotionUpdate();
+		void ResultUpdate();
 		void EnemyNameUpdate();
 		void CommandDraw();
 		void MoveCursor();

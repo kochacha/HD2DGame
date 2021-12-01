@@ -122,7 +122,7 @@ KochaEngine::Enemy* KochaEngine::BattleObjectManager::GetEnemy(const int arg_ene
 	return nullptr;
 }
 
-KochaEngine::BattleObject* KochaEngine::BattleObjectManager::GetNowActive()
+KochaEngine::BattleObject* KochaEngine::BattleObjectManager::GetCurrentActive()
 {
 	int speed = 0;
 	BattleObject* object = nullptr;
@@ -205,4 +205,31 @@ void KochaEngine::BattleObjectManager::ActiveReset()
 		if ((*it)->IsKnockDown()) continue;
 		(*it)->ActiveReset();
 	}
+}
+
+bool KochaEngine::BattleObjectManager::IsEnemyDestroy()
+{
+	auto end = battleObjects.end();
+	for (auto it = battleObjects.begin(); it != end; ++it)
+	{
+		if ((*it)->GetType() != ENEMY) continue;
+		if ((*it)->IsDead()) continue;
+		if ((*it)->IsKnockDown()) continue;
+		return false;
+	}
+	return true;
+}
+
+bool KochaEngine::BattleObjectManager::IsCharacterDestroy()
+{
+	auto end = battleObjects.end();
+	for (auto it = battleObjects.begin(); it != end; ++it)
+	{
+		if ((*it)->GetType() != BATTLE_PLAYER &&
+			(*it)->GetType() != BATTLE_FIGHTER) continue;
+		if ((*it)->IsDead()) continue;
+		if ((*it)->IsKnockDown()) continue;
+		return false;
+	}
+	return true;
 }

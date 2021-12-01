@@ -36,7 +36,10 @@ KochaEngine::GamePlay::GamePlay()
 	cursorPos = DEFAULT_COMMAND_POS + Vector2(10, 52);
 	cursorTexture = new Texture2D("Resources/Texture/UI/cursor.png", cursorPos, Vector2(16, 16), 0);
 
-	battleText = new Text(TALK_TEXT_POS, Vector2(32, 32));
+	battleLongText = new Text(TALK_LONG_TEXT_POS, Vector2(32, 32));
+	battleShortText = new Text(TALK_SHORT_TEXT_POS, Vector2(32, 32));
+	battleShortText->SetOneLineFonts(20);
+	battleNameText = new Text(TALK_LONG_TEXT_POS, Vector2(32, 32));
 	commandTitleText = new Text(DEFAULT_COMMAND_POS + Vector2(5, 5), Vector2(32, 32));
 	for (int i = 0; i < MAX_BATTLE_ENEMY; i++)
 	{
@@ -64,7 +67,9 @@ KochaEngine::GamePlay::~GamePlay()
 	delete waitCommandTexture;
 	delete anotherCommandTexture;
 	delete cursorTexture;
-	delete battleText;
+	delete battleLongText;
+	delete battleShortText;
+	delete battleNameText;
 	delete commandTitleText;
 	for (int i = 0; i < MAX_BATTLE_ENEMY; i++)
 	{
@@ -79,11 +84,14 @@ void KochaEngine::GamePlay::Initialize()
 	isBattle = false;
 	isBattleEnd = false;
 	isBattleStart = false;
-	isTextUpdate = false;
+	isCommandTitleUpdate = false;
 	isTurnUpdate = false;
 	isAttackMotion = false;
 	isDefenceMotion = false;
 	isEnemyTurn = false;
+	isCharacterDestroy = false;
+	isEnemyDestroy = false;
+	isResultOnce = false;
 
 	gManager->RemoveAll();
 	bManager->RemoveAll();
@@ -106,7 +114,7 @@ void KochaEngine::GamePlay::Initialize()
 	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
 
 	fadeTexture->SetColor(Vector4(0, 0, 0.12f, 1));
-	nowTab = GamePlay::DEFAULT_TAB;
+	currentTab = GamePlay::DEFAULT_TAB;
 
 	motionTime = 0;
 	frameCount = 0;
@@ -114,6 +122,8 @@ void KochaEngine::GamePlay::Initialize()
 	commandNum = 0;
 	battleCharaCount = 0;
 	battleStartWait = 0;
+	resultFlowNum = 0;
+	resultFlowWait = 0;
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -256,14 +266,12 @@ void KochaEngine::GamePlay::BattleInitialize()
 	isTurnUpdate = false;
 	battleCharaCount = 0;
 	commandNum = 0;
-	battleStartWait = 40;
+	resultFlowNum = 0;
+	battleStartWait = 100;
 	for (int i = 0; i < 5; i++)
 	{
 		preCommandNum[i] = 0;
 	}
-
-	//敵出現テキスト再生
-	battleText->ReText("Talk/Field/Sample1.txt");
 
 	const Vector3 cameraPos = camera->GetEye();
 
@@ -296,12 +304,58 @@ void KochaEngine::GamePlay::BattleInitialize()
 		bManager->AddObject(new BattleCharacter(BATTLE_FIGHTER, cameraPos + BATTLE_CHARACTOR_POS[2], fighterParam));
 	}
 
-	//バトルに参加しているキャラクターのチェック
 
+	////敵出現テキスト再生
+	//if (bManager->GetEnemyCount() == 1)
+	//{
+	//	//○○があらわれた
+	//	battleLongText->ReText("Talk/Battle/EnemySpawn.txt");
+	//}
+	//else
+	//{
+	//	//まもののむれがあらわれた
+	//	battleLongText->ReText("Talk/Battle/EnemySpawn.txt");
+	//}
+
+	battleLongText->ReText("Talk/Battle/EnemySpawn.txt");
+	commandTitleText->ReText("default.txt");
 }
 
 void KochaEngine::GamePlay::BattleUpdate()
 {
+	//デバッグ用
+	{
+		if (Input::TriggerKey(DIK_F1))
+		{
+			//サンプルテキスト再生
+			battleLongText->ReText("Talk/Battle/CharaDestroy_0.txt");
+		}
+		if (Input::TriggerKey(DIK_F2))
+		{
+			//サンプルテキスト再生
+			battleLongText->ReText("Talk/Battle/CharaDestroy_1.txt");
+		}
+		if (Input::TriggerKey(DIK_E))
+		{
+			//テキストスキップ
+			battleLongText->Skip();
+		}
+		if (Input::TriggerKey(DIK_Q))
+		{
+			//もらってきたエネミーの名前描画
+			auto enemy = bManager->GetEnemy(1);
+			if (enemy != nullptr)
+			{
+				battleLongText->ReText(enemy->GetParam().name);
+			}
+		}
+		if (Input::TriggerKey(DIK_SPACE))
+		{
+			//バトルシーン終了
+			BattleEnd();
+		}
+	}
+
 	//バトルシーン開始//
 
 	//バトル開始時に一度だけ通る処理
@@ -316,142 +370,20 @@ void KochaEngine::GamePlay::BattleUpdate()
 		battleStartWait--;
 	}
 
-	//デバッグ用
-	{
-		if (Input::TriggerKey(DIK_T))
-		{
-			//サンプルテキスト再生
-			battleText->ReText("Talk/Field/Sample1.txt");
-		}
-		if (Input::TriggerKey(DIK_E))
-		{
-			//テキストスキップ
-			battleText->Skip();
-		}
-		if (Input::TriggerKey(DIK_Q))
-		{
-			//もらってきたエネミーの名前描画
-			auto enemy = bManager->GetEnemy(1);
-			if (enemy != nullptr)
-			{
-				battleText->ReText(enemy->GetParam().name);
-			}
-		}
-		if (Input::TriggerKey(DIK_SPACE))
-		{
-			//バトルシーン終了
-			fadeFlag = true;
-			isBattleEnd = true;
-		}
-	}
+	//バトルの一連の流れの処理のUpdate
+	BattleFlowUpdate();
 
-
-	//キャラ・エネミーの行動が終わったら更新
-	if (!isTurnUpdate)
-	{
-		isTurnUpdate = true;
-		isAttackMotion = false;
-
-		//現在行動中のキャラ・エネミーを持ってくる
-		nowActiveActor = bManager->GetNowActive();
-
-		//コマンド上に表示する名前を更新するフラグ
-		isTextUpdate = false;
-
-		nowTab = CommandTab::DEFAULT_TAB;
-		commandNum = 0;
-		for (int i = 0; i < 5; i++)
-		{
-			preCommandNum[i] = 0;
-		}
-
-		//エネミーの名前描画を更新
-		EnemyNameUpdate();
-	}
-
-	//ここからコマンド操作等の処理//
-
-	//行動中のキャラがいない場合
-	if (nowActiveActor == nullptr)
-	{
-		//行動できるキャラ・エネミーが居なくなったので一巡が終了
-		//全キャラ・エネミーを行動可能状態にする
-		bManager->ActiveReset();
-		isTurnUpdate = false;
-	}
-	else //行動中のキャラ・エネミーがいる場合
-	{
-		//バトルオブジェクトタイプを持ってくる
-		auto nowActiveActorType = nowActiveActor->GetType();
-
-		//バトルオブジェクトタイプがキャラだったら
-		if (nowActiveActorType == BATTLE_PLAYER ||
-			nowActiveActorType == BATTLE_FIGHTER)
-		{
-			isEnemyTurn = false;
-			if (!isTextUpdate)
-			{
-				isTextUpdate = true;
-				//現在コマンド操作中のキャラの名前を表示
-				commandTitleText->ReText(nowActiveActor->GetParam().name);
-			}
-
-			//コマンドのカーソル操作
-			if (!isAttackMotion && battleStartWait <= 0)
-			{
-				MoveCursor();
-			}
-
-
-		}
-		else //バトルオブジェクトタイプがエネミーだったら
-		{
-			isEnemyTurn = true;
-
-			if (!isAttackMotion && battleStartWait <= 0)
-			{
-				isAttackMotion = true;
-				motionTime = ATTACK_MOTION_TIME;
-				BattleObject* character = nullptr;
-				while (true)
-				{
-					int rand = Util::GetIntRand(0,2);
-					switch (rand)
-					{
-					case 0:
-						character = bManager->GetCharacter(BattleObjectType::BATTLE_PLAYER);
-						break;
-					case 1:
-						character = bManager->GetCharacter(BattleObjectType::BATTLE_FIGHTER);
-						break;
-					case 2:
-
-						break;
-					default:
-						break;
-					}
-					if (character != nullptr) 
-					{
-						if (!character->IsKnockDown()) break;
-					}
-					
-				}
-				targetActor = character;
-			}
-		}
-
-		AttackMotionUpdate();
-		DefenceMotionUpdate();
-	}
-
-	
-
+	//カーソルのポジションを更新
+	CursorPosSetting();
 
 	//バトルシーン終了処理//
 	if (fadeAlpha >= 1.0f && isBattleEnd)
 	{
 		isBattle = false;
 		isBattleEnd = false;
+		isCharacterDestroy = false;
+		isEnemyDestroy = false;
+		isResultOnce = false;
 		bManager->RemoveAll();
 	}
 
@@ -463,6 +395,44 @@ void KochaEngine::GamePlay::BattleUpdate()
 
 	skyObj->MoveRotate(Vector3(0, 0.005f, 0));
 	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
+}
+
+void KochaEngine::GamePlay::BattleFlowUpdate()
+{
+	if (battleStartWait > 0) return;
+
+	//キャラ・エネミーの行動が終わったら更新
+	if (!isTurnUpdate)
+	{
+		isTurnUpdate = true;
+
+		TurnInitialize();
+	}
+
+
+	//ここからコマンド操作等の処理//
+
+	//キャラクターかエネミーどちらかが全滅していないとき
+	if (!isCharacterDestroy && !isEnemyDestroy)
+	{
+		//行動中のキャラがいない場合
+		if (currentActiveActor == nullptr)
+		{
+			//行動できるキャラ・エネミーが居なくなったので一巡が終了
+			//全キャラ・エネミーを行動可能状態にする
+			bManager->ActiveReset();
+			isTurnUpdate = false;
+		}
+		else //行動中のキャラ・エネミーがいる場合
+		{
+			ActiveActorUpdate();
+		}
+	}
+	else
+	{
+		//バトル終了時演出
+		ResultUpdate();
+	}
 }
 
 void KochaEngine::GamePlay::BattleObjDraw()
@@ -485,20 +455,22 @@ void KochaEngine::GamePlay::BattleSpriteDraw()
 
 	if (!isAttackMotion && !isEnemyTurn)
 	{
+		//キャラクターのターン中
 		CommandDraw();
 		commandTitleText->Draw(0);
 		cursorTexture->Draw(cursorPos);
 	}
 	else
 	{
+		//キャラクターのターン中以外のとき
 		defaultWakuTexture->Draw();
 		waitCommandTexture->Draw();
+		battleLongText->Draw(KochaEngine::GameSetting::talkSpeed);
 	}
 
 
 	bManager->SpriteDraw();
 
-	battleText->Draw(KochaEngine::GameSetting::talkSpeed);
 }
 
 void KochaEngine::GamePlay::FieldUpdate()
@@ -532,6 +504,117 @@ void KochaEngine::GamePlay::FieldSpriteDraw()
 	gManager->SpriteDraw();
 }
 
+void KochaEngine::GamePlay::BattleEnd()
+{
+	fadeFlag = true;
+	isBattleEnd = true;
+}
+
+void KochaEngine::GamePlay::TurnInitialize()
+{
+	//キャラクターが全滅したら
+	if (bManager->IsCharacterDestroy())
+	{
+		isCharacterDestroy = true;
+		return;
+	}
+	//エネミーが全滅したら
+	if (bManager->IsEnemyDestroy())
+	{
+		isEnemyDestroy = true;
+		return;
+	}
+
+	//現在行動中のキャラ・エネミーを持ってくる
+	currentActiveActor = bManager->GetCurrentActive();
+
+	//キャラ・エネミーを行動中状態にする
+	if (currentActiveActor != nullptr)
+	{
+		currentActiveActor->CurrentActive();
+	}
+
+	//コマンド上に表示する名前を更新するフラグ
+	isCommandTitleUpdate = false;
+
+	isAttackMotion = false;
+
+	currentTab = CommandTab::DEFAULT_TAB;
+	commandNum = 0;
+	for (int i = 0; i < 5; i++)
+	{
+		preCommandNum[i] = 0;
+	}
+
+	//エネミーの名前描画を更新
+	EnemyNameUpdate();
+}
+
+void KochaEngine::GamePlay::ActiveActorUpdate()
+{
+	//バトルオブジェクトタイプを持ってくる
+	auto currentActiveActorType = currentActiveActor->GetType();
+
+	//バトルオブジェクトタイプがキャラだったら
+	if (currentActiveActorType == BATTLE_PLAYER ||
+		currentActiveActorType == BATTLE_FIGHTER)
+	{
+		isEnemyTurn = false;
+		if (!isCommandTitleUpdate)
+		{
+			isCommandTitleUpdate = true;
+			//現在コマンド操作中のキャラの名前を表示
+			commandTitleText->ReText(currentActiveActor->GetParam().name);
+		}
+
+		//コマンドのカーソル操作
+		if (!isAttackMotion)
+		{
+			MoveCursor();
+		}
+
+
+	}
+	else //バトルオブジェクトタイプがエネミーだったら
+	{
+		isEnemyTurn = true;
+
+		if (!isAttackMotion)
+		{
+			isAttackMotion = true;
+			motionTime = ATTACK_MOTION_TIME;
+			BattleObject* character = nullptr;
+			while (true)
+			{
+				int rand = Util::GetIntRand(0, 2);
+				switch (rand)
+				{
+				case 0:
+					character = bManager->GetCharacter(BattleObjectType::BATTLE_PLAYER);
+					break;
+				case 1:
+					character = bManager->GetCharacter(BattleObjectType::BATTLE_FIGHTER);
+					break;
+				case 2:
+
+					break;
+				default:
+					break;
+				}
+				if (character != nullptr)
+				{
+					if (!character->IsKnockDown()) break;
+				}
+
+			}
+			targetActor = character;
+		}
+	}
+
+	AttackMotionUpdate();
+	DefenceMotionUpdate();
+}
+
 void KochaEngine::GamePlay::AttackMotionUpdate()
 {
 	if (!isAttackMotion) return;
@@ -543,7 +626,7 @@ void KochaEngine::GamePlay::AttackMotionUpdate()
 	{
 		//ダメージ計算処理
 		auto targetParam = targetActor->GetParam();
-		auto activeParam = nowActiveActor->GetParam();
+		auto activeParam = currentActiveActor->GetParam();
 
 		//基礎ダメージ
 		int baseDamage = activeParam.attack * 0.5f - targetParam.defence * 0.25f;
@@ -562,13 +645,106 @@ void KochaEngine::GamePlay::AttackMotionUpdate()
 	{
 		isTurnUpdate = false;
 		//行動済みにする
-		nowActiveActor->ActiveDone();
+		currentActiveActor->ActiveDone();
+		//行動中状態を解除する
+		currentActiveActor->CurrentActiveReset();
 	}
 }
 
 void KochaEngine::GamePlay::DefenceMotionUpdate()
 {
 
+}
+
+void KochaEngine::GamePlay::ResultUpdate()
+{
+	//リザルト遷移時に一度だけ通る処理
+	if (!isResultOnce)
+	{
+		isResultOnce = true;
+		resultFlowWait = RESULT_INPUT_WAIT;
+	}
+
+	if (resultFlowWait <= 0)
+	{
+		//リザルト中ボタンを押して次へ進む
+		if (InputManager::TriggerDecision() ||
+			InputManager::TriggerCancel())
+		{
+			//テキストが再生中かどうか
+			if (!battleLongText->IsPlayEnd())
+			{
+				//再生をスキップ
+				battleLongText->Skip();
+			}
+			else
+			{
+				//次のリザルトへ
+				resultFlowNum++;
+				resultFlowWait = RESULT_INPUT_WAIT;
+			}
+		}
+	}
+	else
+	{
+		resultFlowWait--;
+	}
+
+
+	//キャラクターが全滅していた場合
+	if (isCharacterDestroy)
+	{
+		//ボタン入力時一瞬だけ通るようにする
+		if (resultFlowWait == RESULT_INPUT_WAIT - 1)
+		{
+			switch (resultFlowNum)
+			{
+			case 0:
+				//めのまえがまっくらになった
+				battleLongText->ReText("Talk/Battle/CharaDestroy_0.txt");
+				break;
+			case 1:
+				//おかねをはんぶんうしなった
+				battleLongText->ReText("Talk/Battle/CharaDestroy_1.txt");
+				break;
+			case 2:
+				//バトルを終了する
+				BattleEnd();
+				break;
+			default:
+				break;
+			}
+		}
+
+	}
+	//エネミーが全滅していた場合
+	else if (isEnemyDestroy)
+	{
+		//ボタン入力時一瞬だけ通るようにする
+		if (resultFlowWait == RESULT_INPUT_WAIT - 1)
+		{
+			switch (resultFlowNum)
+			{
+			case 0:
+				//まものをすべてたおした！
+				battleLongText->ReText("Talk/Battle/EnemyDestroy_0.txt");
+				break;
+			case 1:
+				//？？？？？
+				battleLongText->ReText("Talk/Battle/EnemyDestroy_1.txt");
+				break;
+			case 2:
+				//バトルを終了する
+				BattleEnd();
+				break;
+			default:
+				break;
+			}
+
+		}
+		//エネミー全滅時テキスト再生
+
+	}
 }
 
 void KochaEngine::GamePlay::EnemyNameUpdate()
@@ -589,11 +765,12 @@ void KochaEngine::GamePlay::EnemyNameUpdate()
 void KochaEngine::GamePlay::CommandDraw()
 {
 	//auto enemyCount = bManager->GetEnemyCount();
-	switch (nowTab)
+	switch (currentTab)
 	{
 	case KochaEngine::GamePlay::DEFAULT_TAB: //デフォルトコマンド
 		defaultWakuTexture->Draw();
 		defaultCommandTexture->Draw();
+		battleLongText->Draw(KochaEngine::GameSetting::talkSpeed);
 		break;
 	case KochaEngine::GamePlay::ATTACK_TAB: //こうげきコマンド
 		anotherWakuTexture->Draw();
@@ -603,22 +780,27 @@ void KochaEngine::GamePlay::CommandDraw()
 		{
 			enemyNameText[i]->Draw(0);
 		}
+		battleShortText->Draw(KochaEngine::GameSetting::talkSpeed);
 		break;
 	case KochaEngine::GamePlay::SPELL_TAB: //じゅもんコマンド
 		anotherWakuTexture->Draw();
 		anotherCommandTexture->Draw();
+		battleShortText->Draw(KochaEngine::GameSetting::talkSpeed);
 		break;
 	case KochaEngine::GamePlay::SKILL_TAB: //とくぎコマンド
 		anotherWakuTexture->Draw();
 		anotherCommandTexture->Draw();
+		battleShortText->Draw(KochaEngine::GameSetting::talkSpeed);
 		break;
 	case KochaEngine::GamePlay::ITEM_TAB: //どうぐコマンド
 		anotherWakuTexture->Draw();
 		anotherCommandTexture->Draw();
+		battleShortText->Draw(KochaEngine::GameSetting::talkSpeed);
 		break;
 	default:
 		anotherWakuTexture->Draw();
 		anotherCommandTexture->Draw();
+		battleShortText->Draw(KochaEngine::GameSetting::talkSpeed);
 		break;
 	}
 }
@@ -636,7 +818,7 @@ void KochaEngine::GamePlay::MoveCursor()
 	if (InputManager::TriggerDecision())
 	{
 		//決定ボタンを押したとき
-		switch (nowTab)
+		switch (currentTab)
 		{
 		case KochaEngine::GamePlay::DEFAULT_TAB: //デフォルトコマンド
 			preCommandNum[0] = commandNum; //直前の入力の保存
@@ -662,33 +844,31 @@ void KochaEngine::GamePlay::MoveCursor()
 	else if (InputManager::TriggerCancel())
 	{
 		//キャンセルボタンを押したとき
-		switch (nowTab)
+		switch (currentTab)
 		{
 		case KochaEngine::GamePlay::DEFAULT_TAB: //デフォルトコマンド
 			//こうどうを選んでくださいテキストを入れる
 			break;
 		case KochaEngine::GamePlay::ATTACK_TAB: //こうげきコマンド
 			commandNum = preCommandNum[0];
-			nowTab = GamePlay::DEFAULT_TAB;
+			currentTab = GamePlay::DEFAULT_TAB;
 			break;
 		case KochaEngine::GamePlay::SPELL_TAB: //じゅもんコマンド
 			commandNum = preCommandNum[0];
-			nowTab = GamePlay::DEFAULT_TAB;
+			currentTab = GamePlay::DEFAULT_TAB;
 			break;
 		case KochaEngine::GamePlay::SKILL_TAB: //とくぎコマンド
 			commandNum = preCommandNum[0];
-			nowTab = GamePlay::DEFAULT_TAB;
+			currentTab = GamePlay::DEFAULT_TAB;
 			break;
 		case KochaEngine::GamePlay::ITEM_TAB: //どうぐコマンド
 			commandNum = preCommandNum[0];
-			nowTab = GamePlay::DEFAULT_TAB;
+			currentTab = GamePlay::DEFAULT_TAB;
 			break;
 		default:
 			break;
 		}
 	}
-
-	CursorPosSetting();
 }
 
 void KochaEngine::GamePlay::CursorPosSetting()
@@ -726,30 +906,29 @@ void KochaEngine::GamePlay::DefaultTab()
 	{
 	case 0: //こうげき
 		commandNum = preCommandNum[1]; //保存されたコマンドに切り替え
-		nowTab = GamePlay::ATTACK_TAB; //こうげきコマンドへ
+		currentTab = GamePlay::ATTACK_TAB; //こうげきコマンドへ
 		break;
 	case 1: //じゅもん
 		commandNum = preCommandNum[2]; //保存されたコマンドに切り替え
-		nowTab = GamePlay::SPELL_TAB; //じゅもんコマンドへ
+		currentTab = GamePlay::SPELL_TAB; //じゅもんコマンドへ
 		break;
 	case 2: //とくぎ
 		commandNum = preCommandNum[3]; //保存されたコマンドに切り替え
-		nowTab = GamePlay::SKILL_TAB; //とくぎコマンドへ
+		currentTab = GamePlay::SKILL_TAB; //とくぎコマンドへ
 		break;
 	case 3: //どうぐ
 		commandNum = preCommandNum[4]; //保存されたコマンドに切り替え
-		nowTab = GamePlay::ITEM_TAB; //どうぐコマンドへ
+		currentTab = GamePlay::ITEM_TAB; //どうぐコマンドへ
 		break;
 	case 4: //ぼうぎょ
-		//nowActiveActor->GetParam().diffence
+		//currentActiveActor->GetParam().diffence
 		isTurnUpdate = false;
 		//行動済みにする
-		nowActiveActor->ActiveDone();
+		currentActiveActor->ActiveDone();
 		break;
 	case 5: //にげる
 		//バトルシーン終了処理
-		fadeFlag = true;
-		isBattleEnd = true;
+		BattleEnd();
 		break;
 	default:
 		
