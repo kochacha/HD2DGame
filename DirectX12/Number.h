@@ -22,7 +22,8 @@ namespace KochaEngine
 
 		void SetColor(const Vector4& arg_color);
 
-		void Draw(int num);
-		void Draw(Vector2 position, int num);
+		void Draw(const int arg_num);
+		void Draw2(const int arg_num);
+		void Draw(const Vector2& arg_position, const int arg_num);
 	};
 }

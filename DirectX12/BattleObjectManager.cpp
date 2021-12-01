@@ -130,6 +130,7 @@ KochaEngine::BattleObject* KochaEngine::BattleObjectManager::GetCurrentActive()
 	for (auto it = battleObjects.begin(); it != end; ++it)
 	{
 		if ((*it)->IsDead()) continue;
+		if ((*it)->IsKnockDown()) continue;
 		if ((*it)->IsActive()) continue;
 		if ((*it)->GetParam().speed >= speed )
 		{
@@ -204,6 +205,15 @@ void KochaEngine::BattleObjectManager::ActiveReset()
 		if ((*it)->IsDead()) continue;
 		if ((*it)->IsKnockDown()) continue;
 		(*it)->ActiveReset();
+	}
+}
+
+void KochaEngine::BattleObjectManager::TargetOff()
+{
+	auto end = battleObjects.end();
+	for (auto it = battleObjects.begin(); it != end; ++it)
+	{
+		(*it)->TargetOff();
 	}
 }
 

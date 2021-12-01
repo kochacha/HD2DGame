@@ -26,6 +26,7 @@ namespace KochaEngine
 		LightManager* lightManager;
 		ParticleEmitter* emitter;
 		Object* obj;
+		Object* cursor;
 		ActorParam param;
 
 		bool isDead = false; //死んでいるかどうか
@@ -35,6 +36,7 @@ namespace KochaEngine
 		bool isKnockDown = false; //HPが0かどうか
 		bool isActive = false; //行動済みかどうか
 		bool isCurrentActive = false; //現在行動中かどうか
+		bool isTarget = false; //自分がターゲットにされているかどうか
 
 		Vector3 position = { 0,0,0 };
 		Vector3 prePosition = { 0,0,0 };
@@ -58,6 +60,10 @@ namespace KochaEngine
 		virtual void ActiveDone();
 		virtual void CurrentActive();
 		virtual void CurrentActiveReset();
+		virtual void TargetOn();
+		virtual void TargetOff();
+		virtual void AddExp(const int arg_exp);
+		virtual void AddMoney(const int arg_money);
 		virtual void SetDamage(const int arg_damage);
 
 		inline const bool IsDead() { return isDead; }
@@ -66,6 +72,7 @@ namespace KochaEngine
 		inline const bool IsKnockDown() { return isKnockDown; }
 		inline const bool IsActive() { return isActive; }
 		inline const bool IsCurrentActive() { return isCurrentActive; }
+		inline const bool IsTarget() { return isTarget; }
 
 		inline const Vector3 GetPosition() { return position; }
 		inline const Vector3 GetVelocity() { return velocity; }

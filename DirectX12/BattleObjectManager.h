@@ -38,6 +38,7 @@ namespace KochaEngine
 		void RemoveAll();
 		void Reward(); //報酬計算
 		void ActiveReset();
+		void TargetOff();
 
 		bool IsEnemyDestroy(); //エネミーが全滅したかどうか
 		bool IsCharacterDestroy(); //キャラクターが全滅したかどうか

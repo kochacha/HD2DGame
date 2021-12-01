@@ -53,6 +53,7 @@ namespace KochaEngine
 		Text* battleNameText;
 		Text* commandTitleText;
 		Text* enemyNameText[MAX_BATTLE_ENEMY];
+		Number* defaultNumberTex;
 
 		//現在のコマンドタブ
 		CommandTab currentTab;
@@ -84,6 +85,8 @@ namespace KochaEngine
 		bool isEnemyDestroy;
 		//リザルト時に一度だけ行う処理用フラグ
 		bool isResultOnce;
+		//デフォルトウィンドウに数字を描画するか
+		bool isShowNumber;
 
 		//フェードの透明度
 		float fadeAlpha;
@@ -101,6 +104,8 @@ namespace KochaEngine
 		int resultFlowNum;
 		//リザルトでボタンを押したときの待ち時間
 		int resultFlowWait;
+		//獲得経験値
+		int getExp;
 
 		//コマンド番号
 		unsigned int commandNum;
@@ -126,6 +131,7 @@ namespace KochaEngine
 		void AttackMotionUpdate();
 		void DefenceMotionUpdate();
 		void ResultUpdate();
+		void RewardCalc();
 		void EnemyNameUpdate();
 		void CommandDraw();
 		void MoveCursor();

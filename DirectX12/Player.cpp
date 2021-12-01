@@ -37,7 +37,7 @@ void KochaEngine::Player::Initialize()
 
 	obj->SetPosition(position);
 	obj->SetRotate(Vector3(0, 0, 0));
-	obj->SetScale(Vector3(10, 10, 10));
+	obj->SetScale(Vector3(-10, 10, 10));
 	obj->SetTexture("Resources/Texture/Character/player/player_0.png");
 	obj->SetBillboardType(Object::BILLBOARD_Y);
 

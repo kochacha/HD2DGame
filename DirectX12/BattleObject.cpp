@@ -52,6 +52,24 @@ void KochaEngine::BattleObject::CurrentActiveReset()
 	isCurrentActive = false;
 }
 
+void KochaEngine::BattleObject::TargetOn()
+{
+	isTarget = true;
+}
+
+void KochaEngine::BattleObject::TargetOff()
+{
+	isTarget = false;
+}
+
+void KochaEngine::BattleObject::AddExp(const int arg_exp)
+{
+}
+
+void KochaEngine::BattleObject::AddMoney(const int arg_money)
+{
+}
+
 void KochaEngine::BattleObject::SetDamage(const int arg_damage)
 {
 }

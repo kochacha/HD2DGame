@@ -14,6 +14,7 @@ KochaEngine::BattleCharacter::BattleCharacter(const BattleObjectType& arg_battle
 	isActive = false;
 
 	obj = new Object("plane");
+	cursor = new Object("plane");
 	
 	Vector2 charaStatusPos;
 	Vector2 charaNamePos;
@@ -42,9 +43,9 @@ KochaEngine::BattleCharacter::BattleCharacter(const BattleObjectType& arg_battle
 	gaugeTex[3] = new Texture2D("Resources/Texture/Color/lightBlue.png", spPos, MAX_GAUGE_SIZE, 0);
 
 	Vector2 numSize = Vector2(16, 16);
-	int hpDigit = Util::GetDigit(param.maxHP);
-	int spDigit = Util::GetDigit(param.maxSP);
-	int levelDigit = Util::GetDigit(param.level);
+	int hpDigit = 4;//Util::GetDigit(param.maxHP);
+	int spDigit = 4;//Util::GetDigit(param.maxSP);
+	int levelDigit = 4;//Util::GetDigit(param.level);
 	paramTex[0] = new Number(hpPos + Vector2(155, -25), numSize, hpDigit);
 	paramTex[1] = new Number(hpPos + Vector2(55, -25), numSize, hpDigit);
 	paramTex[2] = new Number(spPos + Vector2(155, -25), numSize, spDigit);
@@ -60,6 +61,7 @@ KochaEngine::BattleCharacter::BattleCharacter(const BattleObjectType& arg_battle
 KochaEngine::BattleCharacter::~BattleCharacter()
 {
 	delete obj;
+	delete cursor;
 	delete battleStatusTex;
 	delete nameText;
 	for (int i = 0; i < 5; i++)
@@ -82,6 +84,12 @@ void KochaEngine::BattleCharacter::Initialize()
 	obj->SetPosition(position);
 	obj->SetScale(param.size);
 	obj->SetTexture("Resources/Texture/Character/" + param.texName + "/" + param.texName + "_0.png");
+
+	cursor->SetScale(Vector3(2, 2, 2));
+	cursor->SetTexture("Resources/Texture/UI/cursor.png");
+	cursor->SetPosition(Vector3(position.x, position.y + param.size.y / 1.5f, position.z));
+	cursor->SetBillboardType(Object::BILLBOARD_Y);
+	cursor->MoveRotate(Vector3(0, 0, 90));
 
 	switch (battleObjectType)
 	{
@@ -122,17 +130,16 @@ void KochaEngine::BattleCharacter::Update()
 
 	FixParam();
 
-	if (param.hp == 0)
-	{
-		isKnockDown = true;
-	}
-
 	SetGauge();
 	SetObjParam();
 }
 
 void KochaEngine::BattleCharacter::ObjDraw(Camera* arg_camera, LightManager* arg_lightManager)
 {
+	if (isTarget)
+	{
+		cursor->Draw(arg_camera, arg_lightManager);
+	}
 	obj->Draw(arg_camera, arg_lightManager);
 }
 
@@ -160,30 +167,20 @@ KochaEngine::BattleObjectType KochaEngine::BattleCharacter::GetType()
 	return battleObjectType;
 }
 
+void KochaEngine::BattleCharacter::AddExp(const int arg_exp)
+{
+	getExp = arg_exp;
+}
+
+void KochaEngine::BattleCharacter::AddMoney(const int arg_money)
+{
+	param.money += arg_money;
+}
+
 void KochaEngine::BattleCharacter::SetDamage(const int arg_damage)
 {
 	knockBackTime = 15;
 	param.hp -= arg_damage;
-}
-
-void KochaEngine::BattleCharacter::ActiveReset()
-{
-	isActive = false;
-}
-
-void KochaEngine::BattleCharacter::ActiveDone()
-{
-	isActive = true;
-}
-
-void KochaEngine::BattleCharacter::CurrentActive()
-{
-	isCurrentActive = true;
-}
-
-void KochaEngine::BattleCharacter::CurrentActiveReset()
-{
-	isCurrentActive = false;
 }
 
 void KochaEngine::BattleCharacter::EasingPosition()
@@ -218,6 +215,11 @@ void KochaEngine::BattleCharacter::FixParam()
 	{
 		param.sp = 0;
 	}
+
+	if (param.hp == 0 && knockBackTime <= 0)
+	{
+		isKnockDown = true;
+	}
 }
 
 void KochaEngine::BattleCharacter::SetGauge()
@@ -234,4 +236,6 @@ void KochaEngine::BattleCharacter::SetGauge()
 void KochaEngine::BattleCharacter::SetObjParam()
 {
 	obj->SetPosition(position);
+	cursor->SetPosition(Vector3(position.x, position.y + param.size.y / 1.5f, position.z));
+	cursor->MoveRotate(Vector3(0, 4, 0));
 }

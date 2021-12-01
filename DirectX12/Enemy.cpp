@@ -10,6 +10,7 @@ KochaEngine::Enemy::Enemy(BattleObjectManager* arg_bManager, const Vector3& arg_
 	param = arg_param;
 
 	obj = new Object("plane");
+	cursor = new Object("plane");
 
 	Initialize();
 }
@@ -17,17 +18,25 @@ KochaEngine::Enemy::Enemy(BattleObjectManager* arg_bManager, const Vector3& arg_
 KochaEngine::Enemy::~Enemy()
 {
 	delete obj;
+	delete cursor;
 }
 
 void KochaEngine::Enemy::Initialize()
 {
 	isActive = false;
 	isKnockDown = false;
+
 	obj->SetScale(param.size);
 	std::string texName = "Resources/Texture/Enemy/" + param.texName + "/" + param.texName + "_0.png"; //‰¼’u‚«
 	obj->SetTexture(texName);
 	obj->SetPosition(position);
 	obj->SetBillboardType(Object::BILLBOARD_Y);
+
+	cursor->SetScale(Vector3(2, 2, 2));
+	cursor->SetTexture("Resources/Texture/UI/cursor.png");
+	cursor->SetPosition(Vector3(position.x, position.y + param.size.y / 1.5f, position.z));
+	cursor->SetBillboardType(Object::BILLBOARD_Y);
+	cursor->MoveRotate(Vector3(0, 0, 90));
 
 	knockBackTime = 0;
 
@@ -55,6 +64,11 @@ void KochaEngine::Enemy::Update()
 
 void KochaEngine::Enemy::ObjDraw(Camera* arg_camera, LightManager* arg_lightManager)
 {
+	if (isKnockDown) return;
+	if (isTarget)
+	{
+		cursor->Draw(arg_camera, arg_lightManager);
+	}
 	obj->Draw(arg_camera, arg_lightManager);
 }
 
@@ -67,26 +81,6 @@ void KochaEngine::Enemy::SetDamage(const int arg_damage)
 void KochaEngine::Enemy::Reward()
 {
 	bManager->AddReward(param.money, param.exp);
-}
-
-void KochaEngine::Enemy::ActiveReset()
-{
-	isActive = false;
-}
-
-void KochaEngine::Enemy::ActiveDone()
-{
-	isActive = true;
-}
-
-void KochaEngine::Enemy::CurrentActive()
-{
-	isCurrentActive = true;
-}
-
-void KochaEngine::Enemy::CurrentActiveReset()
-{
-	isCurrentActive = false;
 }
 
 void KochaEngine::Enemy::EasingPosition()
@@ -123,7 +117,7 @@ void KochaEngine::Enemy::FixParam()
 		param.sp = 0;
 	}
 
-	if (param.hp == 0)
+	if (param.hp == 0 && knockBackTime <= 0)
 	{
 		isKnockDown = true;
 	}
@@ -132,6 +126,8 @@ void KochaEngine::Enemy::FixParam()
 void KochaEngine::Enemy::SetObjParam()
 {
 	obj->SetPosition(position);
+	cursor->SetPosition(Vector3(position.x, position.y + param.size.y / 1.5f, position.z));
+	cursor->MoveRotate(Vector3(0, 4, 0));
 }
 
 

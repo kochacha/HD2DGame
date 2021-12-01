@@ -18,6 +18,7 @@ namespace KochaEngine
 		BattleObjectType battleObjectType;
 
 		int knockBackTime;
+		int getExp;
 
 		float hpBarSize;
 		float spBarSize;
@@ -39,11 +40,9 @@ namespace KochaEngine
 		void SpriteDraw() override;
 		BattleObjectType GetType() override;
 
+		void AddExp(const int arg_exp) override;
+		void AddMoney(const int arg_money) override;
 		void SetDamage(const int arg_damage) override;
-		void ActiveReset() override;
-		void ActiveDone() override;
-		void CurrentActive() override;
-		void CurrentActiveReset() override;
 	};
 
 }

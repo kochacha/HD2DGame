@@ -29,10 +29,6 @@ namespace KochaEngine
 
 		void SetDamage(const int arg_damage) override;
 		void Reward() override;
-		void ActiveReset() override;
-		void ActiveDone() override;
-		void CurrentActive() override;
-		void CurrentActiveReset() override;
 		BattleObjectType GetType() override;
 	};
 }

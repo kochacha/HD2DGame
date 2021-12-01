@@ -46,6 +46,8 @@ KochaEngine::GamePlay::GamePlay()
 		const Vector2 ENEMY_NAME_POS = DEFAULT_COMMAND_POS + Vector2(30, 40) + Vector2(0, 32 * i);
 		enemyNameText[i] = new Text("fail.txt",ENEMY_NAME_POS, Vector2(32, 32));
 	}
+
+	defaultNumberTex = new Number(Vector2(TALK_LONG_TEXT_POS.x - 2, TALK_LONG_TEXT_POS.y + 4), Vector2(24, 24), 5);
 }
 
 KochaEngine::GamePlay::~GamePlay()
@@ -75,6 +77,7 @@ KochaEngine::GamePlay::~GamePlay()
 	{
 		delete enemyNameText[i];
 	}
+	delete defaultNumberTex;
 }
 
 void KochaEngine::GamePlay::Initialize()
@@ -92,6 +95,7 @@ void KochaEngine::GamePlay::Initialize()
 	isCharacterDestroy = false;
 	isEnemyDestroy = false;
 	isResultOnce = false;
+	isShowNumber = false;
 
 	gManager->RemoveAll();
 	bManager->RemoveAll();
@@ -264,6 +268,7 @@ void KochaEngine::GamePlay::BattleInitialize()
 {
 	isAttackMotion = false;
 	isTurnUpdate = false;
+	isShowNumber = false;
 	battleCharaCount = 0;
 	commandNum = 0;
 	resultFlowNum = 0;
@@ -401,6 +406,8 @@ void KochaEngine::GamePlay::BattleFlowUpdate()
 {
 	if (battleStartWait > 0) return;
 
+	bManager->TargetOff();
+
 	//キャラ・エネミーの行動が終わったら更新
 	if (!isTurnUpdate)
 	{
@@ -468,6 +475,18 @@ void KochaEngine::GamePlay::BattleSpriteDraw()
 		battleLongText->Draw(KochaEngine::GameSetting::talkSpeed);
 	}
 
+	if (isShowNumber)
+	{
+		if (resultFlowNum == 1)
+		{
+			defaultNumberTex->Draw2(getExp);
+		}
+		else
+		{
+			defaultNumberTex->Draw(bManager->GetTotalMoney());
+		}
+	}
+
 
 	bManager->SpriteDraw();
 
@@ -508,6 +527,21 @@ void KochaEngine::GamePlay::BattleEnd()
 {
 	fadeFlag = true;
 	isBattleEnd = true;
+
+	//ステータスを反映
+	BattleObject* character = nullptr;
+
+	character = bManager->GetCharacter(BattleObjectType::BATTLE_PLAYER);
+	if (character != nullptr)
+	{
+		gManager->GetPlayer()->SetParam(character->GetParam());
+	}
+	character = bManager->GetCharacter(BattleObjectType::BATTLE_FIGHTER);
+	if (character != nullptr)
+	{
+		gManager->GetFighter()->SetParam(character->GetParam());
+	}
+
 }
 
 void KochaEngine::GamePlay::TurnInitialize()
@@ -728,12 +762,20 @@ void KochaEngine::GamePlay::ResultUpdate()
 			case 0:
 				//まものをすべてたおした！
 				battleLongText->ReText("Talk/Battle/EnemyDestroy_0.txt");
+				bManager->Reward();
 				break;
 			case 1:
-				//？？？？？
+				//○○のけいけんちをかくとく！
 				battleLongText->ReText("Talk/Battle/EnemyDestroy_1.txt");
+				RewardCalc();
+				isShowNumber = true;
 				break;
 			case 2:
+				//○○ゴールドてにいれた！
+				battleLongText->ReText("Talk/Battle/EnemyDestroy_2.txt");
+
+				break;
+			case 3:
 				//バトルを終了する
 				BattleEnd();
 				break;
@@ -745,6 +787,32 @@ void KochaEngine::GamePlay::ResultUpdate()
 		//エネミー全滅時テキスト再生
 
 	}
+}
+
+void KochaEngine::GamePlay::RewardCalc()
+{
+	BattleObject* character = nullptr;
+	const float EXP_RATE = 1.1f - (float)battleCharaCount * 0.1f;
+	getExp = (float)bManager->GetTotalExp() * EXP_RATE;
+	if (getExp <= 0) getExp = 1; //最低でも１の経験値は保障
+
+	character = bManager->GetCharacter(BattleObjectType::BATTLE_PLAYER);
+	if (character != nullptr)
+	{
+		character->AddExp(getExp);
+		character->AddMoney(bManager->GetTotalMoney());
+	}
+	character = bManager->GetCharacter(BattleObjectType::BATTLE_FIGHTER);
+	if (character != nullptr)
+	{
+		character->AddExp(getExp);
+	}
+	//character = bManager->GetCharacter(BattleObjectType::BATTLE_PLAYER);
+	//if (character != nullptr)
+	//{
+	//	character->AddExp(getExp);
+	//}
+	
 }
 
 void KochaEngine::GamePlay::EnemyNameUpdate()
@@ -869,6 +937,16 @@ void KochaEngine::GamePlay::MoveCursor()
 			break;
 		}
 	}
+
+	if (currentTab == GamePlay::ATTACK_TAB)
+	{
+		auto enemy = bManager->GetEnemy(commandNum + 1);
+		if (enemy != nullptr)
+		{
+			enemy->TargetOn();
+		}
+	}
+
 }
 
 void KochaEngine::GamePlay::CursorPosSetting()
