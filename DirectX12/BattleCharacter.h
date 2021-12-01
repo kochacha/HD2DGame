@@ -10,6 +10,8 @@ namespace KochaEngine
 	class BattleCharacter : public BattleObject
 	{
 	private:
+		Object* levelUpUI;
+
 		Text* nameText;
 		Texture2D* battleStatusTex;
 		Texture2D* slashTex[2];
@@ -19,6 +21,8 @@ namespace KochaEngine
 
 		int knockBackTime;
 		int getExp;
+		int needExp;
+		int levelUpAnimationTime;
 
 		float hpBarSize;
 		float spBarSize;
@@ -29,6 +33,8 @@ namespace KochaEngine
 		void FixParam();
 		void SetGauge();
 		void SetObjParam();
+		void CalcExp();
+		void LevelUpStatus();
 
 	public:
 		BattleCharacter(const BattleObjectType& arg_battleObjectType, const Vector3& arg_position, const ActorParam& arg_param);

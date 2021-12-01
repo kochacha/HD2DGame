@@ -15,6 +15,7 @@ KochaEngine::BattleCharacter::BattleCharacter(const BattleObjectType& arg_battle
 
 	obj = new Object("plane");
 	cursor = new Object("plane");
+	levelUpUI = new Object("plane");
 	
 	Vector2 charaStatusPos;
 	Vector2 charaNamePos;
@@ -62,6 +63,7 @@ KochaEngine::BattleCharacter::~BattleCharacter()
 {
 	delete obj;
 	delete cursor;
+	delete levelUpUI;
 	delete battleStatusTex;
 	delete nameText;
 	for (int i = 0; i < 5; i++)
@@ -91,6 +93,12 @@ void KochaEngine::BattleCharacter::Initialize()
 	cursor->SetBillboardType(Object::BILLBOARD_Y);
 	cursor->MoveRotate(Vector3(0, 0, 90));
 
+	levelUpUI->SetScale(Vector3(-10, 5, 1));
+	levelUpUI->SetTexture("Resources/Texture/UI/levelUp_0.png");
+	levelUpUI->SetPosition(Vector3(position.x, position.y + param.size.y / 1.5f, position.z));
+	levelUpUI->SetBillboardType(Object::BILLBOARD_Y);
+	//levelUpUI->MoveRotate(Vector3(0, 0, 90));
+
 	switch (battleObjectType)
 	{
 	case KochaEngine::BATTLE_PLAYER:
@@ -105,6 +113,9 @@ void KochaEngine::BattleCharacter::Initialize()
 	}
 
 	knockBackTime = 0;
+	getExp = 0;
+	needExp = 0;
+	levelUpAnimationTime = 0;
 
 	prePosX = position.x - 60 + (Util::GetIntRand(0, 10));
 	activePosX = prePosX - 15;
@@ -128,8 +139,14 @@ void KochaEngine::BattleCharacter::Update()
 		knockBackTime--;
 	}
 
+	if (levelUpAnimationTime > 0)
+	{
+		levelUpAnimationTime--;
+	}
+
 	FixParam();
 
+	CalcExp();
 	SetGauge();
 	SetObjParam();
 }
@@ -140,6 +157,11 @@ void KochaEngine::BattleCharacter::ObjDraw(Camera* arg_camera, LightManager* arg
 	{
 		cursor->Draw(arg_camera, arg_lightManager);
 	}
+	if (levelUpAnimationTime != 0)
+	{
+		levelUpUI->Draw(arg_camera, arg_lightManager);
+	}
+
 	obj->Draw(arg_camera, arg_lightManager);
 }
 
@@ -238,4 +260,59 @@ void KochaEngine::BattleCharacter::SetObjParam()
 	obj->SetPosition(position);
 	cursor->SetPosition(Vector3(position.x, position.y + param.size.y / 1.5f, position.z));
 	cursor->MoveRotate(Vector3(0, 4, 0));
+	levelUpUI->SetPosition(Vector3(position.x, position.y + param.size.y / 1.5f, position.z));
+}
+
+void KochaEngine::BattleCharacter::CalcExp()
+{
+	if (getExp == 0) return;
+
+	needExp = BASE_EXP * param.level * param.level;
+	int totalExp = param.exp + getExp;
+
+	if (totalExp >= needExp)
+	{
+		LevelUpStatus();
+		param.level++;
+		param.hp = param.maxHP;
+		param.sp = param.maxSP;
+		param.exp = 0;
+		levelUpAnimationTime = 120;
+
+		getExp = totalExp - needExp;
+		CalcExp();
+	}
+	else
+	{
+		param.exp += getExp;
+		getExp = 0;
+	}
+
+}
+
+void KochaEngine::BattleCharacter::LevelUpStatus()
+{
+	switch (battleObjectType)
+	{
+	case KochaEngine::BATTLE_PLAYER:
+		param.maxHP += 4;
+		param.maxSP += 3;
+		param.attack += 4;
+		param.defence += 3;
+		param.intelligence += 3;
+		param.skillful += 2;
+		param.speed += 3;
+		break;
+	case KochaEngine::BATTLE_FIGHTER:
+		param.maxHP += 5;
+		param.maxSP += 2;
+		param.attack += 5;
+		param.defence += 4;
+		param.intelligence += 0;
+		param.skillful += 4;
+		param.speed += 2;
+		break;
+	default:
+		break;
+	}
 }

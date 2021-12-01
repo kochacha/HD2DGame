@@ -67,6 +67,9 @@ namespace KochaEngine
 	//リザルト時ボタン入力待ち時間
 	const int RESULT_INPUT_WAIT = 60;
 
+	//ベース(レベル1状態)となる必要経験値
+	const int BASE_EXP = 10;
+
 	//バトル時敵出現ポジション
 	//小サイズの敵
 	const Vector3 SMALL_ENEMY_POS[4] =

@@ -41,6 +41,6 @@ void KochaEngine::EnemyData::AddEnemyParam(const EnemyVol& arg_enemyVol, const s
 void KochaEngine::EnemyData::StaticInit()
 {
     //ここにエネミーのデータを登録していく
-    AddEnemyParam(NIHUTERIZA, "nihuteriza", TYPE_DARK, SMALL_ENEMY_SIZE, 1, 10, 1, 5, 5, 15, 5, 5, 5, 5, 50, 5, 5);
-    AddEnemyParam(BABYDORAGON, "babydoragon", TYPE_FIRE, SMALL_ENEMY_SIZE, 1, 10, 1, 5, 5, 20, 5, 5, 5, 5, 50, 5, 5);
+    AddEnemyParam(NIHUTERIZA, "nihuteriza", TYPE_DARK, SMALL_ENEMY_SIZE, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 60, 5, 5);
+    AddEnemyParam(BABYDORAGON, "babydoragon", TYPE_FIRE, SMALL_ENEMY_SIZE, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 60, 8, 8);
 }

@@ -240,6 +240,7 @@ void KochaEngine::Application::Load()
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/command_3.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/waku_0.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/waku_1.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/UI/levelUp_0.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/cursor.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/slash.png");
 

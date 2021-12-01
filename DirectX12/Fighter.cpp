@@ -23,18 +23,18 @@ void KochaEngine::Fighter::Initialize()
 	param.attribute = TYPE_NORMAL;
 	param.size = Vector3(10, 10, 10);
 	param.level = 1;
-	param.maxHP = 10;
-	param.hp = 10;
-	param.maxSP = 10;
-	param.sp = 10;
+	param.maxHP = 15;
+	param.hp = 15;
+	param.maxSP = 2;
+	param.sp = 2;
 	param.attack = 10;
 	param.defence = 10;
-	param.intelligence = 10;
-	param.speed = 10;
-	param.skillful = 10;
-	param.luck = 10;
+	param.intelligence = 0;
+	param.speed = 3;
+	param.skillful = 6;
+	param.luck = 0;
 	param.exp = 0;
-	param.money = 10;
+	param.money = 0;
 }
 
 void KochaEngine::Fighter::Update()

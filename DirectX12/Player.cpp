@@ -47,18 +47,18 @@ void KochaEngine::Player::Initialize()
 	param.attribute = TYPE_LIGHT;
 	param.size = Vector3(10, 10, 10);
 	param.level = 1;
-	param.maxHP = 124;
-	param.hp = 18;
-	param.maxSP = 475;
-	param.sp = 74;
-	param.attack = 10;
-	param.defence = 10;
-	param.intelligence = 10;
-	param.speed = 100;
-	param.skillful = 10;
-	param.luck = 10;
+	param.maxHP = 10;
+	param.hp = 10;
+	param.maxSP = 8;
+	param.sp = 8;
+	param.attack = 8;
+	param.defence = 6;
+	param.intelligence = 5;
+	param.speed = 6;
+	param.skillful = 4;
+	param.luck = 0;
 	param.exp = 0;
-	param.money = 10;
+	param.money = 100;
 }
 
 void KochaEngine::Player::Update()

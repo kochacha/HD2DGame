@@ -429,6 +429,7 @@ void KochaEngine::GamePlay::BattleFlowUpdate()
 			//全キャラ・エネミーを行動可能状態にする
 			bManager->ActiveReset();
 			isTurnUpdate = false;
+			isEnemyTurn = true;
 		}
 		else //行動中のキャラ・エネミーがいる場合
 		{
@@ -479,7 +480,7 @@ void KochaEngine::GamePlay::BattleSpriteDraw()
 	{
 		if (resultFlowNum == 1)
 		{
-			defaultNumberTex->Draw2(getExp);
+			defaultNumberTex->Draw(getExp);
 		}
 		else
 		{
