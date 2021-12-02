@@ -19,10 +19,13 @@ namespace KochaEngine
 		Number* paramTex[5];
 		BattleObjectType battleObjectType;
 
+		bool isLevelUpAnimationUpdate;
+
 		int knockBackTime;
 		int getExp;
 		int needExp;
 		int levelUpAnimationTime;
+		int levelUpAnimationNum;
 
 		float hpBarSize;
 		float spBarSize;

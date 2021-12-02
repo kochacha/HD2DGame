@@ -240,7 +240,12 @@ void KochaEngine::Application::Load()
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/command_3.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/waku_0.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/waku_1.png");
-		Dx12_Texture::LoadTexture("Resources/Texture/UI/levelUp_0.png");
+		for (int i = 0; i < 11; i++)
+		{
+			std::string extension = std::to_string(i) + ".png";
+
+			Dx12_Texture::LoadTexture("Resources/Texture/UI/levelUp_" + extension);
+		}
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/cursor.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/slash.png");
 

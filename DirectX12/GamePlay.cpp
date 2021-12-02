@@ -273,6 +273,7 @@ void KochaEngine::GamePlay::BattleInitialize()
 	commandNum = 0;
 	resultFlowNum = 0;
 	battleStartWait = 100;
+	currentTab = CommandTab::DEFAULT_TAB;
 	for (int i = 0; i < 5; i++)
 	{
 		preCommandNum[i] = 0;
@@ -476,6 +477,12 @@ void KochaEngine::GamePlay::BattleSpriteDraw()
 		battleLongText->Draw(KochaEngine::GameSetting::talkSpeed);
 	}
 
+	if (isAttackMotion || isDefenceMotion)
+	{
+		//名前は７文字まで
+		battleNameText->Draw(KochaEngine::GameSetting::talkSpeed);
+	}
+
 	if (isShowNumber)
 	{
 		if (resultFlowNum == 1)
@@ -600,6 +607,8 @@ void KochaEngine::GamePlay::ActiveActorUpdate()
 			isCommandTitleUpdate = true;
 			//現在コマンド操作中のキャラの名前を表示
 			commandTitleText->ReText(currentActiveActor->GetParam().name);
+			//どうする？
+			battleLongText->ReText("Talk/Battle/ChooseAction.txt");
 		}
 
 		//コマンドのカーソル操作
@@ -643,6 +652,8 @@ void KochaEngine::GamePlay::ActiveActorUpdate()
 
 			}
 			targetActor = character;
+			battleNameText->ReText(currentActiveActor->GetParam().name);
+			battleLongText->ReText("Talk/Battle/AttackAction.txt");
 		}
 	}
 
@@ -916,7 +927,8 @@ void KochaEngine::GamePlay::MoveCursor()
 		switch (currentTab)
 		{
 		case KochaEngine::GamePlay::DEFAULT_TAB: //デフォルトコマンド
-			//こうどうを選んでくださいテキストを入れる
+			//どうする？
+			battleLongText->ReText("Talk/Battle/ChooseAction.txt");
 			break;
 		case KochaEngine::GamePlay::ATTACK_TAB: //こうげきコマンド
 			commandNum = preCommandNum[0];
@@ -1023,6 +1035,8 @@ void KochaEngine::GamePlay::AttackTab()
 		isAttackMotion = true;
 		motionTime = ATTACK_MOTION_TIME;
 		targetActor = enemy;
+		battleNameText->ReText(currentActiveActor->GetParam().name);
+		battleLongText->ReText("Talk/Battle/AttackAction.txt");
 	}
 	else
 	{

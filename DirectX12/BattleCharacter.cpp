@@ -93,7 +93,7 @@ void KochaEngine::BattleCharacter::Initialize()
 	cursor->SetBillboardType(Object::BILLBOARD_Y);
 	cursor->MoveRotate(Vector3(0, 0, 90));
 
-	levelUpUI->SetScale(Vector3(-10, 5, 1));
+	levelUpUI->SetScale(Vector3(-14, 6, 1));
 	levelUpUI->SetTexture("Resources/Texture/UI/levelUp_0.png");
 	levelUpUI->SetPosition(Vector3(position.x, position.y + param.size.y / 1.5f, position.z));
 	levelUpUI->SetBillboardType(Object::BILLBOARD_Y);
@@ -112,12 +112,15 @@ void KochaEngine::BattleCharacter::Initialize()
 		break;
 	}
 
+	isLevelUpAnimationUpdate = false;
+
 	knockBackTime = 0;
 	getExp = 0;
 	needExp = 0;
 	levelUpAnimationTime = 0;
+	levelUpAnimationNum = 0;
 
-	prePosX = position.x - 60 + (Util::GetIntRand(0, 10));
+	prePosX = position.x + Util::GetIntRand(0, 3) - 60;
 	activePosX = prePosX - 15;
 }
 
@@ -141,8 +144,14 @@ void KochaEngine::BattleCharacter::Update()
 
 	if (levelUpAnimationTime > 0)
 	{
+		if (levelUpAnimationTime % 5 == 0)
+		{
+			isLevelUpAnimationUpdate = true;
+			levelUpAnimationNum++;
+		}
 		levelUpAnimationTime--;
 	}
+
 
 	FixParam();
 
@@ -242,6 +251,11 @@ void KochaEngine::BattleCharacter::FixParam()
 	{
 		isKnockDown = true;
 	}
+
+	if (levelUpAnimationNum > 10)
+	{
+		levelUpAnimationNum = 0;
+	}
 }
 
 void KochaEngine::BattleCharacter::SetGauge()
@@ -261,6 +275,14 @@ void KochaEngine::BattleCharacter::SetObjParam()
 	cursor->SetPosition(Vector3(position.x, position.y + param.size.y / 1.5f, position.z));
 	cursor->MoveRotate(Vector3(0, 4, 0));
 	levelUpUI->SetPosition(Vector3(position.x, position.y + param.size.y / 1.5f, position.z));
+
+	if (isLevelUpAnimationUpdate)
+	{
+		isLevelUpAnimationUpdate = false;
+		std::string extension = std::to_string(levelUpAnimationNum) + ".png";
+		levelUpUI->SetTexture("Resources/Texture/UI/levelUp_" + extension);
+	}
+
 }
 
 void KochaEngine::BattleCharacter::CalcExp()
@@ -277,7 +299,7 @@ void KochaEngine::BattleCharacter::CalcExp()
 		param.hp = param.maxHP;
 		param.sp = param.maxSP;
 		param.exp = 0;
-		levelUpAnimationTime = 120;
+		levelUpAnimationTime = 110;
 
 		getExp = totalExp - needExp;
 		CalcExp();
