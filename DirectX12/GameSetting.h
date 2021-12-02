@@ -23,6 +23,10 @@ namespace KochaEngine
 		static bool isBattleField;
 		//現在のフィールド
 		static int nowField;
+		
+		static float masterVolume;
+		static float seVolume;
+		static float bgmVolume;
 	};
 
 #define MAX_BATTLE_CHARA 3

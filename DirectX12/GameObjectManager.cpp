@@ -50,7 +50,7 @@ void KochaEngine::GameObjectManager::AlphaObjDraw(Camera* arg_camera, LightManag
 	this->camera = arg_camera;
 	this->lightManager = arg_lightManager;
 
-	float cameraPosZ = camera->GetEye().z;
+	float cameraPosZ = camera->GetEye().z + 18;
 
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)

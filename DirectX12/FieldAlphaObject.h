@@ -11,6 +11,7 @@ namespace KochaEngine
 		TREE1,
 		TREE2,
 		GRASS1,
+		GRAVE_STONE,
 	};
 
 	class FieldAlphaObject : public GameObject

@@ -274,6 +274,7 @@ void KochaEngine::Application::Load()
 		Dx12_Texture::LoadTexture("Resources/Texture/Object/tree1.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Object/tree2.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Object/grass1.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Object/graveStone.png");
 
 		//Tilingフォルダ
 		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_stone1.png");
@@ -284,6 +285,9 @@ void KochaEngine::Application::Load()
 		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_rock2.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_water1.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_water2.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_kusa0.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_kusa1.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_suna0.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/water_ball1.png");
 	}
 

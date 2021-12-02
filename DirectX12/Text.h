@@ -6,10 +6,13 @@
 namespace KochaEngine
 {
 	class Font;
+	class Audio;
 
 	class Text
 	{
 	private:
+		Audio* se;
+
 		std::vector<Font*> fonts;
 		std::vector<int> textData;
 
@@ -37,6 +40,7 @@ namespace KochaEngine
 		void Draw(const int arg_addSpeed);
 		void ReText(const std::string& arg_textName);
 		void Skip();
+		void SetSound(const std::string& arg_seName);
 
 		inline const bool IsPlayEnd() { return isPlayEndText; }
 		inline void SetPosition(const Vector2& arg_position) { position = arg_position; }

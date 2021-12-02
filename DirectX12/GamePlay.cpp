@@ -112,7 +112,7 @@ void KochaEngine::GamePlay::Initialize()
 	map->CreateMap(GameSetting::HAZIMARINOTI);
 
 	floor->SetPosition(Vector3(0, 0, 0));
-	floor->SetTexture("Resources/Texture/Tiling/tiling_stone1.png");
+	floor->SetTexture("Resources/Texture/Tiling/tiling_kusa0.png");
 
 	skyObj->SetScale(Vector3(8, 8, 8));
 	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
@@ -287,15 +287,14 @@ void KochaEngine::GamePlay::BattleInitialize()
 		int aaa = Util::GetIntRand(0, 1);
 		if (aaa == 0)
 		{
-			bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[0], EnemyData::GetEnemyParam(NIHUTERIZA)));
-			bManager->AddObject(new Enemy(bManager, cameraPos + SMALL_ENEMY_POS[1], EnemyData::GetEnemyParam(BABYDORAGON)));
+			bManager->AddObject(new Enemy(bManager, cameraPos + SMALL_ENEMY_POS[0], EnemyData::GetEnemyParam(BABYDORAGON)));
+			bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[1], EnemyData::GetEnemyParam(NIHUTERIZA)));
 			bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[2], EnemyData::GetEnemyParam(NIHUTERIZA)));
-			bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[3], EnemyData::GetEnemyParam(NIHUTERIZA)));
 		}
 		else
 		{
-			bManager->AddObject(new Enemy(bManager, cameraPos + SMALL_ENEMY_POS[0], EnemyData::GetEnemyParam(BABYDORAGON)));
-			bManager->AddObject(new Enemy(bManager, cameraPos + SMALL_ENEMY_POS[1], EnemyData::GetEnemyParam(BABYDORAGON)));
+			bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[0], EnemyData::GetEnemyParam(NIHUTERIZA)));
+			bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[1], EnemyData::GetEnemyParam(NIHUTERIZA)));
 		}
 	}
 
@@ -330,37 +329,37 @@ void KochaEngine::GamePlay::BattleInitialize()
 void KochaEngine::GamePlay::BattleUpdate()
 {
 	//デバッグ用
-	{
-		if (Input::TriggerKey(DIK_F1))
-		{
-			//サンプルテキスト再生
-			battleLongText->ReText("Talk/Battle/CharaDestroy_0.txt");
-		}
-		if (Input::TriggerKey(DIK_F2))
-		{
-			//サンプルテキスト再生
-			battleLongText->ReText("Talk/Battle/CharaDestroy_1.txt");
-		}
-		if (Input::TriggerKey(DIK_E))
-		{
-			//テキストスキップ
-			battleLongText->Skip();
-		}
-		if (Input::TriggerKey(DIK_Q))
-		{
-			//もらってきたエネミーの名前描画
-			auto enemy = bManager->GetEnemy(1);
-			if (enemy != nullptr)
-			{
-				battleLongText->ReText(enemy->GetParam().name);
-			}
-		}
-		if (Input::TriggerKey(DIK_SPACE))
-		{
-			//バトルシーン終了
-			BattleEnd();
-		}
-	}
+	//{
+	//	if (Input::TriggerKey(DIK_F1))
+	//	{
+	//		//サンプルテキスト再生
+	//		battleLongText->ReText("Talk/Battle/CharaDestroy_0.txt");
+	//	}
+	//	if (Input::TriggerKey(DIK_F2))
+	//	{
+	//		//サンプルテキスト再生
+	//		battleLongText->ReText("Talk/Battle/CharaDestroy_1.txt");
+	//	}
+	//	if (Input::TriggerKey(DIK_E))
+	//	{
+	//		//テキストスキップ
+	//		battleLongText->Skip();
+	//	}
+	//	if (Input::TriggerKey(DIK_Q))
+	//	{
+	//		//もらってきたエネミーの名前描画
+	//		auto enemy = bManager->GetEnemy(1);
+	//		if (enemy != nullptr)
+	//		{
+	//			battleLongText->ReText(enemy->GetParam().name);
+	//		}
+	//	}
+	//	if (Input::TriggerKey(DIK_SPACE))
+	//	{
+	//		//バトルシーン終了
+	//		BattleEnd();
+	//	}
+	//}
 
 	//バトルシーン開始//
 
@@ -477,7 +476,7 @@ void KochaEngine::GamePlay::BattleSpriteDraw()
 		battleLongText->Draw(KochaEngine::GameSetting::talkSpeed);
 	}
 
-	if (isAttackMotion || isDefenceMotion)
+	if ((isAttackMotion || isDefenceMotion) && !isResultOnce)
 	{
 		//名前は７文字まで
 		battleNameText->Draw(KochaEngine::GameSetting::talkSpeed);
@@ -677,13 +676,13 @@ void KochaEngine::GamePlay::AttackMotionUpdate()
 		//基礎ダメージ
 		int baseDamage = activeParam.attack * 0.5f - targetParam.defence * 0.25f;
 		//運ダメージ範囲
-		int luckDamageRange = baseDamage * ((float)activeParam.luck * 0.001f);
+		int luckDamageRange = baseDamage * ((float)activeParam.luck * 0.002f) + 2;
 		//運ダメージ
-		int luckDamage = Util::GetIntRand(0, luckDamageRange) - luckDamageRange * 0.5f;
+		int luckDamage = Util::GetIntRand(0, luckDamageRange) - luckDamageRange * 0.25f;
 		//トータルダメージ
 		int totalDamage = baseDamage + luckDamage;
 
-		if (totalDamage < 0) totalDamage = 0;
+		if (totalDamage < 1) totalDamage = 1;
 
 		targetActor->SetDamage(totalDamage);
 	}
@@ -811,11 +810,14 @@ void KochaEngine::GamePlay::RewardCalc()
 	character = bManager->GetCharacter(BattleObjectType::BATTLE_PLAYER);
 	if (character != nullptr)
 	{
-		character->AddExp(getExp);
+		if(!character->IsKnockDown())
+		{
+			character->AddExp(getExp);
+		}
 		character->AddMoney(bManager->GetTotalMoney());
 	}
 	character = bManager->GetCharacter(BattleObjectType::BATTLE_FIGHTER);
-	if (character != nullptr)
+	if (character != nullptr && !character->IsKnockDown())
 	{
 		character->AddExp(getExp);
 	}

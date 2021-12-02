@@ -132,3 +132,7 @@ void KochaEngine::Text::Skip()
 {
 	isSkip = true;
 }
+
+void KochaEngine::Text::SetSound(const std::string& arg_seName)
+{
+}
