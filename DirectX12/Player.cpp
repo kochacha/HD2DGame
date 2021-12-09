@@ -2,6 +2,7 @@
 #include "GameObjectManager.h"
 #include "Util.h"
 #include "InputManager.h"
+#include "GameSetting.h"
 
 KochaEngine::Player::Player(Camera* arg_camera, GameObjectManager* arg_gManager, const Vector3& arg_position)
 {
@@ -26,10 +27,12 @@ void KochaEngine::Player::Initialize()
 {
 	isAlpha = true;
 	isBattle = false;
+	animType = AnimationType::WAIT_FLONT;
 
 	EncountReset();
 
 	velocity.Zero();
+	preVelocity.Zero();
 	speed = 0.5f;
 
 	sphere.radius = 4.0f;
@@ -38,7 +41,7 @@ void KochaEngine::Player::Initialize()
 	obj->SetPosition(position);
 	obj->SetRotate(Vector3(0, 0, 0));
 	obj->SetScale(Vector3(-10, 10, 10));
-	obj->SetTexture("Resources/Texture/Character/player/player_0.png");
+	obj->SetTexture("Resources/Texture/Character/player/player_wait_f_0.png");
 	obj->SetBillboardType(Object::BILLBOARD_Y);
 
 	//パラメーターのセット(後々テキストデータから読み込めるようにする(セーブ機能))
@@ -59,6 +62,11 @@ void KochaEngine::Player::Initialize()
 	param.luck = 0;
 	param.exp = 0;
 	param.money = 100;
+
+
+	count = 0;
+	animationNum = 0;
+	animationRate = DEFAULT_ANIMATION_RATE;
 }
 
 void KochaEngine::Player::Update()
@@ -70,6 +78,7 @@ void KochaEngine::Player::Update()
 	MoveZ();
 	EncountEnemy();
 
+	Animation();
 	SetObjParam();
 	CameraTracking();
 }
@@ -124,34 +133,49 @@ void KochaEngine::Player::InputMove()
 {
 	velocity.Zero();
 	speed = 0.5f;
+	animationRate = DEFAULT_ANIMATION_RATE;
 
 	if (isBattle || isEncount) return;
 
 	bool isDash = false;
 
+	SetAnimationType();
+
 	if (InputManager::MoveUp())
 	{
+		preVelocity.Zero();
 		velocity.z = 1;
+		preVelocity.z = velocity.z;
 		isDash = true;
 		encountCount--;
+		animType = AnimationType::WALK_BACK;
 	}
 	else if (InputManager::MoveDown())
 	{
+		preVelocity.Zero();
 		velocity.z = -1;
+		preVelocity.z = velocity.z;
 		isDash = true;
 		encountCount--;
+		animType = AnimationType::WALK_FLONT;
 	}
 	if (InputManager::MoveLeft())
 	{
+		preVelocity.Zero();
 		velocity.x = -1;
+		preVelocity.x = velocity.x;
 		isDash = true;
 		encountCount--;
+		animType = AnimationType::WALK_LEFT;
 	}
 	else if (InputManager::MoveRight())
 	{
+		preVelocity.Zero();
 		velocity.x = 1;
+		preVelocity.x = velocity.x;
 		isDash = true;
 		encountCount--;
+		animType = AnimationType::WALK_RIGHT;
 	}
 	velocity.normalize();
 
@@ -161,6 +185,7 @@ void KochaEngine::Player::InputMove()
 		{
 			speed = 0.8f;
 			encountCount--;
+			animationRate = DASH_ANIMATION_RATE;
 		}
 	}
 }
@@ -200,5 +225,74 @@ void KochaEngine::Player::EncountEnemy()
 	if (encountCount <= 0)
 	{
 		isEncount = true;
+	}
+}
+
+void KochaEngine::Player::SetAnimationType()
+{
+	if (preVelocity.z > 0)
+	{
+		animType = AnimationType::WAIT_BACK;
+	}
+	else if (preVelocity.z < 0)
+	{
+		animType = AnimationType::WAIT_FLONT;
+	}
+	if (preVelocity.x > 0)
+	{
+		animType = AnimationType::WAIT_RIGHT;
+	}
+	else if(preVelocity.x < 0)
+	{
+		animType = AnimationType::WAIT_LEFT;
+	}
+}
+
+void KochaEngine::Player::Animation()
+{
+	count++;
+	if (count % animationRate == 0)
+	{
+		animationNum++;
+	}
+	else
+	{
+		return;
+	}
+	if (animationNum > 1)
+	{
+		animationNum = 0;
+	}
+
+	std::string num = std::to_string(animationNum) + ".png";
+
+	switch (animType)
+	{
+	case KochaEngine::WALK_FLONT:
+		obj->SetTexture("Resources/Texture/Character/player/player_walk_f_" + num);
+		break;
+	case KochaEngine::WALK_BACK:
+		obj->SetTexture("Resources/Texture/Character/player/player_walk_b_" + num);
+		break;
+	case KochaEngine::WALK_LEFT:
+		obj->SetTexture("Resources/Texture/Character/player/player_walk_l_" + num);
+		break;
+	case KochaEngine::WALK_RIGHT:
+		obj->SetTexture("Resources/Texture/Character/player/player_walk_r_" + num);
+		break;
+	case KochaEngine::WAIT_FLONT:
+		obj->SetTexture("Resources/Texture/Character/player/player_wait_f_0.png");
+		break;
+	case KochaEngine::WAIT_BACK:
+		obj->SetTexture("Resources/Texture/Character/player/player_wait_b_0.png");
+		break;
+	case KochaEngine::WAIT_LEFT:
+		obj->SetTexture("Resources/Texture/Character/player/player_wait_l_0.png");
+		break;
+	case KochaEngine::WAIT_RIGHT:
+		obj->SetTexture("Resources/Texture/Character/player/player_wait_r_0.png");
+		break;
+	default:
+		break;
 	}
 }

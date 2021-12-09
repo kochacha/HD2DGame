@@ -84,8 +84,8 @@ void KochaEngine::BattleCharacter::Initialize()
 {
 	//‹¤’ÊÝ’è
 	obj->SetPosition(position);
-	obj->SetScale(param.size);
-	obj->SetTexture("Resources/Texture/Character/" + param.texName + "/" + param.texName + "_0.png");
+	obj->SetScale(Vector3(-param.size.x, param.size.y, param.size.z));
+	obj->SetTexture("Resources/Texture/Character/" + param.texName + "/" + param.texName + "_wait_0.png");
 
 	cursor->SetScale(Vector3(2, 2, 2));
 	cursor->SetTexture("Resources/Texture/UI/cursor.png");
@@ -120,8 +120,8 @@ void KochaEngine::BattleCharacter::Initialize()
 	levelUpAnimationTime = 0;
 	levelUpAnimationNum = 0;
 
-	prePosX = position.x + Util::GetIntRand(0, 3) - 60;
-	activePosX = prePosX - 15;
+	prePosX = position.x + Util::GetIntRand(0, 3) - 55;
+	activePosX = prePosX - 20;
 }
 
 void KochaEngine::BattleCharacter::Update()

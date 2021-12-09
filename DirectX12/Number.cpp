@@ -1,12 +1,12 @@
 #include "Number.h"
 #include "Util.h"
 
-KochaEngine::Number::Number(Vector2 position, Vector2 size, int maxDigit)
+KochaEngine::Number::Number(const Vector2& arg_position, const Vector2& arg_size, const int arg_maxDigit)
 {
-	this->maxDigit = maxDigit;
-	for (int i = 0; i < maxDigit; i++)
+	this->maxDigit = arg_maxDigit;
+	for (int i = 0; i < arg_maxDigit; i++)
 	{
-		numbers[i] = new Texture2D("Resources/Texture/Font/number.png", 10, 1, 1, Vector2(position.x + (size.x + 2.0f) * i,position.y), size, 0);
+		numbers[i] = new Texture2D("Resources/Texture/Font/number.png", 10, 1, 1, Vector2(arg_position.x + (arg_size.x + 2.0f) * i,arg_position.y), arg_size, 0);
 	}
 }
 

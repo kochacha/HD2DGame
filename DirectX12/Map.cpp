@@ -68,7 +68,7 @@ void KochaEngine::Map::CreateMap(const int arg_mapNum)
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10));
 				break;
 			case 60: //ä‚
-				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::ROCK1, Vector3(posX, 5, posZ)));
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::ROCK1, Vector3(posX, 4, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 5));
 				break;
 			case 61:
@@ -78,11 +78,11 @@ void KochaEngine::Map::CreateMap(const int arg_mapNum)
 				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::ROCK3, Vector3(posX, 4, posZ)));
 				break;
 			case 63: //ñÿ
-				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::TREE1, Vector3(posX, 15, posZ)));
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::TREE1, Vector3(posX, 12, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 8));
 				break;
 			case 64: //åÕÇÍñÿ
-				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::TREE2, Vector3(posX, 15, posZ)));
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::TREE2, Vector3(posX, 12, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 8));
 				break;
 			case 65: //ëê

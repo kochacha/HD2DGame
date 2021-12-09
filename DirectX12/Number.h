@@ -15,7 +15,7 @@ namespace KochaEngine
 		int maxDigit;
 
 	public:
-		Number(Vector2 position, Vector2 size, int maxDigit);
+		Number(const Vector2& arg_position, const Vector2& arg_size, const int arg_maxDigit);
 		~Number();
 
 		void Init();

@@ -1,14 +1,21 @@
 #include "GamePlay.h"
-#include "InputManager.h"
-#include "Util.h"
+
 #include "Map.h"
 #include "LightManager.h"
+
 #include "Player.h"
 #include "Fighter.h"
-#include "Text.h"
+#include "BattleCharacter.h"
 #include "EnemyData.h"
 #include "Enemy.h"
-#include "BattleCharacter.h"
+
+#include "Text.h"
+#include "Audio.h"
+#include "Number.h"
+#include "Number3D.h"
+#include "Texture2D.h"
+#include "InputManager.h"
+#include "Util.h"
 
 KochaEngine::GamePlay::GamePlay()
 {
@@ -48,6 +55,8 @@ KochaEngine::GamePlay::GamePlay()
 	}
 
 	defaultNumberTex = new Number(Vector2(TALK_LONG_TEXT_POS.x - 2, TALK_LONG_TEXT_POS.y + 4), Vector2(24, 24), 5);
+
+	damadgeNumber3D = new Number3D(Vector3(-72, 15, -184), Vector3(5, 5, 5));
 }
 
 KochaEngine::GamePlay::~GamePlay()
@@ -78,6 +87,7 @@ KochaEngine::GamePlay::~GamePlay()
 		delete enemyNameText[i];
 	}
 	delete defaultNumberTex;
+	delete damadgeNumber3D;
 }
 
 void KochaEngine::GamePlay::Initialize()
@@ -137,6 +147,8 @@ void KochaEngine::GamePlay::Initialize()
 	fadeFlag = false;
 	fadeAlpha = 1.0f;
 	endCount = 180;
+
+	extraNum = 0;
 }
 
 void KochaEngine::GamePlay::Update()
@@ -204,7 +216,7 @@ void KochaEngine::GamePlay::AlphaObjDraw()
 		FieldAlphaObjDraw();
 	}
 
-
+	damadgeNumber3D->Draw(extraNum, camera, lightManager);
 }
 
 void KochaEngine::GamePlay::DrawGUI()
@@ -218,6 +230,8 @@ void KochaEngine::GamePlay::DrawGUI()
 		ImGui::Text("GamePlay_Field");
 	}
 	ImGui::InputInt("#TalkSpeed", &KochaEngine::GameSetting::talkSpeed, 1);
+	ImGui::InputInt("#extraNum", &extraNum, 1);
+
 }
 
 void KochaEngine::GamePlay::Load()

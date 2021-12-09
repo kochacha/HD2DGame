@@ -195,6 +195,7 @@
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="GameSetting.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="Number3D.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
@@ -492,6 +493,7 @@
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameSetting.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="Number3D.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectManager.h" />

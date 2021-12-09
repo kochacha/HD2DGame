@@ -27,7 +27,7 @@
 
 #include <sstream>
 #include <mmsystem.h>
-#include <omp.h>
+//#include <omp.h>
 
 #pragma comment(lib,"winmm.lib")
 
@@ -67,14 +67,15 @@ void KochaEngine::Application::Run()
 		////↓毎フレーム処理↓//
 		Input::Update();
 
-		if (Input::TriggerKey(DIK_1))
-		{
-			effectManager->Play("light.efk", Vector3(0, 0, 0));
-		}
-		if (Input::TriggerKey(DIK_2))
-		{
-			effectManager->Play("hit.efk", Vector3(0, 0, 0));
-		}
+		//エフェクト再生
+		//if (Input::TriggerKey(DIK_1))
+		//{
+		//	effectManager->Play("light.efk", Vector3(0, 0, 0));
+		//}
+		//if (Input::TriggerKey(DIK_2))
+		//{
+		//	effectManager->Play("hit.efk", Vector3(0, 0, 0));
+		//}
 
 		if (isLogoFlag)
 		{
@@ -82,10 +83,14 @@ void KochaEngine::Application::Run()
 		}
 		else
 		{
+			//エンジンロゴの再生
 			EngineLogo();
 			engineLogoTexture[1]->SetColor(Vector4(1, 1, 1, logoAlpha));
 		}
+
 		/*camera->Update();
+		 
+		//デプスシャドウ用カメラ位置計算と更新
 		auto target = camera->GetTarget();
 		auto eye = camera->GetEye();
 		auto lightPos = XMLoadFloat3(&target) + XMVector3Normalize({1,1,1})
@@ -93,24 +98,27 @@ void KochaEngine::Application::Run()
 		Vector3 lightPos2 = Vector3(lightPos.m128_f32[0], lightPos.m128_f32[1], lightPos.m128_f32[2]);
 		lightCamera->SetEye(lightPos2);
 		lightCamera->Update();
+
+		//点光源をメラメラと動かす
 		MeraMera();
 
+		//方向ライト
 		lightManager->SetDirectionalLightColor(0, dirLightColor);
 		lightManager->SetDirectionalLightDirection(0, dirLightDirection);
 		lightManager->SetDirectionalLightIsActive(0, isActiveDirLight);
+
+		//点光源
 		lightManager->SetPointLightPos(0, pointLightPosition);
 		lightManager->SetPointLightAtten(0, pointLightAtten);
 		lightManager->SetLightCamera(lightCamera);
+
+		//ライトマネージャーの更新
 		lightManager->Update();*/
 
 		////↑毎フレーム処理↑//
 		
 		//１パス
 		{
-			//////////////////////////////
-
-			//////////////////////////////
-
 			peraDof->PreDrawScene(dx12->GetCmdList().Get());
 
 			//Object::BeginDrawFromLight(dx12->GetCmdList().Get());
@@ -130,12 +138,12 @@ void KochaEngine::Application::Run()
 
 			//↑ObjDraw↑//
 			Object::EndDraw();
-
 			Object::BeginAlphaDraw(dx12->GetCmdList().Get());
+			//↓AlphaObjDraw↓//
 
 			sceneManager->AlphaObjDraw();
 
-			//↑ObjDraw↑//
+			//↑AlphaObjDraw↑//
 			Object::EndDraw();
 
 
@@ -150,7 +158,8 @@ void KochaEngine::Application::Run()
 
 			if (isDof)
 			{
-				peraDof->Draw(ShaderType::DEPTH_OF_FIELD_SHADER); //被写界深度
+				//被写界深度
+				peraDof->Draw(ShaderType::DEPTH_OF_FIELD_SHADER);
 			}
 			else
 			{
@@ -232,6 +241,12 @@ void KochaEngine::Application::Load()
 		Dx12_Texture::LoadTexture("Resources/Texture/Font/font.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Font/font_japanese.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Font/number.png");
+		for (int i = 0; i < 10; i++)
+		{
+			std::string extension = std::to_string(i) + ".png";
+
+			Dx12_Texture::LoadTexture("Resources/Texture/Font/number_" + extension);
+		}
 
 		//UIフォルダ
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/command_0.png");
@@ -250,13 +265,29 @@ void KochaEngine::Application::Load()
 		Dx12_Texture::LoadTexture("Resources/Texture/UI/slash.png");
 
 		//Characterフォルダ
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < 2; i++)
 		{
 			std::string extension = std::to_string(i) + ".png";
 
-			Dx12_Texture::LoadTexture("Resources/Texture/Character/player/player_" + extension);
-			Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_" + extension);
+			Dx12_Texture::LoadTexture("Resources/Texture/Character/player/player_walk_f_" + extension);
+			Dx12_Texture::LoadTexture("Resources/Texture/Character/player/player_walk_b_" + extension);
+			Dx12_Texture::LoadTexture("Resources/Texture/Character/player/player_walk_l_" + extension);
+			Dx12_Texture::LoadTexture("Resources/Texture/Character/player/player_walk_r_" + extension);
+			Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_walk_f_" + extension);
+			Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_walk_b_" + extension);
+			Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_walk_l_" + extension);
+			Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_walk_r_" + extension);
 		}
+		Dx12_Texture::LoadTexture("Resources/Texture/Character/player/player_wait_0.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Character/player/player_wait_f_0.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Character/player/player_wait_b_0.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Character/player/player_wait_l_0.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Character/player/player_wait_r_0.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_wait_0.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_wait_f_0.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_wait_b_0.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_wait_l_0.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_wait_r_0.png");
 
 		//Enemyフォルダ
 		for (int i = 0; i < 1; i++)
@@ -504,7 +535,7 @@ bool KochaEngine::Application::UpdateFPS()
 		timeEndPeriod(1);
 		return true;
 	}
-	fps = 1.000000f / frameTime;
+	fps = 1.0f / frameTime;
 	//std::wstringstream stream;
 	//stream << "FPS:" << fps << std::endl;
 	//OutputDebugString(stream.str().c_str());
@@ -588,7 +619,7 @@ bool KochaEngine::Application::Initialize()
 	/*lightManager->SetPointLightColor(0, pointLightColor);
 	lightManager->SetPointLightAtten(0, pointLightAtten);*/
 
-	vignetteScale = 0.25f;
+	vignetteScale = 0.3f;
 	gBoyPixelSize = 4.0f;
 	mosaicSize = 4.0f;
 	sepiaScale = 0.2f;

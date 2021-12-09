@@ -18,6 +18,18 @@ namespace KochaEngine
 		COLLISION_BLOCK,
 	};
 
+	enum AnimationType
+	{
+		WALK_FLONT,
+		WALK_BACK,
+		WALK_LEFT,
+		WALK_RIGHT,
+		WAIT_FLONT,
+		WAIT_BACK,
+		WAIT_LEFT,
+		WAIT_RIGHT,
+	};
+
 	class GameObject
 	{
 	protected:
@@ -25,6 +37,8 @@ namespace KochaEngine
 		LightManager* lightManager;
 		ParticleEmitter* emitter;
 		Object* obj;
+
+		AnimationType animType;
 
 		bool isDead = false;
 		bool isDelete = false;

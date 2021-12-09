@@ -13,10 +13,15 @@ namespace KochaEngine
 
 		ActorParam param;
 
+		Vector3 preVelocity;
+
 		bool isEncount;
 		bool isBattle;
 
 		int encountCount;
+		int animationNum;
+		int count;
+		int animationRate;
 
 		float speed;
 
@@ -26,6 +31,8 @@ namespace KochaEngine
 		void SetObjParam();
 		void CameraTracking();
 		void EncountEnemy();
+		void SetAnimationType();
+		void Animation();
 
 	public:
 		Player(Camera* arg_camera, GameObjectManager* arg_gManager, const Vector3& arg_position);

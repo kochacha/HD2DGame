@@ -524,13 +524,8 @@ void KochaEngine::Dx12_Wrapper::EndDraw()
 	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
 	auto resBarrier = CD3DX12_RESOURCE_BARRIER::Transition(_backBuffers[bbIdx].Get(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-	//auto _resBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
-	//	_peraResource.Get(),
-	//	D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-	//	D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 	_cmdList->ResourceBarrier(1, &resBarrier);
-	//_cmdList->ResourceBarrier(1, &_resBarrier);
 
 	//–½—ß‚ÌƒNƒ[ƒY
 	_cmdList->Close();

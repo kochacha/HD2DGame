@@ -63,6 +63,10 @@ namespace KochaEngine
 	const Vector3 MEDIUM_ENEMY_SIZE = Vector3(20, 20, 20);
 	const Vector3 LARGE_ENEMY_SIZE = Vector3(30, 30, 30);
 
+	//テクスチャアニメーションレート
+	const int DEFAULT_ANIMATION_RATE = 12;
+	const int DASH_ANIMATION_RATE = 8;
+
 	//攻撃時アニメーション時間
 	const int ATTACK_MOTION_TIME = 180;
 	const int SPELL_MOTION_TIME = 300;
@@ -77,15 +81,15 @@ namespace KochaEngine
 	//バトル時敵出現ポジション
 	//小サイズの敵
 	const Vector3 SMALL_ENEMY_POS[4] =
-	{ Vector3(-20, -20, 70),Vector3(-25, -20, 50),Vector3(-40, -20, 80),Vector3(-45, -20, 60) };
+	{ Vector3(-20, -20, 65),Vector3(-25, -20, 55),Vector3(-40, -20, 70),Vector3(-45, -20, 60) };
 	//中サイズの敵、又は飛んでいる敵
 	const Vector3 MEDIUM_ENEMY_POS[4] =
-	{ Vector3(-20, -15, 70),Vector3(-25, -15, 50),Vector3(-40, -15, 80),Vector3(-45, -15, 60) };
+	{ Vector3(-20, -15, 65),Vector3(-25, -15, 55),Vector3(-40, -15, 70),Vector3(-45, -15, 60) };
 	//大サイズの敵
 	const Vector3 LARGE_ENEMY_POS[4] =
-	{ Vector3(-20, -10, 70),Vector3(-25, -10, 50),Vector3(-40, -10, 80),Vector3(-45, -10, 60) };
+	{ Vector3(-20, -10, 65),Vector3(-25, -10, 55),Vector3(-40, -10, 70),Vector3(-45, -10, 60) };
 
 	//バトル時キャラクター出現ポジション
 	const Vector3 BATTLE_CHARACTOR_POS[4] =
-	{ Vector3(80, -20, 50),Vector3(80, -20, 60),Vector3(80, -20, 70),Vector3(80, -20, 80) };
+	{ Vector3(80, -20, 56),Vector3(77, -20, 60),Vector3(74, -20, 64),Vector3(71, -20, 68) };
 }

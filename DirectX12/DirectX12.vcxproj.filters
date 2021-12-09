@@ -273,6 +273,9 @@
     <ClCompile Include="BattleObject.cpp">
       <Filter>Source\Object\GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="Number3D.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShaderHeader.hlsli">
@@ -584,6 +587,9 @@
     </ClInclude>
     <ClInclude Include="BattleObject.h">
       <Filter>Header\Object\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Number3D.h">
+      <Filter>Header\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

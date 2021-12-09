@@ -5,9 +5,6 @@
 #include "BattleObjectManager.h"
 #include "ParticleEmitter.h"
 #include "ParticleManager.h"
-#include "Number.h"
-#include "Audio.h"
-#include "Texture2D.h"
 #include "GameSetting.h"
 
 namespace KochaEngine
@@ -15,6 +12,10 @@ namespace KochaEngine
 	class Map;
 	class LightManager;
 	class Text;
+	class Number;
+	class Number3D;
+	class Audio;
+	class Texture2D;
 
 	class GamePlay : public Scene
 	{
@@ -48,12 +49,17 @@ namespace KochaEngine
 		Texture2D* waitCommandTexture;
 		Texture2D* anotherCommandTexture;
 		Texture2D* cursorTexture;
+
 		Text* battleLongText;
 		Text* battleShortText;
 		Text* battleNameText;
 		Text* commandTitleText;
 		Text* enemyNameText[MAX_BATTLE_ENEMY];
+
 		Number* defaultNumberTex;
+
+		Number3D* damadgeNumber3D;
+		int extraNum;
 
 		//現在のコマンドタブ
 		CommandTab currentTab;

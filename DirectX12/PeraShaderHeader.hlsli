@@ -19,10 +19,11 @@ struct Output
 	float4 uv : TEXCOORD;
 };
 
+//ガウシアンブラー
 float4 GaussianBlur(Texture2D<float4> tex, SamplerState smp, Output input, float value)
 {
-    float widthPixel = 1.0f / 1280.0f;
-    float hightPixel = 1.0f / 720.0f;
+    float widthPixel = 1.00f / 1280.00f;
+    float hightPixel = 1.00f / 720.00f;
     float blurScale = value;
     float4 blur = { 0,0,0,0 };
     blur += tex.Sample(smp, input.uv + float2(-blurScale * widthPixel, -blurScale * hightPixel));
@@ -34,7 +35,7 @@ float4 GaussianBlur(Texture2D<float4> tex, SamplerState smp, Output input, float
     blur += tex.Sample(smp, input.uv + float2(-blurScale * widthPixel, blurScale * hightPixel));
     blur += tex.Sample(smp, input.uv + float2(0, blurScale * hightPixel));
     blur += tex.Sample(smp, input.uv + float2(blurScale * widthPixel, blurScale * hightPixel));
-    blur = blur / 9.0f;
+    blur = blur / 9.00f;
 
     return blur;
 }

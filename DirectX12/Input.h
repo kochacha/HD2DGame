@@ -46,8 +46,8 @@ namespace KochaEngine
 		static bool CheckPadRightTrigger(); //右トリガー
 		static bool CheckPadLeftTrigger();  //左トリガー
 
-		static bool TriggerPadRightTrigger(); //右トリガーのトリガーw
-		static bool TriggerPadLeftTrigger(); //左トリガーのトリガーw
+		static bool TriggerPadRightTrigger(); //右トリガーのトリガー
+		static bool TriggerPadLeftTrigger(); //左トリガーのトリガー
 
 		//右スティック
 		static bool CheckPadRStickRight();
