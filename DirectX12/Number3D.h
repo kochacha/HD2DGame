@@ -26,9 +26,11 @@ namespace KochaEngine
 	public:
 
 		Number3D(const Vector3& arg_position, const Vector3& arg_scale);
+		Number3D(const int arg_num, const Vector3& arg_position, const Vector3& arg_scale);
 		~Number3D();
 		
 		void Initialize();
+		void Draw(Camera* arg_camera, LightManager* arg_ligtManager);
 		void Draw(const int arg_number, Camera* arg_camera, LightManager* arg_ligtManager);
 
 		inline void SetPosition(const Vector3& arg_position) { position = arg_position; }

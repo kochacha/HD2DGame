@@ -2,6 +2,8 @@
 
 #include "Map.h"
 #include "LightManager.h"
+#include "Number3DEmitter.h"
+#include "Number3DManager.h"
 
 #include "Player.h"
 #include "Fighter.h"
@@ -24,7 +26,11 @@ KochaEngine::GamePlay::GamePlay()
 	bManager = new BattleObjectManager();
 
 	pManager = new ParticleManager();
-	emitter = new ParticleEmitter(pManager);
+	pEmitter = new ParticleEmitter(pManager);
+
+	n3DManager = new Number3DManager();
+	n3DEmitter = new Number3DEmitter(n3DManager);
+
 	map = new Map(gManager, camera);
 	lightManager = new LightManager();
 	lightManager = LightManager::Create();
@@ -55,8 +61,6 @@ KochaEngine::GamePlay::GamePlay()
 	}
 
 	defaultNumberTex = new Number(Vector2(TALK_LONG_TEXT_POS.x - 2, TALK_LONG_TEXT_POS.y + 4), Vector2(24, 24), 5);
-
-	damadgeNumber3D = new Number3D(Vector3(-72, 15, -184), Vector3(5, 5, 5));
 }
 
 KochaEngine::GamePlay::~GamePlay()
@@ -67,7 +71,9 @@ KochaEngine::GamePlay::~GamePlay()
 	delete gManager;
 	delete bManager;
 	delete pManager;
-	delete emitter;
+	delete pEmitter;
+	delete n3DManager;
+	delete n3DEmitter;
 	delete map;
 	delete floor;
 	delete skyObj;
@@ -87,7 +93,6 @@ KochaEngine::GamePlay::~GamePlay()
 		delete enemyNameText[i];
 	}
 	delete defaultNumberTex;
-	delete damadgeNumber3D;
 }
 
 void KochaEngine::GamePlay::Initialize()
@@ -216,7 +221,6 @@ void KochaEngine::GamePlay::AlphaObjDraw()
 		FieldAlphaObjDraw();
 	}
 
-	damadgeNumber3D->Draw(extraNum, camera, lightManager);
 }
 
 void KochaEngine::GamePlay::DrawGUI()
@@ -409,6 +413,7 @@ void KochaEngine::GamePlay::BattleUpdate()
 	gManager->Update();
 	bManager->Update();
 	pManager->Update();
+	n3DManager->Update();
 	camera->Update();
 	lightManager->Update();
 
@@ -468,6 +473,7 @@ void KochaEngine::GamePlay::BattleAlphaObjDraw()
 {
 	gManager->AlphaObjDraw2(camera, lightManager);
 	bManager->ObjDraw(camera, lightManager);
+	n3DManager->Draw(camera, lightManager);
 }
 
 void KochaEngine::GamePlay::BattleSpriteDraw()
@@ -517,6 +523,7 @@ void KochaEngine::GamePlay::FieldUpdate()
 {
 	gManager->Update();
 	pManager->Update();
+	n3DManager->Update();
 	camera->Update();
 	lightManager->Update();
 
@@ -532,6 +539,7 @@ void KochaEngine::GamePlay::FieldObjDraw()
 	floor->Draw(camera, lightManager);
 	skyObj->Draw(camera, lightManager);
 	pManager->Draw(camera, lightManager);
+	n3DManager->Draw(camera, lightManager);
 }
 
 void KochaEngine::GamePlay::FieldAlphaObjDraw()
@@ -681,7 +689,11 @@ void KochaEngine::GamePlay::AttackMotionUpdate()
 	{
 		motionTime--;
 	}
-	if (motionTime == 60) //ダメージを与える(通常攻撃)
+	if (motionTime == 120)
+	{
+		currentActiveActor->SetAttackTextureIndex(0);
+	}
+	else if (motionTime == 60) //ダメージを与える(通常攻撃)
 	{
 		//ダメージ計算処理
 		auto targetParam = targetActor->GetParam();
@@ -698,15 +710,28 @@ void KochaEngine::GamePlay::AttackMotionUpdate()
 
 		if (totalDamage < 1) totalDamage = 1;
 
+		//ダメージを与える
 		targetActor->SetDamage(totalDamage);
+
+		//ターゲットの位置を調べる
+		Vector3 targetPos = targetActor->GetPosition();
+		Vector3 addDamagePos = Vector3(targetPos.x, targetPos.y + 2, targetPos.z - 0.01f);
+
+		//ダメージ表記
+		n3DEmitter->AddNumber3D(addDamagePos, totalDamage);
+		
+		//こうげきアニメーション
+		currentActiveActor->SetAttackTextureIndex(1);
 	}
-	if (motionTime == 0) //行動を終了する
+	else if (motionTime == 0) //行動を終了する
 	{
 		isTurnUpdate = false;
 		//行動済みにする
 		currentActiveActor->ActiveDone();
 		//行動中状態を解除する
 		currentActiveActor->CurrentActiveReset();
+
+		currentActiveActor->SetDefaultWaitTexture();
 	}
 }
 
@@ -731,6 +756,7 @@ void KochaEngine::GamePlay::ResultUpdate()
 			InputManager::TriggerCancel())
 		{
 			//テキストが再生中かどうか
+
 			if (!battleLongText->IsPlayEnd())
 			{
 				//再生をスキップ
@@ -1032,6 +1058,8 @@ void KochaEngine::GamePlay::DefaultTab()
 		isTurnUpdate = false;
 		//行動済みにする
 		currentActiveActor->ActiveDone();
+		//行動中状態を解除する
+		currentActiveActor->CurrentActiveReset();
 		break;
 	case 5: //にげる
 		//バトルシーン終了処理

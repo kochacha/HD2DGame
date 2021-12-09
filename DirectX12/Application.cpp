@@ -273,10 +273,12 @@ void KochaEngine::Application::Load()
 			Dx12_Texture::LoadTexture("Resources/Texture/Character/player/player_walk_b_" + extension);
 			Dx12_Texture::LoadTexture("Resources/Texture/Character/player/player_walk_l_" + extension);
 			Dx12_Texture::LoadTexture("Resources/Texture/Character/player/player_walk_r_" + extension);
+			Dx12_Texture::LoadTexture("Resources/Texture/Character/player/player_attack_" + extension);
 			Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_walk_f_" + extension);
 			Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_walk_b_" + extension);
 			Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_walk_l_" + extension);
 			Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_walk_r_" + extension);
+			Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_attack_" + extension);
 		}
 		Dx12_Texture::LoadTexture("Resources/Texture/Character/player/player_wait_0.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Character/player/player_wait_f_0.png");

@@ -65,6 +65,8 @@ namespace KochaEngine
 		virtual void AddExp(const int arg_exp);
 		virtual void AddMoney(const int arg_money);
 		virtual void SetDamage(const int arg_damage);
+		virtual void SetDefaultWaitTexture();
+		virtual void SetAttackTextureIndex(const int arg_index);
 
 		inline const bool IsDead() { return isDead; }
 		inline const bool IsDelete() { return isDelete; }

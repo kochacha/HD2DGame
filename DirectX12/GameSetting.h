@@ -73,7 +73,7 @@ namespace KochaEngine
 	const int SKILL_MOTION_TIME = 240;
 
 	//リザルト時ボタン入力待ち時間
-	const int RESULT_INPUT_WAIT = 60;
+	const int RESULT_INPUT_WAIT = 15;
 
 	//ベース(レベル1状態)となる必要経験値
 	const int BASE_EXP = 10;

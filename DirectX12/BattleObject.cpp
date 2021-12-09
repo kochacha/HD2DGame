@@ -74,6 +74,14 @@ void KochaEngine::BattleObject::SetDamage(const int arg_damage)
 {
 }
 
+void KochaEngine::BattleObject::SetDefaultWaitTexture()
+{
+}
+
+void KochaEngine::BattleObject::SetAttackTextureIndex(const int arg_index)
+{
+}
+
 KochaEngine::BattleObjectType KochaEngine::BattleObject::GetType()
 {
 	return BattleObjectType();

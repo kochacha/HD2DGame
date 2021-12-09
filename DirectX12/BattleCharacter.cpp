@@ -120,7 +120,7 @@ void KochaEngine::BattleCharacter::Initialize()
 	levelUpAnimationTime = 0;
 	levelUpAnimationNum = 0;
 
-	prePosX = position.x + Util::GetIntRand(0, 3) - 55;
+	prePosX = position.x + Util::GetIntRand(0, 3) - 57;
 	activePosX = prePosX - 20;
 }
 
@@ -135,11 +135,15 @@ void KochaEngine::BattleCharacter::Update()
 
 	if (knockBackTime > 0)
 	{
-		if (knockBackTime > 10)
+		if (knockBackTime > 20)
 		{
-			position.x += knockBackTime * 0.1f;
+			position.x += knockBackTime * 0.05f;
 		}
 		knockBackTime--;
+	}
+	if (knockBackTime == 1)
+	{
+		obj->SetTexture("Resources/Texture/Character/" + param.texName + "/" + param.texName + "_wait_0.png");
 	}
 
 	if (levelUpAnimationTime > 0)
@@ -210,8 +214,26 @@ void KochaEngine::BattleCharacter::AddMoney(const int arg_money)
 
 void KochaEngine::BattleCharacter::SetDamage(const int arg_damage)
 {
-	knockBackTime = 15;
+	knockBackTime = 25;
 	param.hp -= arg_damage;
+	obj->SetTexture("Resources/Texture/Character/" + param.texName + "/" + param.texName + "_attack_0.png");
+}
+
+void KochaEngine::BattleCharacter::SetDefaultWaitTexture()
+{
+	obj->SetTexture("Resources/Texture/Character/" + param.texName + "/" + param.texName + "_wait_0.png");
+}
+
+void KochaEngine::BattleCharacter::SetAttackTextureIndex(const int arg_index)
+{
+	if (arg_index == 0)
+	{
+		obj->SetTexture("Resources/Texture/Character/" + param.texName + "/" + param.texName + "_attack_0.png");
+	}
+	else
+	{
+		obj->SetTexture("Resources/Texture/Character/" + param.texName + "/" + param.texName + "_attack_1.png");
+	}
 }
 
 void KochaEngine::BattleCharacter::EasingPosition()

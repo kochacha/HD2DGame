@@ -16,6 +16,8 @@ namespace KochaEngine
 	class Number3D;
 	class Audio;
 	class Texture2D;
+	class Number3DManager;
+	class Number3DEmitter;
 
 	class GamePlay : public Scene
 	{
@@ -34,7 +36,9 @@ namespace KochaEngine
 		GameObjectManager* gManager;
 		BattleObjectManager* bManager;
 		ParticleManager* pManager;
-		ParticleEmitter* emitter;
+		ParticleEmitter* pEmitter;
+		Number3DManager* n3DManager;
+		Number3DEmitter* n3DEmitter;
 		LightManager* lightManager;
 		BattleObject* currentActiveActor;
 		BattleObject* targetActor;
@@ -58,7 +62,6 @@ namespace KochaEngine
 
 		Number* defaultNumberTex;
 
-		Number3D* damadgeNumber3D;
 		int extraNum;
 
 		//現在のコマンドタブ

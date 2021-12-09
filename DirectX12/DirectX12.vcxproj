@@ -196,6 +196,9 @@
     <ClCompile Include="GameSetting.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Number3D.cpp" />
+    <ClCompile Include="Number3DEmitter.cpp" />
+    <ClCompile Include="Number3DManager.cpp" />
+    <ClCompile Include="Number3DOperation.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
@@ -494,6 +497,9 @@
     <ClInclude Include="GameSetting.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Number3D.h" />
+    <ClInclude Include="Number3DEmitter.h" />
+    <ClInclude Include="Number3DManager.h" />
+    <ClInclude Include="Number3DOperation.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectManager.h" />

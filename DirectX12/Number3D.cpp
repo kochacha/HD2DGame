@@ -15,6 +15,22 @@ KochaEngine::Number3D::Number3D(const Vector3& arg_position, const Vector3& arg_
 	Initialize();
 }
 
+KochaEngine::Number3D::Number3D(const int arg_num, const Vector3& arg_position, const Vector3& arg_scale)
+{
+	position = arg_position;
+	scale = arg_scale;
+
+	for (int i = 0; i < NUM3D_MAX_DIGIT; i++)
+	{
+		planes[i] = new Object("plane");
+	}
+
+	Initialize();
+
+	//数字をセッティング
+	SetNumber(arg_num);
+}
+
 KochaEngine::Number3D::~Number3D()
 {
 	Remove();
@@ -28,6 +44,19 @@ void KochaEngine::Number3D::Initialize()
 		planes[i]->SetBillboardType(Object::BILLBOARD_Y);
 	}
 	preNumber = -1; //正の整数以外
+}
+
+void KochaEngine::Number3D::Draw(Camera* arg_camera, LightManager* arg_ligtManager)
+{
+	//位置の修正
+	FixPosition();
+
+	//描画
+	auto remainder = NUM3D_MAX_DIGIT - digit;
+	for (int i = 0; i < digit; i++)
+	{
+		planes[remainder + i]->Draw(arg_camera, arg_ligtManager);
+	}
 }
 
 void KochaEngine::Number3D::Draw(const int arg_number, Camera* arg_camera, LightManager* arg_ligtManager)

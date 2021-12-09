@@ -52,6 +52,8 @@ namespace KochaEngine
 		void AddExp(const int arg_exp) override;
 		void AddMoney(const int arg_money) override;
 		void SetDamage(const int arg_damage) override;
+		void SetDefaultWaitTexture() override;
+		void SetAttackTextureIndex(const int arg_index) override;
 	};
 
 }
