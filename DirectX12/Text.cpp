@@ -1,11 +1,15 @@
 #include "Text.h"
 #include "Font.h"
 #include "CSVReader.h"
+#include "Audio.h"
+#include "GameSetting.h"
 
 KochaEngine::Text::Text(const Vector2& arg_position, const Vector2& arg_fontSize, const unsigned int arg_addSpeed)
 {
 	position = arg_position;
 	fontSize = arg_fontSize;
+
+	se = new Audio();
 
 	Initialize();
 	ReText("default.txt");
@@ -15,6 +19,8 @@ KochaEngine::Text::Text(const std::string& arg_textName, const Vector2& arg_posi
 {
 	position = arg_position;
 	fontSize = arg_fontSize;
+
+	se = new Audio();
 
 	Initialize();
 	ReText(arg_textName);
@@ -28,6 +34,7 @@ void KochaEngine::Text::Initialize()
 	oneLineFonts = 23;
 	isSkip = false;
 	isPlayEndText = false;
+	isSound = false;
 }
 
 void KochaEngine::Text::AddFont(Font* arg_font)
@@ -49,6 +56,7 @@ void KochaEngine::Text::RemoveAll()
 
 KochaEngine::Text::~Text()
 {
+	delete se;
 	RemoveAll();
 }
 
@@ -73,7 +81,15 @@ void KochaEngine::Text::Draw(const int arg_addSpeed)
 				fixPosition = Vector2(fontSize.x * (addTextCount - oneLineFonts), fontSize.y);
 			}
 
+			//文字を追加
 			AddFont(new Font(textData[addTextCount], position + fixPosition, fontSize));
+
+			if (isSound && textData[addTextCount] != 85)
+			{
+				//サウンドを鳴らす
+				se->PlayWave(sePath.c_str(), GameSetting::seVolume);
+			}
+
 			addTextCount++;
 			count = 0;
 			if (addTextCount >= textDataSize)
@@ -98,7 +114,14 @@ void KochaEngine::Text::Draw(const int arg_addSpeed)
 				fixPosition = Vector2(fontSize.x * (addTextCount - oneLineFonts), fontSize.y);
 			}
 			
+			//文字を追加
 			AddFont(new Font(textData[addTextCount], position + fixPosition, fontSize));
+
+			if (isSound && addTextCount == textDataSize)
+			{
+				//サウンドを鳴らす
+				se->PlayWave(sePath.c_str(), GameSetting::seVolume);
+			}
 		}
 	}
 	isSkip = false;
@@ -133,6 +156,8 @@ void KochaEngine::Text::Skip()
 	isSkip = true;
 }
 
-void KochaEngine::Text::SetSound(const std::string& arg_seName)
+void KochaEngine::Text::SetSound(const std::string& arg_sePath)
 {
+	sePath = arg_sePath;
+	isSound = true;
 }

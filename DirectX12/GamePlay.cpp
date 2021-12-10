@@ -341,6 +341,7 @@ void KochaEngine::GamePlay::BattleInitialize()
 	//}
 
 	battleLongText->ReText("Talk/Battle/EnemySpawn.txt");
+	battleLongText->SetSound("Resources/Sound/text1.wav");
 	commandTitleText->ReText("default.txt");
 }
 
@@ -630,6 +631,7 @@ void KochaEngine::GamePlay::ActiveActorUpdate()
 			commandTitleText->ReText(currentActiveActor->GetParam().name);
 			//どうする？
 			battleLongText->ReText("Talk/Battle/ChooseAction.txt");
+			battleLongText->SetSound("Resources/Sound/text1.wav");
 		}
 
 		//コマンドのカーソル操作
@@ -673,8 +675,12 @@ void KochaEngine::GamePlay::ActiveActorUpdate()
 
 			}
 			targetActor = character;
+			//○○(名前)
 			battleNameText->ReText(currentActiveActor->GetParam().name);
+			battleNameText->SetSound("Resources/Sound/text1.wav");
+			//○○のこうどう！
 			battleLongText->ReText("Talk/Battle/AttackAction.txt");
+			battleLongText->SetSound("Resources/Sound/text1.wav");
 		}
 	}
 
@@ -787,10 +793,12 @@ void KochaEngine::GamePlay::ResultUpdate()
 			case 0:
 				//めのまえがまっくらになった
 				battleLongText->ReText("Talk/Battle/CharaDestroy_0.txt");
+				battleLongText->SetSound("Resources/Sound/text1.wav");
 				break;
 			case 1:
 				//おかねをはんぶんうしなった
 				battleLongText->ReText("Talk/Battle/CharaDestroy_1.txt");
+				battleLongText->SetSound("Resources/Sound/text1.wav");
 				break;
 			case 2:
 				//バトルを終了する
@@ -813,17 +821,20 @@ void KochaEngine::GamePlay::ResultUpdate()
 			case 0:
 				//まものをすべてたおした！
 				battleLongText->ReText("Talk/Battle/EnemyDestroy_0.txt");
+				battleLongText->SetSound("Resources/Sound/text1.wav");
 				bManager->Reward();
 				break;
 			case 1:
 				//○○のけいけんちをかくとく！
 				battleLongText->ReText("Talk/Battle/EnemyDestroy_1.txt");
+				battleLongText->SetSound("Resources/Sound/text1.wav");
 				RewardCalc();
 				isShowNumber = true;
 				break;
 			case 2:
 				//○○ゴールドてにいれた！
 				battleLongText->ReText("Talk/Battle/EnemyDestroy_2.txt");
+				battleLongText->SetSound("Resources/Sound/text1.wav");
 
 				break;
 			case 3:
@@ -1079,8 +1090,12 @@ void KochaEngine::GamePlay::AttackTab()
 		isAttackMotion = true;
 		motionTime = ATTACK_MOTION_TIME;
 		targetActor = enemy;
+		//○○(名前)
 		battleNameText->ReText(currentActiveActor->GetParam().name);
+		battleNameText->SetSound("Resources/Sound/text1.wav");
+		//○○のこうどう！
 		battleLongText->ReText("Talk/Battle/AttackAction.txt");
+		battleLongText->SetSound("Resources/Sound/text1.wav");
 	}
 	else
 	{

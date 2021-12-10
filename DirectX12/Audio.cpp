@@ -23,7 +23,7 @@
 
 KochaEngine::Audio::Audio()
 {
-	
+	Init();
 }
 
 KochaEngine::Audio::~Audio()
