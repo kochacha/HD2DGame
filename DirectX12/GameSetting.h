@@ -36,8 +36,8 @@ namespace KochaEngine
 	const Vector2 SCREEN_SIZE = Vector2(1280, 720);
 
 	//カメラ挙動
-	const float BATTLE_FOCUS_EYE_Z = -58;
-	const float BATTLE_FOCUS_TARGET_Z = 22;
+	const float BATTLE_FOCUS_EYE_Z = -55;
+	const float BATTLE_FOCUS_TARGET_Z = 15;
 	const float ATTACK_FOCUS_X = 15;
 
 	//画面中央下の会話テキストの枠

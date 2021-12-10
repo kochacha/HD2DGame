@@ -26,7 +26,7 @@ void KochaEngine::Enemy::Initialize()
 	isActive = false;
 	isKnockDown = false;
 
-	obj->SetScale(param.size);
+	obj->SetScale(Vector3(-param.size.x, param.size.y, param.size.z));
 	std::string texName = "Resources/Texture/Enemy/" + param.texName + "/" + param.texName + "_0.png"; //‰¼’u‚«
 	obj->SetTexture(texName);
 	obj->SetPosition(position);
@@ -41,7 +41,7 @@ void KochaEngine::Enemy::Initialize()
 	knockBackTime = 0;
 
 	prePosX = position.x;
-	activePosX = prePosX + 10;
+	activePosX = prePosX + 25;
 }
 
 void KochaEngine::Enemy::Update()

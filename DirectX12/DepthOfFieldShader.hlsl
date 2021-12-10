@@ -6,7 +6,7 @@ float4 main(Output input) : SV_TARGET
     //return col;
 
     float dep = pow(depthTex.Sample(smp, input.uv),300);
-    dep = abs(dep - 0.65f) * 13.00f;
+    dep = abs(dep - 0.63f) * 12.00f;
     return GaussianBlur(tex0, smp, input, dep);
     //return float4(dep, dep, dep, 1);
     

@@ -121,7 +121,7 @@ void KochaEngine::BattleCharacter::Initialize()
 	levelUpAnimationNum = 0;
 
 	prePosX = position.x + Util::GetIntRand(0, 3) - 57;
-	activePosX = prePosX - 20;
+	activePosX = prePosX - 25;
 }
 
 void KochaEngine::BattleCharacter::Update()
