@@ -2,7 +2,6 @@
 
 KochaEngine::SceneManager::SceneManager()
 {
-
 }
 
 KochaEngine::SceneManager::~SceneManager()

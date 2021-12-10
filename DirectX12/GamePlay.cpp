@@ -4,6 +4,7 @@
 #include "LightManager.h"
 #include "Number3DEmitter.h"
 #include "Number3DManager.h"
+#include "EffectManager.h"
 
 #include "Player.h"
 #include "Fighter.h"
@@ -19,7 +20,7 @@
 #include "InputManager.h"
 #include "Util.h"
 
-KochaEngine::GamePlay::GamePlay()
+KochaEngine::GamePlay::GamePlay(Dx12_Wrapper& arg_dx12) : dx12(arg_dx12)
 {
 	camera = new Camera();
 	gManager = new GameObjectManager();
@@ -27,6 +28,12 @@ KochaEngine::GamePlay::GamePlay()
 
 	pManager = new ParticleManager();
 	pEmitter = new ParticleEmitter(pManager);
+
+	effectManager = new EffectManager(dx12);
+	effectManager->LoadEffect("hit.efk", 3.0f);
+	effectManager->LoadEffect("slash.efk", 3.0f);
+	//effectManager->LoadEffect("slash1.efk", 3.0f);
+	effectManager->LoadEffect("jab1.efk", 3.0f);
 
 	n3DManager = new Number3DManager();
 	n3DEmitter = new Number3DEmitter(n3DManager);
@@ -72,6 +79,7 @@ KochaEngine::GamePlay::~GamePlay()
 	delete bManager;
 	delete pManager;
 	delete pEmitter;
+	delete effectManager;
 	delete n3DManager;
 	delete n3DEmitter;
 	delete map;
@@ -172,6 +180,15 @@ void KochaEngine::GamePlay::Update()
 	}
 	player->SetIsBattle(isBattle);
 
+	if (Input::TriggerKey(DIK_H))
+	{
+		effectManager->Play("hit.efk", Vector3(player->GetPosition().x, player->GetPosition().y, player->GetPosition().z - 2));
+	}
+	if (Input::TriggerKey(DIK_J))
+	{
+		effectManager->Play("slash.efk", Vector3(player->GetPosition().x, player->GetPosition().y, player->GetPosition().z - 2));
+	}
+
 	if (isBattle)
 	{
 		BattleUpdate();
@@ -207,7 +224,6 @@ void KochaEngine::GamePlay::ObjDraw()
 		FieldObjDraw();
 	}
 
-
 }
 
 void KochaEngine::GamePlay::AlphaObjDraw()
@@ -221,6 +237,7 @@ void KochaEngine::GamePlay::AlphaObjDraw()
 		FieldAlphaObjDraw();
 	}
 
+	effectManager->Update(camera);
 }
 
 void KochaEngine::GamePlay::DrawGUI()
@@ -728,6 +745,17 @@ void KochaEngine::GamePlay::AttackMotionUpdate()
 		
 		//こうげきアニメーション
 		currentActiveActor->SetAttackTextureIndex(1);
+
+		//こうげきエフェクト
+		if (targetActor->GetType() == BattleObjectType::ENEMY)
+		{
+			effectManager->Play("slash.efk", targetPos);
+		}
+		else
+		{
+			effectManager->Play("jab1.efk", targetPos);
+		}
+
 	}
 	else if (motionTime == 0) //行動を終了する
 	{

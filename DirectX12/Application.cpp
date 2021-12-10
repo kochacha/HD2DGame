@@ -22,7 +22,7 @@
 //#include "FBXObject.h"
 //#include "FBXLoader.h"
 #include "CustomGui.h"
-#include "EffectManager.h"
+//#include "EffectManager.h"
 #include "LightManager.h"
 
 #include <sstream>
@@ -117,9 +117,11 @@ void KochaEngine::Application::Run()
 
 		////↑毎フレーム処理↑//
 		
+		auto _cmdList = dx12->GetCmdList().Get();
+
 		//１パス
 		{
-			peraDof->PreDrawScene(dx12->GetCmdList().Get());
+			peraDof->PreDrawScene(_cmdList);
 
 			//Object::BeginDrawFromLight(dx12->GetCmdList().Get());
 			////peraBloom->PreDrawShadow(dx12->GetCmdList().Get());
@@ -131,14 +133,14 @@ void KochaEngine::Application::Run()
 			////}
 			//taimatu->Draw(lightCamera);
 
-			Object::BeginDraw(dx12->GetCmdList().Get());
+			Object::BeginDraw(_cmdList);
 			//↓ObjDraw↓//
 
 			sceneManager->ObjDraw();
 
 			//↑ObjDraw↑//
 			Object::EndDraw();
-			Object::BeginAlphaDraw(dx12->GetCmdList().Get());
+			Object::BeginAlphaDraw(_cmdList);
 			//↓AlphaObjDraw↓//
 
 			sceneManager->AlphaObjDraw();
@@ -149,12 +151,12 @@ void KochaEngine::Application::Run()
 
 			//effectManager->Update(camera);
 
-			peraDof->PostDrawScene(dx12->GetCmdList().Get());
+			peraDof->PostDrawScene(_cmdList);
 		}
 
 		//２パス
 		{
-			peraBloom->PreDrawScene(dx12->GetCmdList().Get());
+			peraBloom->PreDrawScene(_cmdList);
 
 			if (isDof)
 			{
@@ -166,16 +168,16 @@ void KochaEngine::Application::Run()
 				peraDof->Draw();
 			}
 
-			peraBloom->PostDrawScene(dx12->GetCmdList().Get());
+			peraBloom->PostDrawScene(_cmdList);
 		}
 
 		//３パス
 		{
-			peraEffect->PreDrawScene(dx12->GetCmdList().Get());
+			peraEffect->PreDrawScene(_cmdList);
 
 			peraBloom->Draw();
 
-			peraEffect->PostDrawScene(dx12->GetCmdList().Get());
+			peraEffect->PostDrawScene(_cmdList);
 		}
 
 		//４パス
@@ -184,7 +186,7 @@ void KochaEngine::Application::Run()
 
 			peraEffect->Draw(peraEffectType);
 
-			Texture2D::BeginDraw(dx12->GetCmdList().Get());
+			Texture2D::BeginDraw(_cmdList);
 			//↓SpriteDraw↓//
 
 			//Texture2D::BeginDrawAlphaSort(dx12->GetCmdList().Get());
@@ -537,7 +539,7 @@ bool KochaEngine::Application::UpdateFPS()
 		timeEndPeriod(1);
 		return true;
 	}
-	fps = 1.0f / frameTime;
+	fps = 1.00000f / frameTime;
 	//std::wstringstream stream;
 	//stream << "FPS:" << fps << std::endl;
 	//OutputDebugString(stream.str().c_str());
@@ -583,7 +585,7 @@ bool KochaEngine::Application::Initialize()
 	sceneManager = new SceneManager();
 	sceneManager->AddScene(TITLE, new Title());
 	sceneManager->AddScene(STAGESELECT, new StageSelect());
-	sceneManager->AddScene(GAMEPLAY, new GamePlay());
+	sceneManager->AddScene(GAMEPLAY, new GamePlay(*dx12));
 	sceneManager->AddScene(ENDING, new Ending());
 	sceneManager->AddScene(GAMEOVER, new GameOver());
 	//sceneManager->ChangeScene(TITLE);
@@ -609,9 +611,9 @@ bool KochaEngine::Application::Initialize()
 	peraEffectType = ShaderType::VIGNETTE_SHADER;
 	isDof = true;
 
-	effectManager = new EffectManager(*dx12);
-	effectManager->LoadEffect("light.efk", 10.0f);
-	effectManager->LoadEffect("hit.efk", 10.0f);
+	//effectManager = new EffectManager(*dx12);
+	//effectManager->LoadEffect("light.efk", 10.0f);
+	//effectManager->LoadEffect("hit.efk", 10.0f);
 
 	//lightManager = LightManager::Create();
 	//lightManager->SetLightCamera(lightCamera);
@@ -658,7 +660,7 @@ void KochaEngine::Application::Terminate()
 	delete peraBloom;
 	delete peraEffect;
 	delete peraDof;
-	delete effectManager;
+	//delete effectManager;
 
 	Input::Terminate();
 }

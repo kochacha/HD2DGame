@@ -285,6 +285,7 @@
     <ClCompile Include="Number3DOperation.cpp">
       <Filter>Source\Particle</Filter>
     </ClCompile>
+    <ClCompile Include="CameraManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShaderHeader.hlsli">
@@ -609,5 +610,6 @@
     <ClInclude Include="Number3DOperation.h">
       <Filter>Header\Particle</Filter>
     </ClInclude>
+    <ClInclude Include="CameraManager.h" />
   </ItemGroup>
 </Project>

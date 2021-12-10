@@ -6,6 +6,10 @@ namespace KochaEngine
 {
 	class SceneManager
 	{
+	private:
+		std::map<Scenes, Scene*> scenes;
+		Scene* currentScene;
+
 	public:
 		SceneManager();
 		~SceneManager();
@@ -18,8 +22,5 @@ namespace KochaEngine
 		void ObjDraw();
 		void DrawGUI();
 		void Terminate();
-	private:
-		std::map<Scenes, Scene*> scenes;
-		Scene* currentScene;
 	};
 }

@@ -11,6 +11,7 @@ namespace KochaEngine
 {
 	class Map;
 	class LightManager;
+	class EffectManager;
 	class Text;
 	class Number;
 	class Number3D;
@@ -18,6 +19,7 @@ namespace KochaEngine
 	class Texture2D;
 	class Number3DManager;
 	class Number3DEmitter;
+	class Dx12_Wrapper;
 
 	class GamePlay : public Scene
 	{
@@ -31,12 +33,15 @@ namespace KochaEngine
 		};
 
 	private:
+		Dx12_Wrapper& dx12;
+
 		Map* map;
 		Camera* camera;
 		GameObjectManager* gManager;
 		BattleObjectManager* bManager;
 		ParticleManager* pManager;
 		ParticleEmitter* pEmitter;
+		EffectManager* effectManager;
 		Number3DManager* n3DManager;
 		Number3DEmitter* n3DEmitter;
 		LightManager* lightManager;
@@ -151,7 +156,7 @@ namespace KochaEngine
 		unsigned int CommandNumDown(const unsigned int arg_commandNum);
 
 	public:
-		GamePlay();
+		GamePlay(Dx12_Wrapper& arg_dx12);
 		~GamePlay() override;
 		void Initialize() override;
 		void Update() override;

@@ -170,6 +170,7 @@
     <ClCompile Include="BattleObjectManager.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CollisionBlock.cpp" />
     <ClCompile Include="CSVReader.cpp" />
@@ -470,6 +471,7 @@
     <ClInclude Include="BattleObjectManager.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraManager.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionBlock.h" />
     <ClInclude Include="CSVReader.h" />
