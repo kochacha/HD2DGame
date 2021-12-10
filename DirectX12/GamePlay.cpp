@@ -5,6 +5,7 @@
 #include "Number3DEmitter.h"
 #include "Number3DManager.h"
 #include "EffectManager.h"
+#include "CameraManager.h"
 
 #include "Player.h"
 #include "Fighter.h"
@@ -23,6 +24,7 @@
 KochaEngine::GamePlay::GamePlay(Dx12_Wrapper& arg_dx12) : dx12(arg_dx12)
 {
 	camera = new Camera();
+	cameraManager = new CameraManager(*camera);
 	gManager = new GameObjectManager();
 	bManager = new BattleObjectManager();
 
@@ -31,9 +33,9 @@ KochaEngine::GamePlay::GamePlay(Dx12_Wrapper& arg_dx12) : dx12(arg_dx12)
 
 	effectManager = new EffectManager(dx12);
 	effectManager->LoadEffect("hit.efk", 3.0f);
-	effectManager->LoadEffect("slash.efk", 3.0f);
+	effectManager->LoadEffect("slash.efk", 5.0f);
 	//effectManager->LoadEffect("slash1.efk", 3.0f);
-	effectManager->LoadEffect("jab1.efk", 3.0f);
+	effectManager->LoadEffect("jab1.efk", 4.0f);
 
 	n3DManager = new Number3DManager();
 	n3DEmitter = new Number3DEmitter(n3DManager);
@@ -74,6 +76,7 @@ KochaEngine::GamePlay::~GamePlay()
 {
 	gManager->RemoveAll();
 	delete camera;
+	delete cameraManager;
 	delete lightManager;
 	delete gManager;
 	delete bManager;
@@ -169,6 +172,7 @@ void KochaEngine::GamePlay::Update()
 	FadeUpdate();
 	auto player = gManager->GetPlayer();
 	if (player == nullptr) return;
+	cameraManager->SetPlayer(player);
 	if (player->IsEncount() && !fadeFlag)
 	{
 		fadeFlag = true;
@@ -180,21 +184,23 @@ void KochaEngine::GamePlay::Update()
 	}
 	player->SetIsBattle(isBattle);
 
-	if (Input::TriggerKey(DIK_H))
-	{
-		effectManager->Play("hit.efk", Vector3(player->GetPosition().x, player->GetPosition().y, player->GetPosition().z - 2));
-	}
-	if (Input::TriggerKey(DIK_J))
-	{
-		effectManager->Play("slash.efk", Vector3(player->GetPosition().x, player->GetPosition().y, player->GetPosition().z - 2));
-	}
+	//if (Input::TriggerKey(DIK_H))
+	//{
+	//	effectManager->Play("hit.efk", Vector3(player->GetPosition().x, player->GetPosition().y, player->GetPosition().z - 2));
+	//}
+	//if (Input::TriggerKey(DIK_J))
+	//{
+	//	effectManager->Play("slash.efk", Vector3(player->GetPosition().x, player->GetPosition().y, player->GetPosition().z - 2));
+	//}
 
 	if (isBattle)
 	{
+		cameraManager->SetCameraState(CameraState::BATTLE_CAMERA_STATE);
 		BattleUpdate();
 	}
 	else
 	{
+		cameraManager->SetCameraState(CameraState::DEFAULT_CAMERA_STATE);
 		FieldUpdate();
 	}
 }
@@ -432,7 +438,7 @@ void KochaEngine::GamePlay::BattleUpdate()
 	bManager->Update();
 	pManager->Update();
 	n3DManager->Update();
-	camera->Update();
+	cameraManager->Update();
 	lightManager->Update();
 
 	skyObj->MoveRotate(Vector3(0, 0.005f, 0));
@@ -542,7 +548,7 @@ void KochaEngine::GamePlay::FieldUpdate()
 	gManager->Update();
 	pManager->Update();
 	n3DManager->Update();
-	camera->Update();
+	cameraManager->Update();
 	lightManager->Update();
 
 	isBattleStart = false;
@@ -629,6 +635,9 @@ void KochaEngine::GamePlay::TurnInitialize()
 
 	//エネミーの名前描画を更新
 	EnemyNameUpdate();
+
+	//カメラの位置をバトル開始時の初期位置に戻す
+	cameraManager->SetDefaultPosition();
 }
 
 void KochaEngine::GamePlay::ActiveActorUpdate()
@@ -651,10 +660,17 @@ void KochaEngine::GamePlay::ActiveActorUpdate()
 			battleLongText->SetSound("Resources/Sound/text1.wav");
 		}
 
-		//コマンドのカーソル操作
+		//こうげきモーション中は操作できないようにする
 		if (!isAttackMotion)
 		{
+			//コマンドのカーソル操作
 			MoveCursor();
+
+			//カメラのフォーカス(奥行)を現在こうどう中のキャラに合わせる
+			float eyeZ = currentActiveActor->GetPosition().z + BATTLE_FOCUS_EYE_Z;
+			float targetZ = currentActiveActor->GetPosition().z + BATTLE_FOCUS_TARGET_Z;
+			cameraManager->SetBattleEyePositionZ(eyeZ);
+			cameraManager->SetBattleTargetPositionZ(targetZ);
 		}
 
 
@@ -698,6 +714,12 @@ void KochaEngine::GamePlay::ActiveActorUpdate()
 			//○○のこうどう！
 			battleLongText->ReText("Talk/Battle/AttackAction.txt");
 			battleLongText->SetSound("Resources/Sound/text1.wav");
+
+			//カメラのフォーカス(奥行)を現在こうどう中のエネミーに合わせる
+			float eyeZ = currentActiveActor->GetPosition().z + BATTLE_FOCUS_EYE_Z;
+			float targetZ = currentActiveActor->GetPosition().z + BATTLE_FOCUS_TARGET_Z;
+			cameraManager->SetBattleEyePositionZ(eyeZ);
+			cameraManager->SetBattleTargetPositionZ(targetZ);
 		}
 	}
 
@@ -715,6 +737,24 @@ void KochaEngine::GamePlay::AttackMotionUpdate()
 	if (motionTime == 120)
 	{
 		currentActiveActor->SetAttackTextureIndex(0);
+
+		//カメラのフォーカス(奥行)をターゲットに合わせる
+		float eyeZ = targetActor->GetPosition().z + BATTLE_FOCUS_EYE_Z;
+		float targetZ = targetActor->GetPosition().z + BATTLE_FOCUS_TARGET_Z;
+		cameraManager->SetBattleEyePositionZ(eyeZ);
+		cameraManager->SetBattleTargetPositionZ(targetZ);
+
+		//カメラのフォーカス(左右)をターゲットに寄せる
+		if (currentActiveActor->GetType() == BattleObjectType::ENEMY)
+		{
+			cameraManager->MoveBattleEyePositionX(ATTACK_FOCUS_X);
+			cameraManager->MoveBattleTargetPositionX(ATTACK_FOCUS_X);
+		}
+		else
+		{
+			cameraManager->MoveBattleEyePositionX(-ATTACK_FOCUS_X);
+			cameraManager->MoveBattleTargetPositionX(-ATTACK_FOCUS_X);
+		}
 	}
 	else if (motionTime == 60) //ダメージを与える(通常攻撃)
 	{
@@ -754,6 +794,7 @@ void KochaEngine::GamePlay::AttackMotionUpdate()
 		else
 		{
 			effectManager->Play("jab1.efk", targetPos);
+			cameraManager->SetCameraShake(5.0f);
 		}
 
 	}
@@ -781,6 +822,8 @@ void KochaEngine::GamePlay::ResultUpdate()
 	{
 		isResultOnce = true;
 		resultFlowWait = RESULT_INPUT_WAIT;
+		//カメラの位置をバトル開始時の初期位置に戻す
+		cameraManager->SetDefaultPosition();
 	}
 
 	if (resultFlowWait <= 0)

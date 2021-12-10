@@ -20,6 +20,7 @@ namespace KochaEngine
 	class Number3DManager;
 	class Number3DEmitter;
 	class Dx12_Wrapper;
+	class CameraManager;
 
 	class GamePlay : public Scene
 	{
@@ -37,6 +38,7 @@ namespace KochaEngine
 
 		Map* map;
 		Camera* camera;
+		CameraManager* cameraManager;
 		GameObjectManager* gManager;
 		BattleObjectManager* bManager;
 		ParticleManager* pManager;
