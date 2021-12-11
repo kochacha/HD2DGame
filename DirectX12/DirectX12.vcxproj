@@ -196,6 +196,7 @@
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="GameSetting.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="JsonLoader.cpp" />
     <ClCompile Include="Number3D.cpp" />
     <ClCompile Include="Number3DEmitter.cpp" />
     <ClCompile Include="Number3DManager.cpp" />
@@ -498,6 +499,7 @@
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameSetting.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="JsonLoader.h" />
     <ClInclude Include="Number3D.h" />
     <ClInclude Include="Number3DEmitter.h" />
     <ClInclude Include="Number3DManager.h" />

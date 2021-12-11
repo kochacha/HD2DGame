@@ -285,7 +285,10 @@
     <ClCompile Include="Number3DOperation.cpp">
       <Filter>Source\Particle</Filter>
     </ClCompile>
-    <ClCompile Include="CameraManager.cpp" />
+    <ClCompile Include="CameraManager.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShaderHeader.hlsli">
@@ -610,6 +613,9 @@
     <ClInclude Include="Number3DOperation.h">
       <Filter>Header\Particle</Filter>
     </ClInclude>
-    <ClInclude Include="CameraManager.h" />
+    <ClInclude Include="CameraManager.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonLoader.h" />
   </ItemGroup>
 </Project>

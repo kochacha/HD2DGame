@@ -186,7 +186,6 @@ void KochaEngine::GamePlay::Update()
 
 	//if (Input::TriggerKey(DIK_H))
 	//{
-	//	effectManager->Play("hit.efk", Vector3(player->GetPosition().x, player->GetPosition().y, player->GetPosition().z - 2));
 	//}
 	//if (Input::TriggerKey(DIK_J))
 	//{
@@ -323,19 +322,20 @@ void KochaEngine::GamePlay::BattleInitialize()
 	const Vector3 cameraPos = camera->GetEye();
 
 	//ここにエネミーエミッタークラス的なの作って呼び出す
+	//EnemyDataと同様、jsonファイルから読み込めるようにする
 	{
 		/*今は仮でエネミー追加*/
 		int aaa = Util::GetIntRand(0, 1);
 		if (aaa == 0)
 		{
-			bManager->AddObject(new Enemy(bManager, cameraPos + SMALL_ENEMY_POS[0], EnemyData::GetEnemyParam(BABYDORAGON)));
-			bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[1], EnemyData::GetEnemyParam(NIHUTERIZA)));
-			bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[2], EnemyData::GetEnemyParam(NIHUTERIZA)));
+			bManager->AddObject(new Enemy(bManager, cameraPos + SMALL_ENEMY_POS[0], EnemyData::GetEnemyParam("babydoragon")));
+			bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[1], EnemyData::GetEnemyParam("nihuteriza")));
+			bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[2], EnemyData::GetEnemyParam("nihuteriza")));
 		}
 		else
 		{
-			bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[0], EnemyData::GetEnemyParam(NIHUTERIZA)));
-			bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[1], EnemyData::GetEnemyParam(NIHUTERIZA)));
+			bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[0], EnemyData::GetEnemyParam("nihuteriza")));
+			bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[1], EnemyData::GetEnemyParam("nihuteriza")));
 		}
 	}
 
@@ -377,11 +377,11 @@ void KochaEngine::GamePlay::BattleUpdate()
 	//		//サンプルテキスト再生
 	//		battleLongText->ReText("Talk/Battle/CharaDestroy_0.txt");
 	//	}
-	//	if (Input::TriggerKey(DIK_F2))
-	//	{
-	//		//サンプルテキスト再生
-	//		battleLongText->ReText("Talk/Battle/CharaDestroy_1.txt");
-	//	}
+		//if (Input::TriggerKey(DIK_F2))
+		//{
+		//	//サンプルテキスト再生
+		//	battleLongText->ReText("yuma.txt");
+		//}
 	//	if (Input::TriggerKey(DIK_E))
 	//	{
 	//		//テキストスキップ
