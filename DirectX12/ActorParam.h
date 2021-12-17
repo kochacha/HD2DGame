@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 #include "Vector3.h"
 #include "Vector4.h"
 
@@ -8,12 +9,12 @@ namespace KochaEngine
 	//属性
 	enum Attribute
 	{
+		TYPE_NORMAL,
 		TYPE_FIRE,
 		TYPE_WATER,
 		TYPE_NATURE,
 		TYPE_LIGHT,
 		TYPE_DARK,
-		TYPE_NORMAL,
 	};
 
 	//キャラ・エネミーのパラメータ
@@ -36,5 +37,6 @@ namespace KochaEngine
 		int luck;
 		int exp;
 		int money;
+		std::vector<std::string> skills;
 	};
 }

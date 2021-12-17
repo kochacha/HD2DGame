@@ -20,22 +20,25 @@ KochaEngine::Attribute KochaEngine::EnemyData::GetAttribute(const int arg_num)
     switch (arg_num)
     {
     case 0:
-        attribute = Attribute::TYPE_FIRE;
+        attribute = Attribute::TYPE_NORMAL;
         break;
     case 1:
-        attribute = Attribute::TYPE_WATER;
+        attribute = Attribute::TYPE_FIRE;
         break;
     case 2:
-        attribute = Attribute::TYPE_NATURE;
+        attribute = Attribute::TYPE_WATER;
         break;
     case 3:
-        attribute = Attribute::TYPE_LIGHT;
+        attribute = Attribute::TYPE_NATURE;
         break;
     case 4:
+        attribute = Attribute::TYPE_LIGHT;
+        break;
+    case 5:
         attribute = Attribute::TYPE_DARK;
         break;
     default:
-        attribute = Attribute::TYPE_FIRE;
+        attribute = Attribute::TYPE_NORMAL;
         break;
     }
     return attribute;
@@ -69,11 +72,15 @@ void KochaEngine::EnemyData::StaticInit()
         param.money = enemyID["Money"].get<double>();
 
         //使うじゅもん・とくぎなども読み込む(arrayで管理)
+        picojson::array& skills = enemyID["Skill"].get<picojson::array>();
+        for (const auto& e : skills) {
+            param.skills.push_back(e.get<std::string>());
+        }
 
         AddEnemyParam(name, param);
     }
 
-    //ここにエネミーのデータを登録していく(jsonファイルから読み込めるようにする)
+    //ここにエネミーのデータを登録していく
     //AddEnemyParam(NIHUTERIZA, "nihuteriza", TYPE_DARK, SMALL_ENEMY_SIZE, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 60, 5, 5);
     //AddEnemyParam(BABYDORAGON, "babydoragon", TYPE_FIRE, SMALL_ENEMY_SIZE, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 60, 8, 8);
 }

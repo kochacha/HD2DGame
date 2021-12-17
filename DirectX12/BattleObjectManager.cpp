@@ -8,7 +8,7 @@ KochaEngine::BattleObjectManager::BattleObjectManager()
 KochaEngine::BattleObjectManager::~BattleObjectManager()
 {
 	//オブジェクトの全削除
-	RemoveAll();
+	Clear();
 }
 
 void KochaEngine::BattleObjectManager::AddObject(BattleObject* arg_battleObject)
@@ -172,7 +172,7 @@ void KochaEngine::BattleObjectManager::Remove()
 	}
 }
 
-void KochaEngine::BattleObjectManager::RemoveAll()
+void KochaEngine::BattleObjectManager::Clear()
 {
 	totalMoney = 0;
 	totalExp = 0;

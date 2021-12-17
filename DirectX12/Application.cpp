@@ -24,6 +24,7 @@
 #include "CustomGui.h"
 //#include "EffectManager.h"
 #include "LightManager.h"
+#include "GameSetting.h"
 
 #include <sstream>
 #include <mmsystem.h>

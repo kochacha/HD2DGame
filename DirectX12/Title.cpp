@@ -23,8 +23,6 @@ void KochaEngine::Title::Initialize()
 
 	fadeAlpha = 1.0f;
 	fadeFlag = false;
-	count = 0;
-	down = 0;
 
 	backTexture->SetColor(Vector4(1, 1, 1, 1));
 	fadeTexture->SetColor(Vector4(0, 0, 0.12f, 1));
@@ -32,14 +30,6 @@ void KochaEngine::Title::Initialize()
 
 void KochaEngine::Title::Update()
 {
-	if (count < 100000)
-	{
-		count++;
-	}
-	else
-	{
-		count = 0;
-	}
 
 	FadeUpdate();
 	if ((Input::TriggerKey(DIK_SPACE) || Input::TriggerPadButton(XINPUT_GAMEPAD_A)) && fadeAlpha <= 0.0f)

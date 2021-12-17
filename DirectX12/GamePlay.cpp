@@ -11,6 +11,7 @@
 #include "Fighter.h"
 #include "BattleCharacter.h"
 #include "EnemyData.h"
+#include "SkillData.h"
 #include "Enemy.h"
 
 #include "Text.h"
@@ -32,10 +33,12 @@ KochaEngine::GamePlay::GamePlay(Dx12_Wrapper& arg_dx12) : dx12(arg_dx12)
 	pEmitter = new ParticleEmitter(pManager);
 
 	effectManager = new EffectManager(dx12);
-	effectManager->LoadEffect("hit.efk", 3.0f);
-	effectManager->LoadEffect("slash.efk", 5.0f);
+	effectManager->LoadEffect("hit.efk", 3.0f); //仮エフェクト
+	effectManager->LoadEffect("none.efk", 5.0f); //通常攻撃(斬撃)エフェクト
 	//effectManager->LoadEffect("slash1.efk", 3.0f);
-	effectManager->LoadEffect("jab1.efk", 4.0f);
+	effectManager->LoadEffect("jab1.efk", 4.0f); //通常攻撃(突き)エフェクト
+	effectManager->LoadEffect("levelUp.efk", 3.0f); //レベルアップ時エフェクト
+	effectManager->LoadEffect("DeadEnemy.efk", 5.0f); //敵死亡時エフェクト
 
 	n3DManager = new Number3DManager();
 	n3DEmitter = new Number3DEmitter(n3DManager);
@@ -43,7 +46,9 @@ KochaEngine::GamePlay::GamePlay(Dx12_Wrapper& arg_dx12) : dx12(arg_dx12)
 	map = new Map(gManager, camera);
 	lightManager = new LightManager();
 	lightManager = LightManager::Create();
-	EnemyData::StaticInit();
+
+	EnemyData::StaticInit(); //エネミーデータの読み込み
+	SkillData::StaticInit(); //スキルデータの読み込み
 
 	floor = new Object("ground");
 	skyObj = new Object("skydome");
@@ -74,7 +79,7 @@ KochaEngine::GamePlay::GamePlay(Dx12_Wrapper& arg_dx12) : dx12(arg_dx12)
 
 KochaEngine::GamePlay::~GamePlay()
 {
-	gManager->RemoveAll();
+	gManager->Clear();
 	delete camera;
 	delete cameraManager;
 	delete lightManager;
@@ -123,8 +128,8 @@ void KochaEngine::GamePlay::Initialize()
 	isResultOnce = false;
 	isShowNumber = false;
 
-	gManager->RemoveAll();
-	bManager->RemoveAll();
+	gManager->Clear();
+	bManager->Clear();
 	gManager->Initialize();
 	bManager->Initialize();
 
@@ -266,7 +271,7 @@ void KochaEngine::GamePlay::Load()
 
 KochaEngine::Scenes KochaEngine::GamePlay::Next()
 {
-	gManager->RemoveAll();
+	gManager->Clear();
 	return ENDING;
 }
 
@@ -328,14 +333,14 @@ void KochaEngine::GamePlay::BattleInitialize()
 		int aaa = Util::GetIntRand(0, 1);
 		if (aaa == 0)
 		{
-			bManager->AddObject(new Enemy(bManager, cameraPos + SMALL_ENEMY_POS[0], EnemyData::GetEnemyParam("babydoragon")));
-			bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[1], EnemyData::GetEnemyParam("nihuteriza")));
-			bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[2], EnemyData::GetEnemyParam("nihuteriza")));
+			bManager->AddObject(new Enemy(bManager, effectManager, n3DEmitter, cameraPos + SMALL_ENEMY_POS[0], EnemyData::GetEnemyParam("babydoragon")));
+			bManager->AddObject(new Enemy(bManager, effectManager, n3DEmitter, cameraPos + MEDIUM_ENEMY_POS[1], EnemyData::GetEnemyParam("nihuteriza")));
+			bManager->AddObject(new Enemy(bManager, effectManager, n3DEmitter, cameraPos + MEDIUM_ENEMY_POS[2], EnemyData::GetEnemyParam("nihuteriza")));
 		}
 		else
 		{
-			bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[0], EnemyData::GetEnemyParam("nihuteriza")));
-			bManager->AddObject(new Enemy(bManager, cameraPos + MEDIUM_ENEMY_POS[1], EnemyData::GetEnemyParam("nihuteriza")));
+			bManager->AddObject(new Enemy(bManager, effectManager, n3DEmitter, cameraPos + MEDIUM_ENEMY_POS[0], EnemyData::GetEnemyParam("nihuteriza")));
+			bManager->AddObject(new Enemy(bManager, effectManager, n3DEmitter, cameraPos + MEDIUM_ENEMY_POS[1], EnemyData::GetEnemyParam("nihuteriza")));
 		}
 	}
 
@@ -346,8 +351,8 @@ void KochaEngine::GamePlay::BattleInitialize()
 		auto fighterParam = gManager->GetFighter()->GetParam();
 
 		//パラメーターをセットしてバトルキャラクター生成
-		bManager->AddObject(new BattleCharacter(BATTLE_PLAYER, cameraPos + BATTLE_CHARACTOR_POS[0], playerParam));
-		bManager->AddObject(new BattleCharacter(BATTLE_FIGHTER, cameraPos + BATTLE_CHARACTOR_POS[2], fighterParam));
+		bManager->AddObject(new BattleCharacter(effectManager, n3DEmitter, BATTLE_PLAYER, cameraPos + BATTLE_CHARACTOR_POS[0], playerParam));
+		bManager->AddObject(new BattleCharacter(effectManager, n3DEmitter, BATTLE_FIGHTER, cameraPos + BATTLE_CHARACTOR_POS[2], fighterParam));
 	}
 
 
@@ -363,9 +368,9 @@ void KochaEngine::GamePlay::BattleInitialize()
 	//	battleLongText->ReText("Talk/Battle/EnemySpawn.txt");
 	//}
 
-	battleLongText->ReText("Talk/Battle/EnemySpawn.txt");
+	battleLongText->SetText("Talk/Battle/EnemySpawn.txt");
 	battleLongText->SetSound("Resources/Sound/text1.wav");
-	commandTitleText->ReText("default.txt");
+	commandTitleText->SetText("default.txt");
 }
 
 void KochaEngine::GamePlay::BattleUpdate()
@@ -431,7 +436,7 @@ void KochaEngine::GamePlay::BattleUpdate()
 		isCharacterDestroy = false;
 		isEnemyDestroy = false;
 		isResultOnce = false;
-		bManager->RemoveAll();
+		bManager->Clear();
 	}
 
 	gManager->Update();
@@ -488,14 +493,14 @@ void KochaEngine::GamePlay::BattleFlowUpdate()
 
 void KochaEngine::GamePlay::BattleObjDraw()
 {
-	gManager->ObjDraw(camera, lightManager);
+	gManager->ObjDrawFieldScene(camera, lightManager);
 	floor->Draw(camera, lightManager);
 	skyObj->Draw(camera, lightManager);
 }
 
 void KochaEngine::GamePlay::BattleAlphaObjDraw()
 {
-	gManager->AlphaObjDraw2(camera, lightManager);
+	gManager->AlphaObjDrawBattleScene(camera, lightManager);
 	bManager->ObjDraw(camera, lightManager);
 	n3DManager->Draw(camera, lightManager);
 }
@@ -559,7 +564,7 @@ void KochaEngine::GamePlay::FieldUpdate()
 
 void KochaEngine::GamePlay::FieldObjDraw()
 {
-	gManager->ObjDraw(camera, lightManager);
+	gManager->ObjDrawFieldScene(camera, lightManager);
 	floor->Draw(camera, lightManager);
 	skyObj->Draw(camera, lightManager);
 	pManager->Draw(camera, lightManager);
@@ -568,7 +573,7 @@ void KochaEngine::GamePlay::FieldObjDraw()
 
 void KochaEngine::GamePlay::FieldAlphaObjDraw()
 {
-	gManager->AlphaObjDraw(camera, lightManager);
+	gManager->AlphaObjDrawFieldScene(camera, lightManager);
 }
 
 void KochaEngine::GamePlay::FieldSpriteDraw()
@@ -654,9 +659,9 @@ void KochaEngine::GamePlay::ActiveActorUpdate()
 		{
 			isCommandTitleUpdate = true;
 			//現在コマンド操作中のキャラの名前を表示
-			commandTitleText->ReText(currentActiveActor->GetParam().name);
+			commandTitleText->SetText(currentActiveActor->GetParam().name);
 			//どうする？
-			battleLongText->ReText("Talk/Battle/ChooseAction.txt");
+			battleLongText->SetText("Talk/Battle/ChooseAction.txt");
 			battleLongText->SetSound("Resources/Sound/text1.wav");
 		}
 
@@ -709,10 +714,10 @@ void KochaEngine::GamePlay::ActiveActorUpdate()
 			}
 			targetActor = character;
 			//○○(名前)
-			battleNameText->ReText(currentActiveActor->GetParam().name);
+			battleNameText->SetText(currentActiveActor->GetParam().name);
 			battleNameText->SetSound("Resources/Sound/text1.wav");
 			//○○のこうどう！
-			battleLongText->ReText("Talk/Battle/AttackAction.txt");
+			battleLongText->SetText("Talk/Battle/AttackAction.txt");
 			battleLongText->SetSound("Resources/Sound/text1.wav");
 
 			//カメラのフォーカス(奥行)を現在こうどう中のエネミーに合わせる
@@ -734,7 +739,7 @@ void KochaEngine::GamePlay::AttackMotionUpdate()
 	{
 		motionTime--;
 	}
-	if (motionTime == 120)
+	if (motionTime == FOCUS_MOTION_TIME) //構える
 	{
 		currentActiveActor->SetAttackTextureIndex(0);
 
@@ -756,44 +761,18 @@ void KochaEngine::GamePlay::AttackMotionUpdate()
 			cameraManager->MoveBattleTargetPositionX(-ATTACK_FOCUS_X);
 		}
 	}
-	else if (motionTime == 60) //ダメージを与える(通常攻撃)
+	else if (motionTime == ACTIVE_MOTION_TIME) //行動する
 	{
 		//ダメージ計算処理
-		auto targetParam = targetActor->GetParam();
-		auto activeParam = currentActiveActor->GetParam();
-
-		//基礎ダメージ
-		int baseDamage = activeParam.attack * 0.5f - targetParam.defence * 0.25f;
-		//運ダメージ範囲
-		int luckDamageRange = baseDamage * ((float)activeParam.luck * 0.002f) + 2;
-		//運ダメージ
-		int luckDamage = Util::GetIntRand(0, luckDamageRange) - luckDamageRange * 0.25f;
-		//トータルダメージ
-		int totalDamage = baseDamage + luckDamage;
-
-		if (totalDamage < 1) totalDamage = 1;
-
 		//ダメージを与える
-		targetActor->SetDamage(totalDamage);
-
-		//ターゲットの位置を調べる
-		Vector3 targetPos = targetActor->GetPosition();
-		Vector3 addDamagePos = Vector3(targetPos.x, targetPos.y + 2, targetPos.z - 0.01f);
-
-		//ダメージ表記
-		n3DEmitter->AddNumber3D(addDamagePos, totalDamage);
+		targetActor->SetDamage("none", currentActiveActor->GetParam());
 		
 		//こうげきアニメーション
 		currentActiveActor->SetAttackTextureIndex(1);
 
 		//こうげきエフェクト
-		if (targetActor->GetType() == BattleObjectType::ENEMY)
+		if (targetActor->GetType() != BattleObjectType::ENEMY)
 		{
-			effectManager->Play("slash.efk", targetPos);
-		}
-		else
-		{
-			effectManager->Play("jab1.efk", targetPos);
 			cameraManager->SetCameraShake(5.0f);
 		}
 
@@ -863,12 +842,12 @@ void KochaEngine::GamePlay::ResultUpdate()
 			{
 			case 0:
 				//めのまえがまっくらになった
-				battleLongText->ReText("Talk/Battle/CharaDestroy_0.txt");
+				battleLongText->SetText("Talk/Battle/CharaDestroy_0.txt");
 				battleLongText->SetSound("Resources/Sound/text1.wav");
 				break;
 			case 1:
 				//おかねをはんぶんうしなった
-				battleLongText->ReText("Talk/Battle/CharaDestroy_1.txt");
+				battleLongText->SetText("Talk/Battle/CharaDestroy_1.txt");
 				battleLongText->SetSound("Resources/Sound/text1.wav");
 				break;
 			case 2:
@@ -891,20 +870,20 @@ void KochaEngine::GamePlay::ResultUpdate()
 			{
 			case 0:
 				//まものをすべてたおした！
-				battleLongText->ReText("Talk/Battle/EnemyDestroy_0.txt");
+				battleLongText->SetText("Talk/Battle/EnemyDestroy_0.txt");
 				battleLongText->SetSound("Resources/Sound/text1.wav");
 				bManager->Reward();
 				break;
 			case 1:
 				//○○のけいけんちをかくとく！
-				battleLongText->ReText("Talk/Battle/EnemyDestroy_1.txt");
+				battleLongText->SetText("Talk/Battle/EnemyDestroy_1.txt");
 				battleLongText->SetSound("Resources/Sound/text1.wav");
 				RewardCalc();
 				isShowNumber = true;
 				break;
 			case 2:
 				//○○ゴールドてにいれた！
-				battleLongText->ReText("Talk/Battle/EnemyDestroy_2.txt");
+				battleLongText->SetText("Talk/Battle/EnemyDestroy_2.txt");
 				battleLongText->SetSound("Resources/Sound/text1.wav");
 
 				break;
@@ -959,10 +938,10 @@ void KochaEngine::GamePlay::EnemyNameUpdate()
 		auto enemy = bManager->GetEnemy(i + 1);
 		if (enemy == nullptr)
 		{
-			enemyNameText[i]->ReText("none.txt");
+			enemyNameText[i]->SetText("none.txt");
 			continue;
 		}
-		enemyNameText[i]->ReText(enemy->GetParam().name);
+		enemyNameText[i]->SetText(enemy->GetParam().name);
 	}
 }
 
@@ -1052,7 +1031,7 @@ void KochaEngine::GamePlay::MoveCursor()
 		{
 		case KochaEngine::GamePlay::DEFAULT_TAB: //デフォルトコマンド
 			//どうする？
-			battleLongText->ReText("Talk/Battle/ChooseAction.txt");
+			battleLongText->SetText("Talk/Battle/ChooseAction.txt");
 			break;
 		case KochaEngine::GamePlay::ATTACK_TAB: //こうげきコマンド
 			commandNum = preCommandNum[0];
@@ -1162,10 +1141,10 @@ void KochaEngine::GamePlay::AttackTab()
 		motionTime = ATTACK_MOTION_TIME;
 		targetActor = enemy;
 		//○○(名前)
-		battleNameText->ReText(currentActiveActor->GetParam().name);
+		battleNameText->SetText(currentActiveActor->GetParam().name);
 		battleNameText->SetSound("Resources/Sound/text1.wav");
 		//○○のこうどう！
-		battleLongText->ReText("Talk/Battle/AttackAction.txt");
+		battleLongText->SetText("Talk/Battle/AttackAction.txt");
 		battleLongText->SetSound("Resources/Sound/text1.wav");
 	}
 	else

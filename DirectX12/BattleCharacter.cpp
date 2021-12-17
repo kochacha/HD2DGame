@@ -4,12 +4,16 @@
 #include "Text.h"
 #include "GameSetting.h"
 #include "Number.h"
+#include "EffectManager.h"
+#include "Number3DEmitter.h"
 
-KochaEngine::BattleCharacter::BattleCharacter(const BattleObjectType& arg_battleObjectType, const Vector3& arg_position, const ActorParam& arg_param)
+KochaEngine::BattleCharacter::BattleCharacter(EffectManager* arg_effectManager, Number3DEmitter* arg_n3DEmitter, const BattleObjectType& arg_battleObjectType, const Vector3& arg_position, const ActorParam& arg_param)
 {
+	effectManager = arg_effectManager;
+	n3DEmitter = arg_n3DEmitter;
 	battleObjectType = arg_battleObjectType;
 	position = arg_position;
-	param = arg_param;
+	baseParam = arg_param;
 
 	isActive = false;
 
@@ -34,7 +38,7 @@ KochaEngine::BattleCharacter::BattleCharacter(const BattleObjectType& arg_battle
 		break;
 	}
 	battleStatusTex = new Texture2D("Resources/Texture/UI/command_2.png", charaStatusPos, BATTLE_STATUS_SIZE, 0);
-	nameText = new Text(param.name, charaNamePos, Vector2(32, 32));
+	nameText = new Text(baseParam.name, charaNamePos, Vector2(32, 32));
 
 	Vector2 hpPos = charaStatusPos + Vector2(10, 110);
 	Vector2 spPos = charaStatusPos + Vector2(10, 158);
@@ -84,18 +88,18 @@ void KochaEngine::BattleCharacter::Initialize()
 {
 	//共通設定
 	obj->SetPosition(position);
-	obj->SetScale(Vector3(-param.size.x, param.size.y, param.size.z));
-	obj->SetTexture("Resources/Texture/Character/" + param.texName + "/" + param.texName + "_wait_0.png");
+	obj->SetScale(Vector3(-baseParam.size.x, baseParam.size.y, baseParam.size.z));
+	obj->SetTexture("Resources/Texture/Character/" + baseParam.texName + "/" + baseParam.texName + "_wait_0.png");
 
 	cursor->SetScale(Vector3(2, 2, 2));
 	cursor->SetTexture("Resources/Texture/UI/cursor.png");
-	cursor->SetPosition(Vector3(position.x, position.y + param.size.y / 1.5f, position.z));
+	cursor->SetPosition(Vector3(position.x, position.y + baseParam.size.y / 1.5f, position.z));
 	cursor->SetBillboardType(Object::BILLBOARD_Y);
 	cursor->MoveRotate(Vector3(0, 0, 90));
 
-	levelUpUI->SetScale(Vector3(-14, 6, 1));
+	levelUpUI->SetScale(Vector3(-10, 4, 1));
 	levelUpUI->SetTexture("Resources/Texture/UI/levelUp_0.png");
-	levelUpUI->SetPosition(Vector3(position.x, position.y + param.size.y / 1.5f, position.z));
+	levelUpUI->SetPosition(Vector3(position.x, position.y + baseParam.size.y / 1.5f, position.z));
 	levelUpUI->SetBillboardType(Object::BILLBOARD_Y);
 	//levelUpUI->MoveRotate(Vector3(0, 0, 90));
 
@@ -120,8 +124,9 @@ void KochaEngine::BattleCharacter::Initialize()
 	levelUpAnimationTime = 0;
 	levelUpAnimationNum = 0;
 
-	prePosX = position.x + Util::GetIntRand(0, 3) - 57;
-	activePosX = prePosX - 25;
+	startPosX = position.x;
+	prePosX = startPosX + Util::GetIntRand(0, 3) - 57;
+	activePosX = prePosX - 22;
 }
 
 void KochaEngine::BattleCharacter::Update()
@@ -143,7 +148,7 @@ void KochaEngine::BattleCharacter::Update()
 	}
 	if (knockBackTime == 1)
 	{
-		obj->SetTexture("Resources/Texture/Character/" + param.texName + "/" + param.texName + "_wait_0.png");
+		obj->SetTexture("Resources/Texture/Character/" + baseParam.texName + "/" + baseParam.texName + "_wait_0.png");
 	}
 
 	if (levelUpAnimationTime > 0)
@@ -190,11 +195,11 @@ void KochaEngine::BattleCharacter::SpriteDraw()
 		}
 		gaugeTex[i]->Draw();
 	}
-	paramTex[0]->Draw(param.maxHP);
-	paramTex[1]->Draw(param.hp);
-	paramTex[2]->Draw(param.maxSP);
-	paramTex[3]->Draw(param.sp);
-	paramTex[4]->Draw(param.level);
+	paramTex[0]->Draw(baseParam.maxHP);
+	paramTex[1]->Draw(baseParam.hp);
+	paramTex[2]->Draw(baseParam.maxSP);
+	paramTex[3]->Draw(baseParam.sp);
+	paramTex[4]->Draw(baseParam.level);
 }
 
 KochaEngine::BattleObjectType KochaEngine::BattleCharacter::GetType()
@@ -209,31 +214,103 @@ void KochaEngine::BattleCharacter::AddExp(const int arg_exp)
 
 void KochaEngine::BattleCharacter::AddMoney(const int arg_money)
 {
-	param.money += arg_money;
+	baseParam.money += arg_money;
 }
 
 void KochaEngine::BattleCharacter::SetDamage(const int arg_damage)
 {
+	baseParam.hp -= arg_damage;
 	knockBackTime = 25;
-	param.hp -= arg_damage;
-	obj->SetTexture("Resources/Texture/Character/" + param.texName + "/" + param.texName + "_attack_0.png");
+	obj->SetTexture("Resources/Texture/Character/" + baseParam.texName + "/" + baseParam.texName + "_attack_0.png");
+}
+
+void KochaEngine::BattleCharacter::SetDamage(const std::string& arg_skillName, const ActorParam& arg_param)
+{
+	//スキルデータ
+	SkillParam activeData = SkillData::GetSkillParam(arg_skillName);
+
+	if (activeData.isSupport)
+	{
+		Support(activeData, arg_param);
+	}
+	else
+	{
+		Damage(activeData, arg_param);
+	}
 }
 
 void KochaEngine::BattleCharacter::SetDefaultWaitTexture()
 {
-	obj->SetTexture("Resources/Texture/Character/" + param.texName + "/" + param.texName + "_wait_0.png");
+	obj->SetTexture("Resources/Texture/Character/" + baseParam.texName + "/" + baseParam.texName + "_wait_0.png");
 }
 
 void KochaEngine::BattleCharacter::SetAttackTextureIndex(const int arg_index)
 {
 	if (arg_index == 0)
 	{
-		obj->SetTexture("Resources/Texture/Character/" + param.texName + "/" + param.texName + "_attack_0.png");
+		obj->SetTexture("Resources/Texture/Character/" + baseParam.texName + "/" + baseParam.texName + "_attack_0.png");
 	}
 	else
 	{
-		obj->SetTexture("Resources/Texture/Character/" + param.texName + "/" + param.texName + "_attack_1.png");
+		obj->SetTexture("Resources/Texture/Character/" + baseParam.texName + "/" + baseParam.texName + "_attack_1.png");
 	}
+}
+
+void KochaEngine::BattleCharacter::Support(const SkillParam& arg_activeData, const ActorParam& arg_param)
+{
+
+}
+
+void KochaEngine::BattleCharacter::Damage(const SkillParam& arg_activeData, const ActorParam& arg_param)
+{
+	if (arg_activeData.isMagic)
+	{
+		MagicDamage(arg_activeData, arg_param);
+	}
+	else
+	{
+		PhysicsDamage(arg_activeData, arg_param);
+	}
+}
+
+void KochaEngine::BattleCharacter::MagicDamage(const SkillParam& arg_activeData, const ActorParam& arg_param)
+{
+}
+
+void KochaEngine::BattleCharacter::PhysicsDamage(const SkillParam& arg_activeData, const ActorParam& arg_param)
+{
+	//ダメージ計算処理
+	auto activeParam = arg_param;
+
+	//基礎ダメージ
+	int damage = activeParam.attack * arg_activeData.attackRate - baseParam.defence * 0.25f;
+	//運ダメージ範囲
+	int luckDamageRange = damage * ((float)activeParam.luck * arg_activeData.luckRate * 0.002f) + 2;
+	//運ダメージ
+	int luckDamage = Util::GetIntRand(0, luckDamageRange) - luckDamageRange * 0.25f;
+	//トータルダメージ
+	int totalDamage = damage + luckDamage;
+
+	//基礎ダメージを下回っていた場合補正する
+	if (totalDamage < arg_activeData.baseDamage) totalDamage = arg_activeData.baseDamage;
+
+	//ダメージを受ける
+	baseParam.hp -= totalDamage;
+
+	//ダメージ表記を出す位置
+	Vector3 addDamagePos = Vector3(position.x, position.y + 2, position.z - 0.01f);
+
+	//ダメージ表記
+	n3DEmitter->AddNumber3D(addDamagePos, totalDamage);
+
+	//エフェクトの再生
+	effectManager->Play(arg_activeData.effectName, position);
+
+	//ノックバックの追加
+	knockBackTime = 25;
+
+	//ダメージを食らっているテクスチャに変える
+	obj->SetTexture("Resources/Texture/Character/" + baseParam.texName + "/" + baseParam.texName + "_attack_0.png");
 }
 
 void KochaEngine::BattleCharacter::EasingPosition()
@@ -252,24 +329,24 @@ void KochaEngine::BattleCharacter::EasingPosition()
 
 void KochaEngine::BattleCharacter::FixParam()
 {
-	if (param.hp > param.maxHP)
+	if (baseParam.hp > baseParam.maxHP)
 	{
-		param.hp = param.maxHP;
+		baseParam.hp = baseParam.maxHP;
 	}
-	else if (param.hp < 0)
+	else if (baseParam.hp < 0)
 	{
-		param.hp = 0;
+		baseParam.hp = 0;
 	}
-	if (param.sp > param.maxSP)
+	if (baseParam.sp > baseParam.maxSP)
 	{
-		param.sp = param.maxSP;
+		baseParam.sp = baseParam.maxSP;
 	}
-	else if (param.sp < 0)
+	else if (baseParam.sp < 0)
 	{
-		param.sp = 0;
+		baseParam.sp = 0;
 	}
 
-	if (param.hp == 0 && knockBackTime <= 0)
+	if (baseParam.hp == 0 && knockBackTime <= 0)
 	{
 		isKnockDown = true;
 	}
@@ -282,9 +359,9 @@ void KochaEngine::BattleCharacter::FixParam()
 
 void KochaEngine::BattleCharacter::SetGauge()
 {
-	float hpRate = (float)param.hp / (float)param.maxHP;
+	float hpRate = (float)baseParam.hp / (float)baseParam.maxHP;
 	const float HP_BAR_SIZE_X = MAX_GAUGE_SIZE.x * hpRate;
-	float spRate = (float)param.sp / (float)param.maxSP;
+	float spRate = (float)baseParam.sp / (float)baseParam.maxSP;
 	const float SP_BAR_SIZE_X = MAX_GAUGE_SIZE.x * spRate;
 
 	gaugeTex[1]->SetSize(Vector2(HP_BAR_SIZE_X, MAX_GAUGE_SIZE.y));
@@ -294,9 +371,9 @@ void KochaEngine::BattleCharacter::SetGauge()
 void KochaEngine::BattleCharacter::SetObjParam()
 {
 	obj->SetPosition(position);
-	cursor->SetPosition(Vector3(position.x, position.y + param.size.y / 1.5f, position.z));
+	cursor->SetPosition(Vector3(position.x, position.y + baseParam.size.y / 1.5f, position.z));
 	cursor->MoveRotate(Vector3(0, 4, 0));
-	levelUpUI->SetPosition(Vector3(position.x, position.y + param.size.y / 1.5f, position.z));
+	levelUpUI->SetPosition(Vector3(position.x, position.y + baseParam.size.y / 1.5f, position.z));
 
 	if (isLevelUpAnimationUpdate)
 	{
@@ -311,24 +388,25 @@ void KochaEngine::BattleCharacter::CalcExp()
 {
 	if (getExp == 0) return;
 
-	needExp = BASE_EXP * param.level * param.level;
-	int totalExp = param.exp + getExp;
+	needExp = BASE_EXP * baseParam.level * baseParam.level;
+	int totalExp = baseParam.exp + getExp;
 
 	if (totalExp >= needExp)
 	{
 		LevelUpStatus();
-		param.level++;
-		param.hp = param.maxHP;
-		param.sp = param.maxSP;
-		param.exp = 0;
+		baseParam.level++;
+		baseParam.hp = baseParam.maxHP;
+		baseParam.sp = baseParam.maxSP;
+		baseParam.exp = 0;
 		levelUpAnimationTime = 110;
 
 		getExp = totalExp - needExp;
 		CalcExp();
+		effectManager->Play("levelUp.efk", Vector3(position.x, position.y - 4.0f, position.z));
 	}
 	else
 	{
-		param.exp += getExp;
+		baseParam.exp += getExp;
 		getExp = 0;
 	}
 
@@ -339,22 +417,22 @@ void KochaEngine::BattleCharacter::LevelUpStatus()
 	switch (battleObjectType)
 	{
 	case KochaEngine::BATTLE_PLAYER:
-		param.maxHP += 4;
-		param.maxSP += 3;
-		param.attack += 4;
-		param.defence += 3;
-		param.intelligence += 3;
-		param.skillful += 2;
-		param.speed += 3;
+		baseParam.maxHP += 4;
+		baseParam.maxSP += 3;
+		baseParam.attack += 4;
+		baseParam.defence += 3;
+		baseParam.intelligence += 3;
+		baseParam.skillful += 2;
+		baseParam.speed += 3;
 		break;
 	case KochaEngine::BATTLE_FIGHTER:
-		param.maxHP += 5;
-		param.maxSP += 2;
-		param.attack += 5;
-		param.defence += 4;
-		param.intelligence += 0;
-		param.skillful += 4;
-		param.speed += 2;
+		baseParam.maxHP += 5;
+		baseParam.maxSP += 2;
+		baseParam.attack += 5;
+		baseParam.defence += 4;
+		baseParam.intelligence += 0;
+		baseParam.skillful += 4;
+		baseParam.speed += 2;
 		break;
 	default:
 		break;

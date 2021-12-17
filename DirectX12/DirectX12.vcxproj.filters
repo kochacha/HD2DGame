@@ -217,28 +217,28 @@
       <Filter>Source\Object</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
-      <Filter>Source\Object\GameObject</Filter>
+      <Filter>Source\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="GameObjectManager.cpp">
-      <Filter>Source\Object\GameObject</Filter>
+      <Filter>Source\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Battle.cpp">
       <Filter>Source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Map.cpp">
-      <Filter>Source\Object\GameObject</Filter>
+      <Filter>Source\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Block.cpp">
-      <Filter>Source\Object\GameObject</Filter>
+      <Filter>Source\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="FieldObject.cpp">
-      <Filter>Source\Object\GameObject</Filter>
+      <Filter>Source\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="CollisionBlock.cpp">
-      <Filter>Source\Object\GameObject</Filter>
+      <Filter>Source\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="FieldAlphaObject.cpp">
-      <Filter>Source\Object\GameObject</Filter>
+      <Filter>Source\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Font.cpp">
       <Filter>Source\UI</Filter>
@@ -253,25 +253,22 @@
       <Filter>Source\Util</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Source\Object\GameObject\Actor</Filter>
+      <Filter>Source\GameObject\Actor</Filter>
     </ClCompile>
     <ClCompile Include="Enemy.cpp">
-      <Filter>Source\Object\GameObject\Actor</Filter>
+      <Filter>Source\GameObject\Actor</Filter>
     </ClCompile>
     <ClCompile Include="Fighter.cpp">
-      <Filter>Source\Object\GameObject\Actor</Filter>
+      <Filter>Source\GameObject\Actor</Filter>
     </ClCompile>
     <ClCompile Include="BattleCharacter.cpp">
-      <Filter>Source\Object\GameObject\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyData.cpp">
-      <Filter>Source\Object\GameObject\Actor</Filter>
+      <Filter>Source\GameObject\Actor</Filter>
     </ClCompile>
     <ClCompile Include="BattleObjectManager.cpp">
-      <Filter>Source\Object\GameObject</Filter>
+      <Filter>Source\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="BattleObject.cpp">
-      <Filter>Source\Object\GameObject</Filter>
+      <Filter>Source\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Number3D.cpp">
       <Filter>Source\UI</Filter>
@@ -288,7 +285,15 @@
     <ClCompile Include="CameraManager.cpp">
       <Filter>Source\Object</Filter>
     </ClCompile>
-    <ClCompile Include="JsonLoader.cpp" />
+    <ClCompile Include="EnemyData.cpp">
+      <Filter>Source\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonLoader.cpp">
+      <Filter>Source\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillData.cpp">
+      <Filter>Source\DataBase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShaderHeader.hlsli">
@@ -362,16 +367,22 @@
     <Filter Include="Source\UI">
       <UniqueIdentifier>{05958280-d496-45f3-a048-e0f08d37d814}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Object\GameObject">
+    <Filter Include="Source\DataBase">
+      <UniqueIdentifier>{d783bfaf-9243-4c55-b5bf-24133491f62a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\DataBase">
+      <UniqueIdentifier>{75bf2b94-d037-49fe-aeb6-693068194ad5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GameObject">
       <UniqueIdentifier>{1f2bd67d-77e1-4ff5-99e1-81ccb491b0f7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header\Object\GameObject">
-      <UniqueIdentifier>{d0c31d25-7612-4543-90df-05517a2c7e21}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Object\GameObject\Actor">
+    <Filter Include="Source\GameObject\Actor">
       <UniqueIdentifier>{6de05db0-fad6-4bd0-ba34-ce32d85d85f9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header\Object\GameObject\Actor">
+    <Filter Include="Header\GameObject">
+      <UniqueIdentifier>{d0c31d25-7612-4543-90df-05517a2c7e21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\GameObject\Actor">
       <UniqueIdentifier>{023294a7-9b89-4721-be7a-7ae5b4a3ae65}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -542,28 +553,28 @@
       <Filter>Header\Object</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>Header\Object\GameObject</Filter>
+      <Filter>Header\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="GameObjectManager.h">
-      <Filter>Header\Object\GameObject</Filter>
+      <Filter>Header\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="Battle.h">
       <Filter>Header\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Map.h">
-      <Filter>Header\Object\GameObject</Filter>
+      <Filter>Header\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="Block.h">
-      <Filter>Header\Object\GameObject</Filter>
+      <Filter>Header\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="FieldObject.h">
-      <Filter>Header\Object\GameObject</Filter>
+      <Filter>Header\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="CollisionBlock.h">
-      <Filter>Header\Object\GameObject</Filter>
+      <Filter>Header\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="FieldAlphaObject.h">
-      <Filter>Header\Object\GameObject</Filter>
+      <Filter>Header\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="Font.h">
       <Filter>Header\UI</Filter>
@@ -578,28 +589,25 @@
       <Filter>Header\Device</Filter>
     </ClInclude>
     <ClInclude Include="ActorParam.h">
-      <Filter>Header\Object\GameObject\Actor</Filter>
+      <Filter>Header\GameObject\Actor</Filter>
     </ClInclude>
     <ClInclude Include="BattleCharacter.h">
-      <Filter>Header\Object\GameObject\Actor</Filter>
+      <Filter>Header\GameObject\Actor</Filter>
     </ClInclude>
     <ClInclude Include="Enemy.h">
-      <Filter>Header\Object\GameObject\Actor</Filter>
+      <Filter>Header\GameObject\Actor</Filter>
     </ClInclude>
     <ClInclude Include="Fighter.h">
-      <Filter>Header\Object\GameObject\Actor</Filter>
+      <Filter>Header\GameObject\Actor</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Header\Object\GameObject\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyData.h">
-      <Filter>Header\Object\GameObject\Actor</Filter>
+      <Filter>Header\GameObject\Actor</Filter>
     </ClInclude>
     <ClInclude Include="BattleObjectManager.h">
-      <Filter>Header\Object\GameObject</Filter>
+      <Filter>Header\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="BattleObject.h">
-      <Filter>Header\Object\GameObject</Filter>
+      <Filter>Header\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="Number3D.h">
       <Filter>Header\UI</Filter>
@@ -616,6 +624,17 @@
     <ClInclude Include="CameraManager.h">
       <Filter>Header\Object</Filter>
     </ClInclude>
-    <ClInclude Include="JsonLoader.h" />
+    <ClInclude Include="EnemyData.h">
+      <Filter>Header\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonLoader.h">
+      <Filter>Header\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillData.h">
+      <Filter>Header\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillParam.h">
+      <Filter>Header\DataBase</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

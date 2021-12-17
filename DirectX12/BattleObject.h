@@ -8,6 +8,7 @@
 #include "Input.h"
 #include "Vector3.h"
 #include "ActorParam.h"
+#include "SkillData.h"
 
 namespace KochaEngine
 {
@@ -27,7 +28,10 @@ namespace KochaEngine
 		ParticleEmitter* emitter;
 		Object* obj;
 		Object* cursor;
-		ActorParam param;
+		ActorParam baseParam; //素のパラメーター(装備品含む)
+		ActorParam battleParam; //バフを考慮したパラメーター(バトル時)
+
+		std::string currentActiveName;
 
 		bool isDead = false; //死んでいるかどうか
 		bool isDelete = false; //削除するかどうか
@@ -65,6 +69,8 @@ namespace KochaEngine
 		virtual void AddExp(const int arg_exp);
 		virtual void AddMoney(const int arg_money);
 		virtual void SetDamage(const int arg_damage);
+		virtual void SetDamage(const std::string& arg_skillName, const ActorParam& arg_param);
+		virtual std::string GetSkillName(const int arg_index);
 		virtual void SetDefaultWaitTexture();
 		virtual void SetAttackTextureIndex(const int arg_index);
 
@@ -79,7 +85,7 @@ namespace KochaEngine
 		inline const Vector3 GetPosition() { return position; }
 		inline const Vector3 GetVelocity() { return velocity; }
 		inline void SetPosition(const Vector3& arg_position) { this->position = arg_position; }
-		inline const ActorParam GetParam() { return param; }
+		inline const ActorParam GetParam() { return baseParam; }
 	};
 }
 

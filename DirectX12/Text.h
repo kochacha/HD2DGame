@@ -19,7 +19,7 @@ namespace KochaEngine
 		std::string sePath;
 		Vector2 position;
 		Vector2 fontSize;
-		unsigned int count;
+		unsigned int addCount;
 		unsigned int textDataSize;
 		unsigned int addTextCount;
 		bool isSkip;
@@ -30,7 +30,8 @@ namespace KochaEngine
 
 		void Initialize();
 		void AddFont(Font* arg_font);
-		void RemoveAll();
+		void AddText();
+		void Clear();
 
 	public:
 		Text(const Vector2& arg_position,
@@ -40,7 +41,7 @@ namespace KochaEngine
 		~Text();
 
 		void Draw(const int arg_addSpeed);
-		void ReText(const std::string& arg_textName);
+		void SetText(const std::string& arg_textName);
 		void Skip();
 
 		inline const bool IsPlayEnd() { return isPlayEndText; }

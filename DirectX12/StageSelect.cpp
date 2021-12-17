@@ -29,7 +29,7 @@ void KochaEngine::StageSelect::Initialize()
 
 	nowType = TYPE1;
 	countFlag = false;
-	gManager->RemoveAll();
+	gManager->Clear();
 	camera->Initialize(1280, 720, 90, 80, { 0,80,-100 }, { 0,0,0 }, { 0,1,0 });
 
 	fadeAlpha = 1;

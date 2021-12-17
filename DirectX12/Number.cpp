@@ -39,14 +39,14 @@ void KochaEngine::Number::Draw(const int arg_num)
 {
 	Init();
 	int digits = Util::GetDigit(arg_num) - 1;
-	int hoge = (int)std::pow(10, digits);
-	int baka = arg_num;
+	int currentDigit = (int)std::pow(10, digits);
+	int currentNum = arg_num;
 
 	for (int i = 0; i <= digits; i++)
 	{
-		numbers[maxDigit - digits + i - 1]->SetTexNum(baka / hoge + 1);
-		baka = baka % hoge;
-		hoge /= 10;
+		numbers[maxDigit - digits + i - 1]->SetTexNum(currentNum / currentDigit + 1);
+		currentNum = currentNum % currentDigit;
+		currentDigit /= 10;
 	}
 
 	int startDigit = maxDigit - Util::GetDigit(arg_num);
@@ -56,18 +56,18 @@ void KochaEngine::Number::Draw(const int arg_num)
 	}
 }
 
-void KochaEngine::Number::Draw2(const int arg_num)
+void KochaEngine::Number::DrawOnlyDigit(const int arg_num)
 {
 	Init();
 	int digits = Util::GetDigit(arg_num) - 1;
-	int hoge = (int)std::pow(10, digits);
-	int baka = arg_num;
+	int currentDigit = (int)std::pow(10, digits);
+	int currentNum = arg_num;
 
 	for (int i = 0; i <= digits; i++)
 	{
-		numbers[maxDigit - digits + i - 1]->SetTexNum(baka / hoge + 1);
-		baka = baka % hoge;
-		hoge /= 10;
+		numbers[maxDigit - digits + i - 1]->SetTexNum(currentNum / currentDigit + 1);
+		currentNum = currentNum % currentDigit;
+		currentDigit /= 10;
 	}
 
 	for (int i = 0; i < maxDigit; i++)
@@ -80,14 +80,14 @@ void KochaEngine::Number::Draw(const Vector2& arg_position, const int arg_num)
 {
 	Init();
 	int digits = Util::GetDigit(arg_num) - 1;
-	int hoge = (int)std::pow(10, digits);
-	int baka = arg_num;
+	int currentDigit = (int)std::pow(10, digits);
+	int currentNum = arg_num;
 
 	for (int i = 0; i <= digits; i++)
 	{
-		numbers[maxDigit - digits + i - 1]->SetTexNum(baka / hoge + 1);
-		baka = baka % hoge;
-		hoge /= 10;
+		numbers[maxDigit - digits + i - 1]->SetTexNum(currentNum / currentDigit + 1);
+		currentNum = currentNum % currentDigit;
+		currentDigit /= 10;
 	}
 
 	for (int i = 0; i < maxDigit; i++)

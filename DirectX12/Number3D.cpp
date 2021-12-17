@@ -95,15 +95,15 @@ void KochaEngine::Number3D::SetNumber(const int arg_number)
 	digit = Util::GetDigit(number);
 
 	int digits = digit - 1;
-	int hoge = (int)std::pow(10, digits);
-	int baka = number;
+	int currentDigit = (int)std::pow(10, digits);
+	int currentNum = number;
 
 	for (int i = 0; i <= digits; i++)
 	{
-		std::string extension = std::to_string(baka / hoge) + ".png";
+		std::string extension = std::to_string(currentNum / currentDigit) + ".png";
 		planes[NUM3D_MAX_DIGIT - digits + i - 1]->SetTexture("Resources/Texture/Font/number_" + extension);
-		baka = baka % hoge;
-		hoge /= 10;
+		currentNum = currentNum % currentDigit;
+		currentDigit /= 10;
 	}
 
 }

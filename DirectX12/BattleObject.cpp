@@ -74,6 +74,20 @@ void KochaEngine::BattleObject::SetDamage(const int arg_damage)
 {
 }
 
+void KochaEngine::BattleObject::SetDamage(const std::string& arg_skillName, const ActorParam& arg_param)
+{
+}
+
+std::string KochaEngine::BattleObject::GetSkillName(const int arg_index)
+{
+	int index = arg_index;
+	if (index >= baseParam.skills.size())
+	{
+		index = baseParam.skills.size() - 1;
+	}
+	return baseParam.skills[index];
+}
+
 void KochaEngine::BattleObject::SetDefaultWaitTexture()
 {
 }

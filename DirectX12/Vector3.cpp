@@ -16,14 +16,14 @@ void KochaEngine::Vector3::Zero()
 	x = y = z = 0;
 }
 
-float KochaEngine::Vector3::length() const
+float KochaEngine::Vector3::Length() const
 {
 	return sqrt(x * x + y * y + z * z);
 }
 
-KochaEngine::Vector3& KochaEngine::Vector3::normalize()
+KochaEngine::Vector3& KochaEngine::Vector3::Normalize()
 {
-	float len = length();
+	float len = Length();
 	if (len != 0)
 	{
 		return *this /= len;
@@ -31,12 +31,12 @@ KochaEngine::Vector3& KochaEngine::Vector3::normalize()
 	return *this;
 }
 
-float KochaEngine::Vector3::dot(const Vector3& v) const
+float KochaEngine::Vector3::Dot(const Vector3& v) const
 {
 	return x * v.x + y * v.y + z * v.z;
 }
 
-KochaEngine::Vector3 KochaEngine::Vector3::cross(const Vector3 & v) const
+KochaEngine::Vector3 KochaEngine::Vector3::Cross(const Vector3 & v) const
 {
 	return Vector3(y * v.z - v.y * z, z * v.x - v.z * x, x * v.y - v.x * y);
 }
@@ -112,24 +112,24 @@ const KochaEngine::Vector3 operator/(const KochaEngine::Vector3& v, float s)
 	return temp /= s;
 }
 
-const KochaEngine::Vector3 lerp(const KochaEngine::Vector3 & start, const KochaEngine::Vector3 & end, const float t)
+const KochaEngine::Vector3 Lerp(const KochaEngine::Vector3 & start, const KochaEngine::Vector3 & end, const float t)
 {
 	return start * (1.0f - t) + end * t;
 }
 
-const KochaEngine::Vector3 easeIn(const KochaEngine::Vector3 & start, const KochaEngine::Vector3 & end, const float t)
+const KochaEngine::Vector3 EaseIn(const KochaEngine::Vector3 & start, const KochaEngine::Vector3 & end, const float t)
 {
 	float y = t * t;
 	return start * (1.0f - y) + end * y;
 }
 
-const KochaEngine::Vector3 easeOut(const KochaEngine::Vector3 & start, const KochaEngine::Vector3 & end, const float t)
+const KochaEngine::Vector3 EaseOut(const KochaEngine::Vector3 & start, const KochaEngine::Vector3 & end, const float t)
 {
 	float y = t * (2 - t);
 	return start * (1.0f - y) + end * y;
 }
 
-const KochaEngine::Vector3 easeInOut(const KochaEngine::Vector3 & start, const KochaEngine::Vector3 & end, const float t)
+const KochaEngine::Vector3 EaseInOut(const KochaEngine::Vector3 & start, const KochaEngine::Vector3 & end, const float t)
 {
 	float y = t * t * (3 - 2 * t);
 	return start * (1.0f - y) + end * y;

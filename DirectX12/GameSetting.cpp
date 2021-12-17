@@ -1,5 +1,7 @@
 #include "GameSetting.h"
 
+double KochaEngine::GameSetting::gameSpeed = 1.0f;
+
 bool KochaEngine::GameSetting::isBattleField = false;
 
 int KochaEngine::GameSetting::talkSpeed = 3;

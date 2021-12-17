@@ -20,7 +20,7 @@ namespace KochaEngine
 		};
 
 		inline void SetDirection(const Vector3& arg_direction) { direction = arg_direction; }
-		inline void SetLightColor(const Vector3& arg_lightColor) { direction = arg_lightColor; }
+		inline void SetLightColor(const Vector3& arg_lightColor) { lightColor = arg_lightColor; }
 		inline void SetIsActive(const bool arg_isActive) { isActive = arg_isActive; }
 
 		inline const Vector3& GetDirection() { return direction; }

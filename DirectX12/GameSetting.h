@@ -17,6 +17,9 @@ namespace KochaEngine
 			HAZIMARINOMATI,
 		};
 
+		//ゲームの更新スピード
+		static double gameSpeed;
+
 		//会話の流れるスピード
 		static int talkSpeed;
 		//敵とエンカウントするフィールドにいるかどうか
@@ -24,6 +27,7 @@ namespace KochaEngine
 		//現在のフィールド
 		static int nowField;
 		
+		//ボリューム関連
 		static float masterVolume;
 		static float seVolume;
 		static float bgmVolume;
@@ -76,6 +80,9 @@ namespace KochaEngine
 	const int ATTACK_MOTION_TIME = 180;
 	const int SPELL_MOTION_TIME = 300;
 	const int SKILL_MOTION_TIME = 240;
+
+	const int FOCUS_MOTION_TIME = 120;
+	const int ACTIVE_MOTION_TIME = 60;
 
 	//リザルト時ボタン入力待ち時間
 	const int RESULT_INPUT_WAIT = 15;

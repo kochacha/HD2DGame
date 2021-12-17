@@ -22,10 +22,10 @@ namespace KochaEngine
 		void AddObject(GameObject* arg_gameObject);
 		void Initialize();
 		void Update();
-		void AlphaObjDraw(Camera* arg_camera, LightManager* arg_lightManager);
-		void AlphaObjDraw2(Camera* arg_camera, LightManager* arg_lightManager);
-		void ObjDraw(Camera* arg_camera, LightManager* arg_lightManager);
-		void ObjDraw2(Camera* arg_camera, LightManager* arg_lightManager);
+		void AlphaObjDrawFieldScene(Camera* arg_camera, LightManager* arg_lightManager);
+		void AlphaObjDrawBattleScene(Camera* arg_camera, LightManager* arg_lightManager);
+		void ObjDrawFieldScene(Camera* arg_camera, LightManager* arg_lightManager);
+		void ObjDrawBattleScene(Camera* arg_camera, LightManager* arg_lightManager);
 		void SpriteDraw();
 		void CheckBlock(GameObject* arg_obj, const GameObjectType& arg_otherType);
 		int GetEnemyCount();
@@ -34,6 +34,6 @@ namespace KochaEngine
 		Fighter* GetFighter();
 
 		void Remove();
-		void RemoveAll();
+		void Clear();
 	};
 }

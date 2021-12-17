@@ -11,7 +11,7 @@ KochaEngine::GameObjectManager::GameObjectManager()
 KochaEngine::GameObjectManager::~GameObjectManager()
 {
 	//ゲームオブジェクトの全削除
-	RemoveAll();
+	Clear();
 }
 
 void KochaEngine::GameObjectManager::AddObject(GameObject* arg_gameObject)
@@ -41,7 +41,7 @@ void KochaEngine::GameObjectManager::Update()
 	Remove();
 }
 
-void KochaEngine::GameObjectManager::AlphaObjDraw(Camera* arg_camera, LightManager* arg_lightManager)
+void KochaEngine::GameObjectManager::AlphaObjDrawFieldScene(Camera* arg_camera, LightManager* arg_lightManager)
 {
 	//フィールドシーン用の透明オブジェクトの描画
 	if (arg_camera == nullptr) return;
@@ -64,7 +64,7 @@ void KochaEngine::GameObjectManager::AlphaObjDraw(Camera* arg_camera, LightManag
 
 }
 
-void KochaEngine::GameObjectManager::AlphaObjDraw2(Camera* arg_camera, LightManager* arg_lightManager)
+void KochaEngine::GameObjectManager::AlphaObjDrawBattleScene(Camera* arg_camera, LightManager* arg_lightManager)
 {
 	//バトルシーン用の透明オブジェクトの描画
 	if (arg_camera == nullptr) return;
@@ -87,7 +87,7 @@ void KochaEngine::GameObjectManager::AlphaObjDraw2(Camera* arg_camera, LightMana
 	}
 }
 
-void KochaEngine::GameObjectManager::ObjDraw(Camera* arg_camera, LightManager* arg_lightManager)
+void KochaEngine::GameObjectManager::ObjDrawFieldScene(Camera* arg_camera, LightManager* arg_lightManager)
 {
 	//フィールドシーン用の不透明オブジェクトの描画
 	if (arg_camera == nullptr) return;
@@ -106,7 +106,7 @@ void KochaEngine::GameObjectManager::ObjDraw(Camera* arg_camera, LightManager* a
 	}
 }
 
-void KochaEngine::GameObjectManager::ObjDraw2(Camera* arg_camera, LightManager* arg_lightManager)
+void KochaEngine::GameObjectManager::ObjDrawBattleScene(Camera* arg_camera, LightManager* arg_lightManager)
 {
 	//バトルシーン用の不透明オブジェクトの描画
 	if (arg_camera == nullptr) return;
@@ -187,7 +187,7 @@ void KochaEngine::GameObjectManager::Remove()
 	}
 }
 
-void KochaEngine::GameObjectManager::RemoveAll()
+void KochaEngine::GameObjectManager::Clear()
 {
 	//ゲームオブジェクトの全削除
 	auto end = gameObjects.end();

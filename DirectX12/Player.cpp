@@ -177,7 +177,7 @@ void KochaEngine::Player::InputMove()
 		encountCount--;
 		animType = AnimationType::WALK_RIGHT;
 	}
-	velocity.normalize();
+	velocity.Normalize();
 
 	if (isDash)
 	{

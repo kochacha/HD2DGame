@@ -17,9 +17,6 @@ namespace KochaEngine
 		bool bgmFlag;
 		bool fadeFlag;
 		float fadeAlpha;
-		float down;
-
-		int count;
 
 		void FadeUpdate();
 

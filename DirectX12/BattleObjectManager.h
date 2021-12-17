@@ -35,7 +35,7 @@ namespace KochaEngine
 		BattleObject* GetCharacter(const KochaEngine::BattleObjectType& arg_type);
 
 		void Remove();
-		void RemoveAll();
+		void Clear();
 		void Reward(); //•ñVŒvZ
 		void ActiveReset();
 		void TargetOff();

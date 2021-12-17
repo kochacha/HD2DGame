@@ -11,8 +11,7 @@ KochaEngine::Text::Text(const Vector2& arg_position, const Vector2& arg_fontSize
 
 	se = new Audio();
 
-	Initialize();
-	ReText("default.txt");
+	SetText("default.txt");
 }
 
 KochaEngine::Text::Text(const std::string& arg_textName, const Vector2& arg_position, const Vector2& arg_fontSize, const unsigned int arg_addSpeed)
@@ -22,15 +21,14 @@ KochaEngine::Text::Text(const std::string& arg_textName, const Vector2& arg_posi
 
 	se = new Audio();
 
-	Initialize();
-	ReText(arg_textName);
+	SetText(arg_textName);
 }
 
 void KochaEngine::Text::Initialize()
 {
 	textDataSize = 0;
 	addTextCount = 0;
-	count = 0;
+	addCount = 0;
 	oneLineFonts = 23;
 	isSkip = false;
 	isPlayEndText = false;
@@ -44,7 +42,17 @@ void KochaEngine::Text::AddFont(Font* arg_font)
 	fonts.push_back(arg_font);
 }
 
-void KochaEngine::Text::RemoveAll()
+void KochaEngine::Text::AddText()
+{
+	int fixY = addTextCount / oneLineFonts; //小数点以下は切り捨てる
+
+	Vector2 fixPosition = Vector2(fontSize.x * (addTextCount - oneLineFonts * fixY), fontSize.y * fixY);
+
+	//文字を追加
+	AddFont(new Font(textData[addTextCount], position + fixPosition, fontSize));
+}
+
+void KochaEngine::Text::Clear()
 {
 	auto end = fonts.end();
 	for (auto it = fonts.begin(); it != end; ++it)
@@ -57,7 +65,7 @@ void KochaEngine::Text::RemoveAll()
 KochaEngine::Text::~Text()
 {
 	delete se;
-	RemoveAll();
+	Clear();
 }
 
 void KochaEngine::Text::Draw(const int arg_addSpeed)
@@ -65,24 +73,13 @@ void KochaEngine::Text::Draw(const int arg_addSpeed)
 	//addSpeedフレーム毎にフォントを追加していく
 	if (arg_addSpeed > 0 && !isSkip)
 	{
-		if (count < arg_addSpeed)
+		if (addCount < arg_addSpeed)
 		{
-			count++;
+			addCount++;
 		}
 		else if (addTextCount < textDataSize)
 		{
-			Vector2 fixPosition;
-			if (addTextCount < oneLineFonts)
-			{
-				fixPosition = Vector2(fontSize.x * addTextCount, 0);
-			}
-			else
-			{
-				fixPosition = Vector2(fontSize.x * (addTextCount - oneLineFonts), fontSize.y);
-			}
-
-			//文字を追加
-			AddFont(new Font(textData[addTextCount], position + fixPosition, fontSize));
+			AddText(); //１文字分追加
 
 			if (isSound && textData[addTextCount] != 85)
 			{
@@ -91,9 +88,11 @@ void KochaEngine::Text::Draw(const int arg_addSpeed)
 			}
 
 			addTextCount++;
-			count = 0;
+			addCount = 0;
+
 			if (addTextCount >= textDataSize)
 			{
+				//テキストの描画が完了
 				isPlayEndText = true;
 			}
 		}
@@ -104,18 +103,7 @@ void KochaEngine::Text::Draw(const int arg_addSpeed)
 		//addSpeedが0なら同時に全部描画する
 		for (; addTextCount < textDataSize; addTextCount++)
 		{
-			Vector2 fixPosition;
-			if (addTextCount < oneLineFonts)
-			{
-				fixPosition = Vector2(fontSize.x * addTextCount, 0);
-			}
-			else
-			{
-				fixPosition = Vector2(fontSize.x * (addTextCount - oneLineFonts), fontSize.y);
-			}
-			
-			//文字を追加
-			AddFont(new Font(textData[addTextCount], position + fixPosition, fontSize));
+			AddText(); //１文字分追加
 
 			if (isSound && addTextCount == textDataSize)
 			{
@@ -133,10 +121,10 @@ void KochaEngine::Text::Draw(const int arg_addSpeed)
 	}
 }
 
-void KochaEngine::Text::ReText(const std::string& arg_textName)
+void KochaEngine::Text::SetText(const std::string& arg_textName)
 {
 	Initialize();
-	RemoveAll();
+	Clear();
 
 	auto textName = "Resources/Text/" + arg_textName;
 
