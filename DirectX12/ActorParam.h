@@ -39,4 +39,10 @@ namespace KochaEngine
 		int money;
 		std::vector<std::string> skills;
 	};
+
+	//ƒoƒt‚âó‘ÔˆÙí
+	struct AssignmentState
+	{
+		
+	};
 }

@@ -70,6 +70,7 @@ namespace KochaEngine
 		virtual void AddMoney(const int arg_money);
 		virtual void SetDamage(const int arg_damage);
 		virtual void SetDamage(const std::string& arg_skillName, const ActorParam& arg_param);
+		virtual void CostSP(const int arg_cost);
 		virtual std::string GetSkillName(const int arg_index);
 		virtual void SetDefaultWaitTexture();
 		virtual void SetAttackTextureIndex(const int arg_index);

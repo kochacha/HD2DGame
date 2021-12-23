@@ -50,14 +50,17 @@ void KochaEngine::GameObjectManager::AlphaObjDrawFieldScene(Camera* arg_camera, 
 	this->camera = arg_camera;
 	this->lightManager = arg_lightManager;
 
-	float cameraPosZ = camera->GetEye().z + 18;
+	auto _eye = camera->GetEye();
+	float cameraNearPosZ = _eye.z + 18;
+	float cameraFarPosZ = _eye.z + 400;
 
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
 	{
 		if (!(*it)->IsAlphaObject()) continue; //AlphaObject‚¶‚á‚È‚¢ê‡‚Í•`‰æ‚µ‚È‚¢
 		if ((*it)->IsDead()) continue;
-		if ((*it)->GetPosition().z < cameraPosZ) continue; //AlphaObject‚ªCamera‚æ‚è‚àŽè‘O‚É‚ ‚Á‚½‚ç•`‰æ‚µ‚È‚¢
+		if ((*it)->GetPosition().z < cameraNearPosZ || 
+			(*it)->GetPosition().z > cameraFarPosZ) continue; //AlphaObject‚ªCamera‚æ‚è‚àŽè‘O‚É‚ ‚Á‚½‚ç•`‰æ‚µ‚È‚¢
 
 		(*it)->ObjDraw(this->camera, this->lightManager);
 	}
@@ -73,7 +76,9 @@ void KochaEngine::GameObjectManager::AlphaObjDrawBattleScene(Camera* arg_camera,
 	this->camera = arg_camera;
 	this->lightManager = arg_lightManager;
 
-	float cameraPosZ = camera->GetEye().z + 80;
+	auto _eye = camera->GetEye();
+	float cameraNearPosZ = _eye.z + 80;
+	float cameraFarPosZ = _eye.z + 400;
 
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
@@ -81,7 +86,8 @@ void KochaEngine::GameObjectManager::AlphaObjDrawBattleScene(Camera* arg_camera,
 		auto type = (*it)->GetType();
 		if (!(*it)->IsAlphaObject()) continue; //AlphaObject‚¶‚á‚È‚¢ê‡‚Í•`‰æ‚µ‚È‚¢
 		if ((*it)->IsDead()) continue;
-		if ((*it)->GetPosition().z < cameraPosZ) continue; //AlphaObject‚ª‰æ–Ê‚Ì­‚µ‰œ‚æ‚è‚àX‚É‰œ‚É‚ ‚Á‚½‚ç•`‰æ‚µ‚È‚¢
+		if ((*it)->GetPosition().z < cameraNearPosZ ||
+			(*it)->GetPosition().z > cameraFarPosZ) continue; //AlphaObject‚ªCamera‚æ‚è‚àŽè‘O‚É‚ ‚Á‚½‚ç•`‰æ‚µ‚È‚¢
 
 		(*it)->ObjDraw(this->camera, this->lightManager);
 	}
@@ -96,11 +102,14 @@ void KochaEngine::GameObjectManager::ObjDrawFieldScene(Camera* arg_camera, Light
 	this->camera = arg_camera;
 	this->lightManager = arg_lightManager;
 
+	float cameraPosZ = camera->GetEye().z - 50;
+
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
 	{
 		if ((*it)->IsAlphaObject()) continue; //AlphaObject‚Ìê‡‚Í•`‰æ‚µ‚È‚¢
 		if ((*it)->IsDead()) continue;
+		if ((*it)->GetPosition().z < cameraPosZ) continue;
 
 		(*it)->ObjDraw(this->camera, this->lightManager);
 	}
@@ -122,6 +131,7 @@ void KochaEngine::GameObjectManager::ObjDrawBattleScene(Camera* arg_camera, Ligh
 	{
 		if ((*it)->IsAlphaObject()) continue; //AlphaObject‚Ìê‡‚Í•`‰æ‚µ‚È‚¢
 		if ((*it)->IsDead()) continue;
+		if ((*it)->GetPosition().z < cameraPosZ) continue;
 
 		(*it)->ObjDraw(this->camera, this->lightManager);
 	}

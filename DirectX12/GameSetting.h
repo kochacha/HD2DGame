@@ -34,7 +34,7 @@ namespace KochaEngine
 	};
 
 #define MAX_BATTLE_CHARA 3
-#define MAX_BATTLE_ENEMY 5
+#define MAX_NAME_TEXT_COUNT_COMMAND 5
 
 	//ゲーム画面サイズ
 	const Vector2 SCREEN_SIZE = Vector2(1280, 720);
@@ -51,10 +51,11 @@ namespace KochaEngine
 	const Vector2 ANOTHER_WAKU_SIZE = Vector2(680, 96);
 
 	//バトル中コマンド
-	const Vector2 DEFAULT_COMMAND_POS = Vector2(20, 482);
+	const Vector2 DEFAULT_COMMAND_POS = Vector2(20, 460);
 	const Vector2 DEFAULT_COMMAND_SIZE = Vector2(168, 208);
 	const Vector2 ANOTHER_COMMAND_SIZE = Vector2(256, 208);
 	const Vector2 ATTACK_COMMAND_SIZE = Vector2(256, 208);
+	const Vector2 SP_COMMAND_SIZE = Vector2(128, 40);
 
 	const unsigned int MAX_COMMAND_NUM = 4;
 

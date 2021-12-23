@@ -27,7 +27,7 @@ namespace KochaEngine
 		enum CommandTab
 		{
 			DEFAULT_TAB,
-			ATTACK_TAB,
+			TARGET_SELECT_TAB,
 			SKILL_TAB,
 			ITEM_TAB,
 		};
@@ -58,13 +58,16 @@ namespace KochaEngine
 		Texture2D* defaultCommandTexture;
 		Texture2D* waitCommandTexture;
 		Texture2D* anotherCommandTexture;
+		Texture2D* pageCommandTexture;
+		Texture2D* spCommandTexture;
 		Texture2D* cursorTexture;
 
 		Text* battleLongText;
 		Text* battleShortText;
 		Text* battleNameText;
 		Text* commandTitleText;
-		Text* enemyNameText[MAX_BATTLE_ENEMY];
+		Text* enemyNameText[MAX_NAME_TEXT_COUNT_COMMAND];
+		Text* skillNameText[MAX_NAME_TEXT_COUNT_COMMAND];
 
 		Number* defaultNumberTex;
 
@@ -72,6 +75,8 @@ namespace KochaEngine
 
 		//現在のコマンドタブ
 		CommandTab currentTab;
+		//直前のコマンドタブ
+		CommandTab previousTab;
 
 		//カーソルのポジション
 		Vector2 cursorPos;
@@ -88,8 +93,8 @@ namespace KochaEngine
 		bool isCommandTitleUpdate;
 		//次のターンに行くかどうか
 		bool isTurnUpdate;
-		//こうげき・じゅもん・とくぎモーション中かどうか
-		bool isAttackMotion;
+		//モーション中かどうか
+		bool isActiveMotion;
 		//ぼうぎょモーション中かどうか
 		bool isDefenceMotion;
 		//敵のターンかどうか
@@ -123,11 +128,15 @@ namespace KochaEngine
 		int getExp;
 		//選択中のスキル番号
 		int selectSkillIndex;
+		//スキルタブのページ番号
+		int skillTabPageNum;
+		//スキルタブの直前のページ番号
+		int preSkillTabPageNum;
 
 		//コマンド番号
 		unsigned int commandNum;
-		//コマンド番号保存用 : 0,デフォルト 1,こうげき 2,とくぎ 3,どうぐ
-		unsigned int preCommandNum[4];
+		//コマンド番号保存用 : 0,デフォルト
+		unsigned int preCommandNum;
 
 
 		void BattleInitialize();
@@ -146,18 +155,22 @@ namespace KochaEngine
 		void TurnInitialize();
 		void ActiveActorUpdate();
 		void EnemyActionSelect();
-		void AttackMotionUpdate();
+		void ActiveMotionUpdate();
 		void DefenceMotionUpdate();
 		void ResultUpdate();
 		void RewardCalc();
 		void EnemyNameUpdate();
+		void SkillNameUpdate();
 		void CommandDraw();
 		void MoveCursor();
 		void CursorPosSetting();
 		void DefaultTab();
-		void AttackTab();
+		void TargetSelectTab();
+		void SkillTab();
 		unsigned int CommandNumUp(const unsigned int arg_commandNum);
 		unsigned int CommandNumDown(const unsigned int arg_commandNum);
+		unsigned int CommandNumRight(const unsigned int arg_commandNum, const unsigned int arg_maxNum);
+		unsigned int CommandNumLeft(const unsigned int arg_commandNum, const unsigned int arg_maxNum);
 
 	public:
 		GamePlay(Dx12_Wrapper& arg_dx12);

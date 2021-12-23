@@ -61,6 +61,8 @@ KochaEngine::GamePlay::GamePlay(Dx12_Wrapper& arg_dx12) : dx12(arg_dx12)
 	defaultCommandTexture = new Texture2D("Resources/Texture/UI/command_1.png", DEFAULT_COMMAND_POS, DEFAULT_COMMAND_SIZE, 0);
 	waitCommandTexture = new Texture2D("Resources/Texture/UI/command_0.png", DEFAULT_COMMAND_POS, DEFAULT_COMMAND_SIZE, 0);
 	anotherCommandTexture = new Texture2D("Resources/Texture/UI/command_3.png", DEFAULT_COMMAND_POS, ANOTHER_COMMAND_SIZE, 0);
+	pageCommandTexture = new Texture2D("Resources/Texture/UI/command_4.png", DEFAULT_COMMAND_POS, ANOTHER_COMMAND_SIZE + Vector2(0, 32), 0);
+	spCommandTexture = new Texture2D("Resources/Texture/UI/command_5.png", ANOTHER_WAKU_POS + Vector2(0, -55), SP_COMMAND_SIZE, 0);
 
 	cursorPos = DEFAULT_COMMAND_POS + Vector2(10, 52);
 	cursorTexture = new Texture2D("Resources/Texture/UI/cursor.png", cursorPos, Vector2(16, 16), 0);
@@ -70,10 +72,11 @@ KochaEngine::GamePlay::GamePlay(Dx12_Wrapper& arg_dx12) : dx12(arg_dx12)
 	battleShortText->SetOneLineFonts(20);
 	battleNameText = new Text(TALK_LONG_TEXT_POS, Vector2(32, 32));
 	commandTitleText = new Text(DEFAULT_COMMAND_POS + Vector2(5, 5), Vector2(32, 32));
-	for (int i = 0; i < MAX_BATTLE_ENEMY; i++)
+	for (int i = 0; i < MAX_NAME_TEXT_COUNT_COMMAND; i++)
 	{
-		const Vector2 ENEMY_NAME_POS = DEFAULT_COMMAND_POS + Vector2(30, 40) + Vector2(0, 32 * i);
-		enemyNameText[i] = new Text("fail.txt",ENEMY_NAME_POS, Vector2(32, 32));
+		const Vector2 NAME_TEXT_COMMAND_POS = DEFAULT_COMMAND_POS + Vector2(30, 40) + Vector2(0, 32 * i);
+		enemyNameText[i] = new Text("fail.txt",NAME_TEXT_COMMAND_POS, Vector2(32, 32));
+		skillNameText[i] = new Text("fail.txt",NAME_TEXT_COMMAND_POS, Vector2(32, 32));
 	}
 
 	defaultNumberTex = new Number(Vector2(TALK_LONG_TEXT_POS.x - 2, TALK_LONG_TEXT_POS.y + 4), Vector2(24, 24), 5);
@@ -101,14 +104,17 @@ KochaEngine::GamePlay::~GamePlay()
 	delete defaultCommandTexture;
 	delete waitCommandTexture;
 	delete anotherCommandTexture;
+	delete pageCommandTexture;
+	delete spCommandTexture;
 	delete cursorTexture;
 	delete battleLongText;
 	delete battleShortText;
 	delete battleNameText;
 	delete commandTitleText;
-	for (int i = 0; i < MAX_BATTLE_ENEMY; i++)
+	for (int i = 0; i < MAX_NAME_TEXT_COUNT_COMMAND; i++)
 	{
 		delete enemyNameText[i];
+		delete skillNameText[i];
 	}
 	delete defaultNumberTex;
 }
@@ -122,7 +128,7 @@ void KochaEngine::GamePlay::Initialize()
 	isBattleStart = false;
 	isCommandTitleUpdate = false;
 	isTurnUpdate = false;
-	isAttackMotion = false;
+	isActiveMotion = false;
 	isDefenceMotion = false;
 	isEnemyTurn = false;
 	isCharacterDestroy = false;
@@ -152,6 +158,7 @@ void KochaEngine::GamePlay::Initialize()
 
 	fadeTexture->SetColor(Vector4(0, 0, 0.12f, 1));
 	currentTab = GamePlay::DEFAULT_TAB;
+	previousTab = currentTab;
 
 	motionTime = 0;
 	frameCount = 0;
@@ -162,11 +169,10 @@ void KochaEngine::GamePlay::Initialize()
 	resultFlowNum = 0;
 	resultFlowWait = 0;
 	selectSkillIndex = 0;
+	skillTabPageNum = 1;
+	preSkillTabPageNum = skillTabPageNum;
 
-	for (int i = 0; i < MAX_COMMAND_NUM; i++)
-	{
-		preCommandNum[i] = 0;
-	}
+	preCommandNum = 0;
 	
 	fadeFlag = false;
 	fadeAlpha = 1.0f;
@@ -314,7 +320,7 @@ void KochaEngine::GamePlay::FadeUpdate()
 
 void KochaEngine::GamePlay::BattleInitialize()
 {
-	isAttackMotion = false;
+	isActiveMotion = false;
 	isTurnUpdate = false;
 	isShowNumber = false;
 	battleCharaCount = 0;
@@ -322,10 +328,8 @@ void KochaEngine::GamePlay::BattleInitialize()
 	resultFlowNum = 0;
 	battleStartWait = 100;
 	currentTab = CommandTab::DEFAULT_TAB;
-	for (int i = 0; i < MAX_COMMAND_NUM; i++)
-	{
-		preCommandNum[i] = 0;
-	}
+	previousTab = currentTab;
+	preCommandNum = 0;
 
 	const Vector3 cameraPos = camera->GetEye();
 
@@ -497,7 +501,7 @@ void KochaEngine::GamePlay::BattleFlowUpdate()
 
 void KochaEngine::GamePlay::BattleObjDraw()
 {
-	gManager->ObjDrawFieldScene(camera, lightManager);
+	gManager->ObjDrawBattleScene(camera, lightManager);
 	floor->Draw(camera, lightManager);
 	skyObj->Draw(camera, lightManager);
 }
@@ -514,7 +518,7 @@ void KochaEngine::GamePlay::BattleSpriteDraw()
 	//バトル時のスプライト描画
 	//defaultWakuTexture->Draw();
 
-	if (!isAttackMotion && !isEnemyTurn)
+	if (!isActiveMotion && !isEnemyTurn)
 	{
 		//キャラクターのターン中
 		CommandDraw();
@@ -529,7 +533,7 @@ void KochaEngine::GamePlay::BattleSpriteDraw()
 		battleLongText->Draw(KochaEngine::GameSetting::talkSpeed);
 	}
 
-	if ((isAttackMotion || isDefenceMotion) && !isResultOnce)
+	if ((isActiveMotion || isDefenceMotion) && !isResultOnce)
 	{
 		//名前は７文字まで
 		battleNameText->Draw(KochaEngine::GameSetting::talkSpeed);
@@ -628,20 +632,27 @@ void KochaEngine::GamePlay::TurnInitialize()
 	if (currentActiveActor != nullptr)
 	{
 		currentActiveActor->CurrentActive();
+
+		//スキルの名前描画を更新
+		if (currentActiveActor->GetType() == BATTLE_PLAYER ||
+			currentActiveActor->GetType() == BATTLE_FIGHTER)
+		{
+			SkillNameUpdate();
+		}
 	}
 
 	//コマンド上に表示する名前を更新するフラグ
 	isCommandTitleUpdate = false;
 
-	isAttackMotion = false;
+	isActiveMotion = false;
 
 	currentTab = CommandTab::DEFAULT_TAB;
+	previousTab = currentTab;
 	commandNum = 0;
 	selectSkillIndex = 0;
-	for (int i = 0; i < MAX_COMMAND_NUM; i++)
-	{
-		preCommandNum[i] = 0;
-	}
+	skillTabPageNum = 1;
+	preSkillTabPageNum = skillTabPageNum;
+	preCommandNum = 0;
 
 	//エネミーの名前描画を更新
 	EnemyNameUpdate();
@@ -671,7 +682,7 @@ void KochaEngine::GamePlay::ActiveActorUpdate()
 		}
 
 		//こうげきモーション中は操作できないようにする
-		if (!isAttackMotion)
+		if (!isActiveMotion)
 		{
 			//コマンドのカーソル操作
 			MoveCursor();
@@ -691,15 +702,15 @@ void KochaEngine::GamePlay::ActiveActorUpdate()
 		EnemyActionSelect();
 	}
 
-	AttackMotionUpdate();
+	ActiveMotionUpdate();
 	DefenceMotionUpdate();
 }
 
 void KochaEngine::GamePlay::EnemyActionSelect()
 {
-	if (isAttackMotion) return;
+	if (isActiveMotion) return;
 
-	isAttackMotion = true;
+	isActiveMotion = true;
 
 	//行動中のエネミーのスキルの数を調べる
 	int maxSkillIndex = currentActiveActor->GetSkillCount();
@@ -777,9 +788,9 @@ void KochaEngine::GamePlay::EnemyActionSelect()
 	cameraManager->SetBattleTargetPositionZ(targetZ);
 }
 
-void KochaEngine::GamePlay::AttackMotionUpdate()
+void KochaEngine::GamePlay::ActiveMotionUpdate()
 {
-	if (!isAttackMotion) return;
+	if (!isActiveMotion) return;
 	if (motionTime > 0)
 	{
 		motionTime--;
@@ -813,11 +824,12 @@ void KochaEngine::GamePlay::AttackMotionUpdate()
 		//ダメージ計算処理
 		//ダメージを与える
 		targetActor->SetDamage(activeSkillName, currentActiveActor->GetBattleParam());
+		currentActiveActor->CostSP(SkillData::GetSkillParam(activeSkillName).cost);
 		
 		//こうげきアニメーション
 		currentActiveActor->SetAttackTextureIndex(1);
 
-		//こうげきエフェクト
+		//ダメージ受けた時のカメラ揺れ
 		if (targetActor->GetType() != BattleObjectType::ENEMY)
 		{
 			cameraManager->SetCameraShake(5.0f);
@@ -980,7 +992,7 @@ void KochaEngine::GamePlay::RewardCalc()
 void KochaEngine::GamePlay::EnemyNameUpdate()
 {
 	//こうげきコマンドに表示される敵の名前の更新
-	for (int i = 0; i < MAX_BATTLE_ENEMY; i++)
+	for (int i = 0; i < MAX_NAME_TEXT_COUNT_COMMAND; i++)
 	{
 		auto enemy = bManager->GetEnemy(i + 1);
 		if (enemy == nullptr)
@@ -989,6 +1001,23 @@ void KochaEngine::GamePlay::EnemyNameUpdate()
 			continue;
 		}
 		enemyNameText[i]->SetText(enemy->GetBaseParam().name);
+	}
+}
+
+//ページをまたぐときに呼び出す
+void KochaEngine::GamePlay::SkillNameUpdate()
+{
+	//スキルコマンドに表示されるスキルの名前の更新
+	for (int i = 0; i < MAX_NAME_TEXT_COUNT_COMMAND; i++)
+	{
+		int _indexNum = (skillTabPageNum - 1) * 5 + i + 1;
+		auto skill = currentActiveActor->GetSkillName(_indexNum);
+		if (skill == "noSkill")
+		{
+			skillNameText[i]->SetText("none.txt");
+			continue;
+		}
+		skillNameText[i]->SetText(SkillData::GetSkillParam(skill).name);
 	}
 }
 
@@ -1002,11 +1031,11 @@ void KochaEngine::GamePlay::CommandDraw()
 		defaultCommandTexture->Draw();
 		battleLongText->Draw(KochaEngine::GameSetting::talkSpeed);
 		break;
-	case KochaEngine::GamePlay::ATTACK_TAB: //こうげきコマンド
+	case KochaEngine::GamePlay::TARGET_SELECT_TAB: //ターゲット選択コマンド
 		anotherWakuTexture->Draw();
 		anotherCommandTexture->Draw();
 
-		for (int i = 0; i < MAX_BATTLE_ENEMY; i++)
+		for (int i = 0; i < MAX_NAME_TEXT_COUNT_COMMAND; i++)
 		{
 			enemyNameText[i]->Draw(0);
 		}
@@ -1014,12 +1043,17 @@ void KochaEngine::GamePlay::CommandDraw()
 		break;
 	case KochaEngine::GamePlay::SKILL_TAB: //スキルコマンド
 		anotherWakuTexture->Draw();
-		anotherCommandTexture->Draw();
+		pageCommandTexture->Draw();
+		spCommandTexture->Draw();
+		for (int i = 0; i < MAX_NAME_TEXT_COUNT_COMMAND; i++)
+		{
+			skillNameText[i]->Draw(0);
+		}
 		battleShortText->Draw(KochaEngine::GameSetting::talkSpeed);
 		break;
 	case KochaEngine::GamePlay::ITEM_TAB: //どうぐコマンド
 		anotherWakuTexture->Draw();
-		anotherCommandTexture->Draw();
+		pageCommandTexture->Draw();
 		battleShortText->Draw(KochaEngine::GameSetting::talkSpeed);
 		break;
 	default:
@@ -1040,24 +1074,26 @@ void KochaEngine::GamePlay::MoveCursor()
 	{
 		commandNum = CommandNumDown(commandNum);
 	}
+	//決定ボタンを押したとき
 	if (InputManager::TriggerDecision())
 	{
-		//決定ボタンを押したとき
+		preCommandNum = commandNum; //直前の入力の保存
+
 		switch (currentTab)
 		{
 		case KochaEngine::GamePlay::DEFAULT_TAB: //デフォルトコマンド
-			preCommandNum[0] = commandNum; //直前の入力の保存
+			previousTab = currentTab;
 			DefaultTab();
 			break;
-		case KochaEngine::GamePlay::ATTACK_TAB: //こうげきコマンド
-			preCommandNum[1] = commandNum; //直前の入力の保存
-			AttackTab();
+		case KochaEngine::GamePlay::TARGET_SELECT_TAB: //ターゲット選択コマンド
+			TargetSelectTab();
 			break;
-		case KochaEngine::GamePlay::SKILL_TAB: //じゅもんコマンド
-			preCommandNum[2] = commandNum; //直前の入力の保存
+		case KochaEngine::GamePlay::SKILL_TAB: //スキルコマンド
+			previousTab = currentTab;
+			SkillTab();
 			break;
-		case KochaEngine::GamePlay::ITEM_TAB: //とくぎコマンド
-			preCommandNum[3] = commandNum; //直前の入力の保存
+		case KochaEngine::GamePlay::ITEM_TAB: //どうぐコマンド
+			previousTab = currentTab;
 			break;
 		default:
 			break;
@@ -1072,16 +1108,16 @@ void KochaEngine::GamePlay::MoveCursor()
 			////どうする？
 			//battleLongText->SetText("Talk/Battle/ChooseAction.txt");
 			break;
-		case KochaEngine::GamePlay::ATTACK_TAB: //こうげきコマンド
-			commandNum = preCommandNum[0];
-			currentTab = GamePlay::DEFAULT_TAB;
+		case KochaEngine::GamePlay::TARGET_SELECT_TAB: //ターゲット選択コマンド
+			commandNum = preCommandNum;
+			currentTab = previousTab;
 			break;
 		case KochaEngine::GamePlay::SKILL_TAB: //スキルコマンド
-			commandNum = preCommandNum[0];
+			commandNum = preCommandNum;
 			currentTab = GamePlay::DEFAULT_TAB;
 			break;
 		case KochaEngine::GamePlay::ITEM_TAB: //どうぐコマンド
-			commandNum = preCommandNum[0];
+			commandNum = preCommandNum;
 			currentTab = GamePlay::DEFAULT_TAB;
 			break;
 		default:
@@ -1089,7 +1125,47 @@ void KochaEngine::GamePlay::MoveCursor()
 		}
 	}
 
-	if (currentTab == GamePlay::ATTACK_TAB)
+	switch (currentTab)
+	{
+	case KochaEngine::GamePlay::DEFAULT_TAB: //デフォルトコマンド
+
+		break;
+	case KochaEngine::GamePlay::TARGET_SELECT_TAB: //ターゲット選択コマンド
+
+		break;
+	case KochaEngine::GamePlay::SKILL_TAB: //スキルコマンド
+		if (InputManager::TriggerRight())
+		{
+			preSkillTabPageNum = skillTabPageNum;
+			//ページを進める
+			skillTabPageNum = CommandNumRight(skillTabPageNum, (currentActiveActor->GetSkillCount() + MAX_NAME_TEXT_COUNT_COMMAND - 2) / MAX_NAME_TEXT_COUNT_COMMAND);
+			//ページをまたいでいるのでスキルページを更新
+			if (preSkillTabPageNum != skillTabPageNum)
+			{
+				SkillNameUpdate();
+			}
+		}
+		else if (InputManager::TriggerLeft())
+		{
+			preSkillTabPageNum = skillTabPageNum;
+			//ページを戻す
+			skillTabPageNum = CommandNumLeft(skillTabPageNum, (currentActiveActor->GetSkillCount() + MAX_NAME_TEXT_COUNT_COMMAND - 2) / MAX_NAME_TEXT_COUNT_COMMAND);
+			//ページをまたいでいるのでスキルページを更新
+			if (preSkillTabPageNum != skillTabPageNum)
+			{
+				SkillNameUpdate();
+			}
+		}
+
+		break;
+	case KochaEngine::GamePlay::ITEM_TAB: //どうぐコマンド
+
+		break;
+	default:
+		break;
+	}
+
+	if (currentTab == GamePlay::TARGET_SELECT_TAB)
 	{
 		auto enemy = bManager->GetEnemy(commandNum + 1);
 		if (enemy)
@@ -1130,16 +1206,20 @@ void KochaEngine::GamePlay::DefaultTab()
 	//デフォルトコマンドで決定が押されたとき
 	switch (commandNum)
 	{
-	case 0: //こうげき
-		commandNum = preCommandNum[1]; //保存されたコマンドに切り替え
-		currentTab = GamePlay::ATTACK_TAB; //こうげきコマンドへ
+	case 0: //ターゲット選択
+		commandNum = 0;
+		selectSkillIndex = 0;
+		currentTab = GamePlay::TARGET_SELECT_TAB; //ターゲット選択コマンドへ
 		break;
 	case 1: //スキル
-		commandNum = preCommandNum[2]; //保存されたコマンドに切り替え
+	    //スキルページを初期化
+		skillTabPageNum = 1;
+		preSkillTabPageNum = skillTabPageNum;
+		commandNum = 0;
 		currentTab = GamePlay::SKILL_TAB; //スキルコマンドへ
 		break;
 	case 2: //どうぐ
-		commandNum = preCommandNum[3]; //保存されたコマンドに切り替え
+		commandNum = 0;
 		currentTab = GamePlay::ITEM_TAB; //どうぐコマンドへ
 		break;
 	case 3: //ぼうぎょ
@@ -1160,14 +1240,15 @@ void KochaEngine::GamePlay::DefaultTab()
 	}
 }
 
-void KochaEngine::GamePlay::AttackTab()
+void KochaEngine::GamePlay::TargetSelectTab()
 {
+	//敵か味方か判断してから選択
+
 	auto enemy = bManager->GetEnemy(commandNum + 1);
 	if (enemy)
 	{
-		isAttackMotion = true;
+		isActiveMotion = true;
 		motionTime = ATTACK_MOTION_TIME;
-		selectSkillIndex = 0;
 		targetActor = enemy;
 		//○○(名前)
 		battleNameText->SetText(currentActiveActor->GetBaseParam().name);
@@ -1181,6 +1262,39 @@ void KochaEngine::GamePlay::AttackTab()
 		//なしを選択した場合
 		//不可音を鳴らす
 		int a = 0;
+	}
+}
+
+void KochaEngine::GamePlay::SkillTab()
+{
+	selectSkillIndex = (skillTabPageNum - 1) * MAX_NAME_TEXT_COUNT_COMMAND + commandNum + 1;
+	std::string _skillName = currentActiveActor->GetSkillName(selectSkillIndex);
+	if (_skillName != "noSkill")
+	{
+		SkillParam _skillData = SkillData::GetSkillParam(_skillName);
+		if (_skillData.cost > currentActiveActor->GetBaseParam().sp)
+		{
+			//SPが足りない場合
+            //不可音を鳴らす&SPが足りないテキストを出す
+			int a = 0;
+			return;
+		}
+		if (!_skillData.isOverall)
+		{
+			commandNum = 0;
+			currentTab = GamePlay::TARGET_SELECT_TAB; //ターゲット選択コマンドへ
+		}
+		else
+		{
+			//全体攻撃
+		}
+	}
+	else
+	{
+		//なしを選択した場合
+        //不可音を鳴らす
+		int a = 0;
+		return;
 	}
 }
 
@@ -1208,6 +1322,34 @@ unsigned int KochaEngine::GamePlay::CommandNumDown(const unsigned int arg_comman
 	else
 	{
 		_commandNum = 0;
+	}
+	return _commandNum;
+}
+
+unsigned int KochaEngine::GamePlay::CommandNumRight(const unsigned int arg_commandNum, const unsigned int arg_maxNum)
+{
+	unsigned int _commandNum = arg_commandNum;
+	if (_commandNum < arg_maxNum)
+	{
+		_commandNum++;
+	}
+	else
+	{
+		_commandNum = 1;
+	}
+	return _commandNum;
+}
+
+unsigned int KochaEngine::GamePlay::CommandNumLeft(const unsigned int arg_commandNum, const unsigned int arg_maxNum)
+{
+	unsigned int _commandNum = arg_commandNum;
+	if (_commandNum > 1)
+	{
+		_commandNum--;
+	}
+	else
+	{
+		_commandNum = arg_maxNum;
 	}
 	return _commandNum;
 }

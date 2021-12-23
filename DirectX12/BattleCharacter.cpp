@@ -364,6 +364,7 @@ void KochaEngine::BattleCharacter::EasingPosition()
 	}
 }
 
+//パラメーター修正
 void KochaEngine::BattleCharacter::FixParam()
 {
 	if (baseParam.hp > baseParam.maxHP)
