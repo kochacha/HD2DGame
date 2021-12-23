@@ -3,6 +3,8 @@
 #include "Util.h"
 #include "InputManager.h"
 #include "GameSetting.h"
+#include "JsonLoader.h"
+#include "SkillData.h"
 
 KochaEngine::Player::Player(Camera* arg_camera, GameObjectManager* arg_gManager, const Vector3& arg_position)
 {
@@ -27,6 +29,7 @@ void KochaEngine::Player::Initialize()
 {
 	isAlpha = true;
 	isBattle = false;
+	isSkillUpdate = true;
 	animType = AnimationType::WAIT_FLONT;
 
 	EncountReset();
@@ -44,25 +47,37 @@ void KochaEngine::Player::Initialize()
 	obj->SetTexture("Resources/Texture/Character/player/player_wait_f_0.png");
 	obj->SetBillboardType(Object::BILLBOARD_Y);
 
-	//パラメーターのセット(後々テキストデータから読み込めるようにする(セーブ機能))
+	//パラメーターのセット
+	auto obj = JsonLoader::ReadJsonObj("Resources/DataBase/PlayerData.json");
 	param.name = "Character/player.txt";
 	param.texName = "player";
-	param.attribute = TYPE_LIGHT;
 	param.size = Vector3(10, 10, 10);
-	param.level = 1;
-	param.maxHP = 10;
-	param.hp = 10;
-	param.maxSP = 8;
-	param.sp = 8;
-	param.attack = 8;
-	param.defence = 6;
-	param.intelligence = 5;
-	param.speed = 6;
-	param.skillful = 4;
-	param.luck = 0;
-	param.exp = 0;
-	param.money = 100;
+	param.attribute = SkillData::GetAttribute(obj["Attribute"].get<double>());
+	param.level = obj["Level"].get<double>();
+	param.maxHP = obj["MaxHP"].get<double>();
+	param.hp = obj["HP"].get<double>();
+	param.maxSP = obj["MaxSP"].get<double>();
+	param.sp = obj["SP"].get<double>();
+	param.attack = obj["Attack"].get<double>();
+	param.defence = obj["Defence"].get<double>();
+	param.intelligence = obj["Intelligence"].get<double>();
+	param.speed = obj["Speed"].get<double>();
+	param.skillful = obj["Skillful"].get<double>();
+	param.luck = obj["Luck"].get<double>();
+	param.exp = obj["Exp"].get<double>();
+	param.money = obj["Money"].get<double>();
 
+	picojson::object& skills = obj["Skill"].get<picojson::object>();
+	for (const auto& e : skills) {
+		skillNames.emplace(skills[e.first].get<double>(), e.first);
+		//skillNames.insert(std::make_pair(skills[e.first].get<double>(), e.first));
+		skillMasterLevels.push_back(skills[e.first].get<double>());
+	}
+
+	//skillNames.insert(std::make_pair(1, "none"));
+	//skillNames.insert(std::make_pair(3, "fire_0"));
+	//skillMasterLevels.push_back(1);
+	//skillMasterLevels.push_back(3);
 
 	count = 0;
 	animationNum = 0;
@@ -78,6 +93,7 @@ void KochaEngine::Player::Update()
 	MoveZ();
 	EncountEnemy();
 
+	SkillUpdate();
 	Animation();
 	SetObjParam();
 	CameraTracking();
@@ -225,6 +241,22 @@ void KochaEngine::Player::EncountEnemy()
 	if (encountCount <= 0)
 	{
 		isEncount = true;
+	}
+}
+
+void KochaEngine::Player::SkillUpdate()
+{
+	if (!isSkillUpdate) return;
+	isSkillUpdate = false;
+
+	param.skills.clear();
+
+	for (int i = skillMasterLevels.size() - 1; i >= 0; i--)
+	{
+		if (param.level >= skillMasterLevels[i])
+		{
+			param.skills.push_back(skillNames.at(skillMasterLevels[i]));
+		}
 	}
 }
 

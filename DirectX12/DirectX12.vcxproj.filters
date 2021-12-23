@@ -294,6 +294,9 @@
     <ClCompile Include="SkillData.cpp">
       <Filter>Source\DataBase</Filter>
     </ClCompile>
+    <ClCompile Include="Wizard.cpp">
+      <Filter>Source\GameObject\Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShaderHeader.hlsli">
@@ -635,6 +638,9 @@
     </ClInclude>
     <ClInclude Include="SkillParam.h">
       <Filter>Header\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Wizard.h">
+      <Filter>Header\GameObject\Actor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

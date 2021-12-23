@@ -16,6 +16,7 @@ KochaEngine::Enemy::Enemy(BattleObjectManager* arg_bManager, EffectManager* arg_
 	n3DEmitter = arg_n3DEmitter;
 	position = arg_position;
 	baseParam = arg_param;
+	battleParam = arg_param;
 
 	obj = new Object("plane");
 	cursor = new Object("plane");
@@ -49,7 +50,7 @@ void KochaEngine::Enemy::Initialize()
 	knockBackTime = 0;
 
 	prePosX = position.x;
-	activePosX = prePosX + 25;
+	activePosX = prePosX + 20;
 }
 
 void KochaEngine::Enemy::Update()
@@ -120,6 +121,37 @@ void KochaEngine::Enemy::Damage(const SkillParam& arg_activeData, const ActorPar
 
 void KochaEngine::Enemy::MagicDamage(const SkillParam& arg_activeData, const ActorParam& arg_param)
 {
+	//ダメージ計算処理
+	auto activeParam = arg_param;
+
+	//基礎ダメージ
+	int damage = activeParam.intelligence * arg_activeData.intelligenceRate + arg_activeData.baseDamage;
+	//運ダメージ範囲
+	int luckDamageRange = damage * ((float)activeParam.luck * arg_activeData.luckRate * 0.002f) + 2;
+	//運ダメージ範囲がマイナスだった場合の補正
+	if (luckDamageRange < 0) luckDamageRange = 0;
+	//運ダメージ
+	int luckDamage = Util::GetIntRand(0, luckDamageRange) - luckDamageRange * 0.25f;
+	//トータルダメージ
+	int totalDamage = damage + luckDamage;
+
+	//基礎ダメージを下回っていた場合補正する
+	if (totalDamage < arg_activeData.baseDamage) totalDamage = arg_activeData.baseDamage;
+
+	//ダメージを受ける
+	baseParam.hp -= totalDamage;
+
+	//ダメージ表記を出す位置
+	Vector3 addDamagePos = Vector3(position.x, position.y + 2, position.z - 0.01f);
+
+	//ダメージ表記
+	n3DEmitter->AddNumber3D(addDamagePos, totalDamage);
+
+	//エフェクトの再生
+	effectManager->Play(arg_activeData.effectName, position);
+
+	//ノックバックの追加
+	knockBackTime = 20;
 }
 
 void KochaEngine::Enemy::PhysicsDamage(const SkillParam& arg_activeData, const ActorParam& arg_param)
@@ -128,9 +160,11 @@ void KochaEngine::Enemy::PhysicsDamage(const SkillParam& arg_activeData, const A
 	auto activeParam = arg_param;
 
 	//基礎ダメージ
-	int damage = activeParam.attack * arg_activeData.attackRate - baseParam.defence * 0.25f;
+	int damage = activeParam.attack * arg_activeData.attackRate - battleParam.defence * 0.25f + arg_activeData.baseDamage;
 	//運ダメージ範囲
 	int luckDamageRange = damage * ((float)activeParam.luck * arg_activeData.luckRate * 0.002f) + 2;
+	//運ダメージ範囲がマイナスだった場合の補正
+	if (luckDamageRange < 0) luckDamageRange = 0;
 	//運ダメージ
 	int luckDamage = Util::GetIntRand(0, luckDamageRange) - luckDamageRange * 0.25f;
 	//トータルダメージ
@@ -148,6 +182,7 @@ void KochaEngine::Enemy::PhysicsDamage(const SkillParam& arg_activeData, const A
 	//ダメージ表記
 	n3DEmitter->AddNumber3D(addDamagePos, totalDamage);
 
+	//エフェクトの再生
 	effectManager->Play(arg_activeData.effectName, position);
 
 	//ノックバックの追加

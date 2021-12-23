@@ -1,24 +1,17 @@
 #pragma once
 #include "GameObject.h"
 #include "ActorParam.h"
-#include <map>
 
 namespace KochaEngine
 {
-	class Fighter : public GameObject
+	class Wizard : public GameObject
 	{
 	private:
 		ActorParam param;
-		std::map<int, std::string> skillNames;
-		std::vector<int> skillMasterLevels;
-
-		bool isSkillUpdate;
-
-		void SkillUpdate();
 
 	public:
-		Fighter(Camera* arg_camera, const Vector3& arg_position);
-		~Fighter() override;
+		Wizard(Camera* arg_camera, const Vector3& arg_position);
+		~Wizard() override;
 
 		void Initialize() override;
 		void Update() override;
@@ -26,7 +19,7 @@ namespace KochaEngine
 		void ObjDraw(Camera* arg_camera, LightManager* arg_lightManager) override;
 		GameObjectType GetType() override;
 
-		void SetParam(const ActorParam& arg_param) { param = arg_param; isSkillUpdate = true; }
+		void SetParam(const ActorParam& arg_param) { param = arg_param; }
 
 		const ActorParam GetParam() { return param; }
 	};

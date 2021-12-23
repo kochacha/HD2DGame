@@ -44,22 +44,23 @@ KochaEngine::Attribute KochaEngine::SkillData::GetAttribute(const int arg_num)
     return attribute;
 }
 
+
 void KochaEngine::SkillData::StaticInit()
 {
     auto obj = JsonLoader::ReadJsonObj("Resources/DataBase/SkillData.json");
-    SkillParam param;
     for (const auto& p : obj)
     {
+        SkillParam param;
         std::string name = p.first;
         picojson::object& enemyID = obj[name].get<picojson::object>();
         param.name = "Skill/Name/" + name + "_name.txt";
         param.summaryName = "Skill/Summary/" + name + "_summary.txt";
         param.effectName = name + ".efk";
         param.attribute = GetAttribute(enemyID["Attribute"].get<double>());
-        param.isSupport = GetAttribute(enemyID["IsSupport"].get<bool>());
-        param.isMagic = GetAttribute(enemyID["IsMagic"].get<bool>());
-        param.isOverall = GetAttribute(enemyID["IsOverall"].get<bool>());
-        param.isAllies = GetAttribute(enemyID["IsAllies"].get<bool>());
+        param.isSupport = enemyID["IsSupport"].get<bool>();
+        param.isMagic = enemyID["IsMagic"].get<bool>();
+        param.isOverall = enemyID["IsOverall"].get<bool>();
+        param.isAllies = enemyID["IsAllies"].get<bool>();
         param.frequency = enemyID["Frequency"].get<double>();
         param.cost = enemyID["Cost"].get<double>();
         param.baseDamage = enemyID["BaseDamage"].get<double>();

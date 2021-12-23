@@ -9,7 +9,6 @@ namespace KochaEngine
 	private:
 		static std::map<std::string, ActorParam> params;
 		static void AddEnemyParam(const std::string& arg_enemyVol, const ActorParam& arg_param);
-		static Attribute GetAttribute(const int arg_num);
 
 	public:
 		static void StaticInit();

@@ -1,4 +1,5 @@
 #include "EnemyData.h"
+#include "SkillData.h"
 #include "GameSetting.h"
 #include "JsonLoader.h"
 
@@ -14,47 +15,17 @@ void KochaEngine::EnemyData::AddEnemyParam(const std::string& arg_enemyVol, cons
     params.emplace(arg_enemyVol, arg_param);
 }
 
-KochaEngine::Attribute KochaEngine::EnemyData::GetAttribute(const int arg_num)
-{
-    Attribute attribute;
-    switch (arg_num)
-    {
-    case 0:
-        attribute = Attribute::TYPE_NORMAL;
-        break;
-    case 1:
-        attribute = Attribute::TYPE_FIRE;
-        break;
-    case 2:
-        attribute = Attribute::TYPE_WATER;
-        break;
-    case 3:
-        attribute = Attribute::TYPE_NATURE;
-        break;
-    case 4:
-        attribute = Attribute::TYPE_LIGHT;
-        break;
-    case 5:
-        attribute = Attribute::TYPE_DARK;
-        break;
-    default:
-        attribute = Attribute::TYPE_NORMAL;
-        break;
-    }
-    return attribute;
-}
-
 void KochaEngine::EnemyData::StaticInit()
 {
     auto obj = JsonLoader::ReadJsonObj("Resources/DataBase/EnemyData.json");
-    ActorParam param;
     for (const auto& p : obj) 
     {
+        ActorParam param;
         std::string name = p.first;
         picojson::object& enemyID = obj[name].get<picojson::object>();
         param.name = "Enemy/" + name + ".txt";
         param.texName = name;
-        param.attribute = GetAttribute(enemyID["Attribute"].get<double>());
+        param.attribute = SkillData::GetAttribute(enemyID["Attribute"].get<double>());
         float size = enemyID["Size"].get<double>();
         param.size = Vector3(size, size, size);
         param.level = enemyID["Level"].get<double>();

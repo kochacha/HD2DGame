@@ -293,6 +293,7 @@ void KochaEngine::Application::Load()
 		Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_wait_b_0.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_wait_l_0.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Character/fighter/fighter_wait_r_0.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Character/coffin.png");
 
 		//Enemyフォルダ
 		for (int i = 0; i < 1; i++)

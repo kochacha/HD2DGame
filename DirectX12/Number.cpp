@@ -38,9 +38,12 @@ void KochaEngine::Number::SetColor(const Vector4& arg_color)
 void KochaEngine::Number::Draw(const int arg_num)
 {
 	Init();
-	int digits = Util::GetDigit(arg_num) - 1;
+	int maxNum = (int)std::pow(10, maxDigit) - 1;
+	int preNum = arg_num;
+	if (preNum > maxNum) preNum = maxNum;
+	int digits = Util::GetDigit(preNum) - 1;
 	int currentDigit = (int)std::pow(10, digits);
-	int currentNum = arg_num;
+	int currentNum = preNum;
 
 	for (int i = 0; i <= digits; i++)
 	{
@@ -49,19 +52,22 @@ void KochaEngine::Number::Draw(const int arg_num)
 		currentDigit /= 10;
 	}
 
-	int startDigit = maxDigit - Util::GetDigit(arg_num);
+	int startDigit = maxDigit - Util::GetDigit(preNum);
 	for (int i = startDigit; i < maxDigit; i++)
 	{
 		numbers[i]->Draw();
 	}
 }
 
-void KochaEngine::Number::DrawOnlyDigit(const int arg_num)
+void KochaEngine::Number::DrawAllDigit(const int arg_num)
 {
 	Init();
-	int digits = Util::GetDigit(arg_num) - 1;
+	int maxNum = (int)std::pow(10, maxDigit) - 1;
+	int preNum = arg_num;
+	if (preNum > maxNum) preNum = maxNum;
+	int digits = Util::GetDigit(preNum) - 1;
 	int currentDigit = (int)std::pow(10, digits);
-	int currentNum = arg_num;
+	int currentNum = preNum;
 
 	for (int i = 0; i <= digits; i++)
 	{
@@ -76,12 +82,15 @@ void KochaEngine::Number::DrawOnlyDigit(const int arg_num)
 	}
 }
 
-void KochaEngine::Number::Draw(const Vector2& arg_position, const int arg_num)
+void KochaEngine::Number::DrawAllDigit(const Vector2& arg_position, const int arg_num)
 {
 	Init();
-	int digits = Util::GetDigit(arg_num) - 1;
+	int maxNum = (int)std::pow(10, maxDigit) - 1;
+	int preNum = arg_num;
+	if (preNum > maxNum) preNum = maxNum;
+	int digits = Util::GetDigit(preNum) - 1;
 	int currentDigit = (int)std::pow(10, digits);
-	int currentNum = arg_num;
+	int currentNum = preNum;
 
 	for (int i = 0; i <= digits; i++)
 	{

@@ -28,7 +28,6 @@ namespace KochaEngine
 		{
 			DEFAULT_TAB,
 			ATTACK_TAB,
-			SPELL_TAB,
 			SKILL_TAB,
 			ITEM_TAB,
 		};
@@ -122,11 +121,13 @@ namespace KochaEngine
 		int resultFlowWait;
 		//獲得経験値
 		int getExp;
+		//選択中のスキル番号
+		int selectSkillIndex;
 
 		//コマンド番号
 		unsigned int commandNum;
-		//コマンド番号保存用 : 0,デフォルト 1,こうげき 2,じゅもん 3,とくぎ 4,どうぐ
-		unsigned int preCommandNum[5];
+		//コマンド番号保存用 : 0,デフォルト 1,こうげき 2,とくぎ 3,どうぐ
+		unsigned int preCommandNum[4];
 
 
 		void BattleInitialize();
@@ -144,6 +145,7 @@ namespace KochaEngine
 		void BattleEnd();
 		void TurnInitialize();
 		void ActiveActorUpdate();
+		void EnemyActionSelect();
 		void AttackMotionUpdate();
 		void DefenceMotionUpdate();
 		void ResultUpdate();

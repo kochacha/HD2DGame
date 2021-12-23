@@ -132,9 +132,9 @@ KochaEngine::BattleObject* KochaEngine::BattleObjectManager::GetCurrentActive()
 		if ((*it)->IsDead()) continue;
 		if ((*it)->IsKnockDown()) continue;
 		if ((*it)->IsActive()) continue;
-		if ((*it)->GetParam().speed >= speed )
+		if ((*it)->GetBattleParam().speed >= speed )
 		{
-			speed = (*it)->GetParam().speed;
+			speed = (*it)->GetBattleParam().speed;
 			object = *it;
 		}	
 	}

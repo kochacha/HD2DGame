@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "ActorParam.h"
+#include <map>
 
 namespace KochaEngine
 {
@@ -12,11 +13,14 @@ namespace KochaEngine
 		GameObjectManager* gManager;
 
 		ActorParam param;
+		std::map<int, std::string> skillNames;
+		std::vector<int> skillMasterLevels;
 
 		Vector3 preVelocity;
 
 		bool isEncount;
 		bool isBattle;
+		bool isSkillUpdate;
 
 		int encountCount;
 		int animationNum;
@@ -31,6 +35,7 @@ namespace KochaEngine
 		void SetObjParam();
 		void CameraTracking();
 		void EncountEnemy();
+		void SkillUpdate();
 		void SetAnimationType();
 		void Animation();
 
@@ -46,7 +51,7 @@ namespace KochaEngine
 		GameObjectType GetType() override;
 
 		void SetIsBattle(const bool arg_isBattle) { isBattle = arg_isBattle; }
-		void SetParam(const ActorParam& arg_param) { param = arg_param; }
+		void SetParam(const ActorParam& arg_param) { param = arg_param; isSkillUpdate = true; }
 		void EncountReset();
 
 		const ActorParam GetParam() { return param; }

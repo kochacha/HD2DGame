@@ -23,7 +23,7 @@ namespace KochaEngine
 		void SetColor(const Vector4& arg_color);
 
 		void Draw(const int arg_num);
-		void DrawOnlyDigit(const int arg_num);
-		void Draw(const Vector2& arg_position, const int arg_num);
+		void DrawAllDigit(const int arg_num);
+		void DrawAllDigit(const Vector2& arg_position, const int arg_num);
 	};
 }

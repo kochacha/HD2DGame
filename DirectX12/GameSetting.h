@@ -34,7 +34,7 @@ namespace KochaEngine
 	};
 
 #define MAX_BATTLE_CHARA 3
-#define MAX_BATTLE_ENEMY 6
+#define MAX_BATTLE_ENEMY 5
 
 	//ゲーム画面サイズ
 	const Vector2 SCREEN_SIZE = Vector2(1280, 720);
@@ -51,12 +51,12 @@ namespace KochaEngine
 	const Vector2 ANOTHER_WAKU_SIZE = Vector2(680, 96);
 
 	//バトル中コマンド
-	const Vector2 DEFAULT_COMMAND_POS = Vector2(20, 450);
-	const Vector2 DEFAULT_COMMAND_SIZE = Vector2(168, 240);
-	const Vector2 ANOTHER_COMMAND_SIZE = Vector2(256, 240);
-	const Vector2 ATTACK_COMMAND_SIZE = Vector2(256, 240);
+	const Vector2 DEFAULT_COMMAND_POS = Vector2(20, 482);
+	const Vector2 DEFAULT_COMMAND_SIZE = Vector2(168, 208);
+	const Vector2 ANOTHER_COMMAND_SIZE = Vector2(256, 208);
+	const Vector2 ATTACK_COMMAND_SIZE = Vector2(256, 208);
 
-	const unsigned int MAX_COMMAND_NUM = 5;
+	const unsigned int MAX_COMMAND_NUM = 4;
 
 	//バトル中ステータス
 	const Vector2 BATTLE_STATUS_POS = Vector2(1000, 500);
@@ -78,8 +78,8 @@ namespace KochaEngine
 
 	//攻撃時アニメーション時間
 	const int ATTACK_MOTION_TIME = 180;
-	const int SPELL_MOTION_TIME = 300;
-	const int SKILL_MOTION_TIME = 240;
+	//const int SPELL_MOTION_TIME = 300;
+	//const int SKILL_MOTION_TIME = 240;
 
 	const int FOCUS_MOTION_TIME = 120;
 	const int ACTIVE_MOTION_TIME = 60;

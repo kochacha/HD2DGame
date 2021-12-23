@@ -85,7 +85,9 @@ namespace KochaEngine
 		inline const Vector3 GetPosition() { return position; }
 		inline const Vector3 GetVelocity() { return velocity; }
 		inline void SetPosition(const Vector3& arg_position) { this->position = arg_position; }
-		inline const ActorParam GetParam() { return baseParam; }
+		inline const ActorParam GetBaseParam() { return baseParam; }
+		inline const ActorParam GetBattleParam() { return battleParam; }
+		inline const int GetSkillCount() { return baseParam.skills.size(); }
 	};
 }
 

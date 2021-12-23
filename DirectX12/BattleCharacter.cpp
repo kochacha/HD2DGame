@@ -14,6 +14,7 @@ KochaEngine::BattleCharacter::BattleCharacter(EffectManager* arg_effectManager, 
 	battleObjectType = arg_battleObjectType;
 	position = arg_position;
 	baseParam = arg_param;
+	battleParam = arg_param;
 
 	isActive = false;
 
@@ -275,6 +276,40 @@ void KochaEngine::BattleCharacter::Damage(const SkillParam& arg_activeData, cons
 
 void KochaEngine::BattleCharacter::MagicDamage(const SkillParam& arg_activeData, const ActorParam& arg_param)
 {
+	//ダメージ計算処理
+	auto activeParam = arg_param;
+
+	//基礎ダメージ
+	int damage = activeParam.intelligence * arg_activeData.intelligenceRate;
+	//運ダメージ範囲
+	int luckDamageRange = damage * ((float)activeParam.luck * arg_activeData.luckRate * 0.002f) + 2;
+	//運ダメージ範囲がマイナスだった場合の補正
+	if (luckDamageRange < 0) luckDamageRange = 0;
+	//運ダメージ
+	int luckDamage = Util::GetIntRand(0, luckDamageRange) - luckDamageRange * 0.25f;
+	//トータルダメージ
+	int totalDamage = damage + luckDamage;
+
+	//基礎ダメージを下回っていた場合補正する
+	if (totalDamage < arg_activeData.baseDamage) totalDamage = arg_activeData.baseDamage;
+
+	//ダメージを受ける
+	baseParam.hp -= totalDamage;
+
+	//ダメージ表記を出す位置
+	Vector3 addDamagePos = Vector3(position.x, position.y + 2, position.z - 0.01f);
+
+	//ダメージ表記
+	n3DEmitter->AddNumber3D(addDamagePos, totalDamage);
+
+	//エフェクトの再生
+	effectManager->Play(arg_activeData.effectName, position);
+
+	//ノックバックの追加
+	knockBackTime = 25;
+
+	//ダメージを食らっているテクスチャに変える
+	obj->SetTexture("Resources/Texture/Character/" + baseParam.texName + "/" + baseParam.texName + "_attack_0.png");
 }
 
 void KochaEngine::BattleCharacter::PhysicsDamage(const SkillParam& arg_activeData, const ActorParam& arg_param)
@@ -283,9 +318,11 @@ void KochaEngine::BattleCharacter::PhysicsDamage(const SkillParam& arg_activeDat
 	auto activeParam = arg_param;
 
 	//基礎ダメージ
-	int damage = activeParam.attack * arg_activeData.attackRate - baseParam.defence * 0.25f;
+	int damage = activeParam.attack * arg_activeData.attackRate - battleParam.defence * 0.25f;
 	//運ダメージ範囲
 	int luckDamageRange = damage * ((float)activeParam.luck * arg_activeData.luckRate * 0.002f) + 2;
+	//運ダメージ範囲がマイナスだった場合の補正
+	if (luckDamageRange < 0) luckDamageRange = 0;
 	//運ダメージ
 	int luckDamage = Util::GetIntRand(0, luckDamageRange) - luckDamageRange * 0.25f;
 	//トータルダメージ
@@ -346,9 +383,10 @@ void KochaEngine::BattleCharacter::FixParam()
 		baseParam.sp = 0;
 	}
 
-	if (baseParam.hp == 0 && knockBackTime <= 0)
+	if (baseParam.hp == 0 && knockBackTime <= 0 && !isKnockDown)
 	{
 		isKnockDown = true;
+		obj->SetTexture("Resources/Texture/Character/coffin.png");
 	}
 
 	if (levelUpAnimationNum > 10)
@@ -417,18 +455,18 @@ void KochaEngine::BattleCharacter::LevelUpStatus()
 	switch (battleObjectType)
 	{
 	case KochaEngine::BATTLE_PLAYER:
-		baseParam.maxHP += 4;
-		baseParam.maxSP += 3;
-		baseParam.attack += 4;
+		baseParam.maxHP += 4 + Util::GetIntRand(0, 2);
+		baseParam.maxSP += 2 + Util::GetIntRand(0, 1);
+		baseParam.attack += 4 + Util::GetIntRand(0, 1);
 		baseParam.defence += 3;
-		baseParam.intelligence += 3;
+		baseParam.intelligence += 3 + Util::GetIntRand(0, 1);
 		baseParam.skillful += 2;
 		baseParam.speed += 3;
 		break;
 	case KochaEngine::BATTLE_FIGHTER:
-		baseParam.maxHP += 5;
-		baseParam.maxSP += 2;
-		baseParam.attack += 5;
+		baseParam.maxHP += 5 + Util::GetIntRand(0, 2);
+		baseParam.maxSP += 1 + Util::GetIntRand(0, 1);
+		baseParam.attack += 5 + Util::GetIntRand(0, 1);
 		baseParam.defence += 4;
 		baseParam.intelligence += 0;
 		baseParam.skillful += 4;
