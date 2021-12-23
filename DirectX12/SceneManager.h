@@ -6,18 +6,21 @@ namespace KochaEngine
 {
 	class SceneManager
 	{
-	public:
-		SceneManager();
-		~SceneManager();
-		void AddScene(Scenes name, Scene* scene);
-		void ChangeScene(Scenes name);
-		void Load(Scenes name);
-		void Update();
-		void SpriteDraw();
-		void ObjDraw();
-		void Terminate();
 	private:
 		std::map<Scenes, Scene*> scenes;
 		Scene* currentScene;
+
+	public:
+		SceneManager();
+		~SceneManager();
+		void AddScene(Scenes arg_name, Scene* arg_scene);
+		void ChangeScene(Scenes arg_name);
+		void Load(Scenes arg_name);
+		void Update();
+		void SpriteDraw();
+		void AlphaObjDraw();
+		void ObjDraw();
+		void DrawGUI();
+		void Terminate();
 	};
 }

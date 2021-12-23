@@ -16,6 +16,7 @@ namespace KochaEngine
 		HRESULT CreatePMDRootSignature();
 		HRESULT CreateFBXRootSignature();
 		HRESULT CreatePeraRootSignature();
+		HRESULT CreateShadowRootSignature();
 
 		HRESULT result;
 
@@ -28,6 +29,7 @@ namespace KochaEngine
 		static ComPtr<ID3D12RootSignature> pmdRootSignature;
 		static ComPtr<ID3D12RootSignature> fbxRootSignature;
 		static ComPtr<ID3D12RootSignature> peraRootSignature;
+		static ComPtr<ID3D12RootSignature> shadowRootSignature;
 
 		Dx12_Wrapper& dx12;
 
@@ -42,6 +44,7 @@ namespace KochaEngine
 		static ComPtr<ID3D12RootSignature> GetPMDRootSignature() { return pmdRootSignature; }
 		static ComPtr<ID3D12RootSignature> GetFBXRootSignature() { return fbxRootSignature; }
 		static ComPtr<ID3D12RootSignature> GetPeraRootSignature() { return peraRootSignature; }
+		static ComPtr<ID3D12RootSignature> GetShadowRootSignature() { return shadowRootSignature; }
 
 	};
 }

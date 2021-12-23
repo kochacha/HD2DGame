@@ -58,6 +58,9 @@
     <FxCompile Include="GaussianBlurShader.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="DepthOfFieldShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -93,12 +96,6 @@
     <ClCompile Include="Figure2D.cpp">
       <Filter>Source\Object</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObjectManager.cpp">
-      <Filter>Source\Object</Filter>
-    </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>Source\Object</Filter>
     </ClCompile>
@@ -106,9 +103,6 @@
       <Filter>Source\Object</Filter>
     </ClCompile>
     <ClCompile Include="Texture2D.cpp">
-      <Filter>Source\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture3D.cpp">
       <Filter>Source\Object</Filter>
     </ClCompile>
     <ClCompile Include="Ending.cpp">
@@ -213,6 +207,96 @@
     <ClCompile Include="Vector4.cpp">
       <Filter>Source\Util</Filter>
     </ClCompile>
+    <ClCompile Include="CustomGui.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectManager.cpp">
+      <Filter>Source\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="LightManager.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectManager.cpp">
+      <Filter>Source\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Battle.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Source\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Block.cpp">
+      <Filter>Source\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="FieldObject.cpp">
+      <Filter>Source\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionBlock.cpp">
+      <Filter>Source\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="FieldAlphaObject.cpp">
+      <Filter>Source\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Source\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSetting.cpp">
+      <Filter>Source\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source\GameObject\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source\GameObject\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Fighter.cpp">
+      <Filter>Source\GameObject\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="BattleCharacter.cpp">
+      <Filter>Source\GameObject\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="BattleObjectManager.cpp">
+      <Filter>Source\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="BattleObject.cpp">
+      <Filter>Source\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Number3D.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Number3DEmitter.cpp">
+      <Filter>Source\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Number3DManager.cpp">
+      <Filter>Source\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Number3DOperation.cpp">
+      <Filter>Source\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraManager.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyData.cpp">
+      <Filter>Source\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonLoader.cpp">
+      <Filter>Source\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillData.cpp">
+      <Filter>Source\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Wizard.cpp">
+      <Filter>Source\GameObject\Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShaderHeader.hlsli">
@@ -285,6 +369,24 @@
     </Filter>
     <Filter Include="Source\UI">
       <UniqueIdentifier>{05958280-d496-45f3-a048-e0f08d37d814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\DataBase">
+      <UniqueIdentifier>{d783bfaf-9243-4c55-b5bf-24133491f62a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\DataBase">
+      <UniqueIdentifier>{75bf2b94-d037-49fe-aeb6-693068194ad5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GameObject">
+      <UniqueIdentifier>{1f2bd67d-77e1-4ff5-99e1-81ccb491b0f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GameObject\Actor">
+      <UniqueIdentifier>{6de05db0-fad6-4bd0-ba34-ce32d85d85f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\GameObject">
+      <UniqueIdentifier>{d0c31d25-7612-4543-90df-05517a2c7e21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\GameObject\Actor">
+      <UniqueIdentifier>{023294a7-9b89-4721-be7a-7ae5b4a3ae65}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -372,12 +474,6 @@
     <ClInclude Include="Figure2D.h">
       <Filter>Header\Object</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Header\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObjectManager.h">
-      <Filter>Header\Object</Filter>
-    </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Header\Object</Filter>
     </ClInclude>
@@ -385,9 +481,6 @@
       <Filter>Header\Object</Filter>
     </ClInclude>
     <ClInclude Include="Texture2D.h">
-      <Filter>Header\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture3D.h">
       <Filter>Header\Object</Filter>
     </ClInclude>
     <ClInclude Include="Number.h">
@@ -446,6 +539,108 @@
     </ClInclude>
     <ClInclude Include="Vector4.h">
       <Filter>Header\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomGui.h">
+      <Filter>Header\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectManager.h">
+      <Filter>Header\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="LightManager.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>Header\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Battle.h">
+      <Filter>Header\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Header\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Block.h">
+      <Filter>Header\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="FieldObject.h">
+      <Filter>Header\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionBlock.h">
+      <Filter>Header\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="FieldAlphaObject.h">
+      <Filter>Header\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Header\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Header\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSetting.h">
+      <Filter>Header\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Header\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorParam.h">
+      <Filter>Header\GameObject\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="BattleCharacter.h">
+      <Filter>Header\GameObject\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Header\GameObject\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Fighter.h">
+      <Filter>Header\GameObject\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header\GameObject\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="BattleObjectManager.h">
+      <Filter>Header\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="BattleObject.h">
+      <Filter>Header\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Number3D.h">
+      <Filter>Header\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Number3DEmitter.h">
+      <Filter>Header\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Number3DManager.h">
+      <Filter>Header\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Number3DOperation.h">
+      <Filter>Header\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraManager.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyData.h">
+      <Filter>Header\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonLoader.h">
+      <Filter>Header\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillData.h">
+      <Filter>Header\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillParam.h">
+      <Filter>Header\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Wizard.h">
+      <Filter>Header\GameObject\Actor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

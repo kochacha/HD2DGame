@@ -24,6 +24,11 @@ void KochaEngine::GameOver::ObjDraw()
 {
 }
 
+void KochaEngine::GameOver::DrawGUI()
+{
+	ImGui::Text("GameOver");
+}
+
 void KochaEngine::GameOver::Load()
 {
 }

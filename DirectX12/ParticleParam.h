@@ -1,5 +1,5 @@
 #pragma once
-#include <DirectXMath.h>
+#include <string>
 #include "Vector3.h"
 #include "Vector4.h"
 
@@ -15,6 +15,7 @@ namespace KochaEngine
 		Vector3 moveRotate;
 		Vector4 color;
 		Vector4 moveColor;
+		std::string textureName;
 		int life;
 	};
 }

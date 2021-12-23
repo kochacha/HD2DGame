@@ -66,7 +66,7 @@ namespace KochaEngine
 		HRESULT CreateDepthStencilView();
 
 		//スワップチェインの生成
-		HRESULT CreateSwapChain(const HWND& hwnd);
+		HRESULT CreateSwapChain(const HWND& arg_hwnd);
 
 		//DXGIまわり初期化
 		HRESULT InitializeDXGIDevice();
@@ -82,7 +82,7 @@ namespace KochaEngine
 		HRESULT CreatePeraResource();
 
 	public:
-		Dx12_Wrapper(HWND hwnd);
+		Dx12_Wrapper(const HWND& arg_hwnd);
 		~Dx12_Wrapper();
 
 		void Update();
@@ -95,6 +95,7 @@ namespace KochaEngine
 		ComPtr < ID3D12Device> GetDevice();//デバイス
 		ComPtr < ID3D12GraphicsCommandList> GetCmdList();//コマンドリスト
 		ComPtr < IDXGISwapChain4> GetSwapchain();//スワップチェイン
+		ComPtr < ID3D12CommandQueue> GetQue();
 		ComPtr < ID3D12DescriptorHeap> GetHeapForImgui();
 		SIZE GetWinSize();
 

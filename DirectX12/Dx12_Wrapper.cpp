@@ -15,7 +15,7 @@ using namespace std;
 using namespace DirectX;
 using namespace ImGui;
 
-KochaEngine::Dx12_Wrapper::Dx12_Wrapper(HWND hwnd)
+KochaEngine::Dx12_Wrapper::Dx12_Wrapper(const HWND& arg_hwnd)
 {
 #ifdef _DEBUG
 	//デバッグレイヤーをオンに
@@ -39,7 +39,7 @@ KochaEngine::Dx12_Wrapper::Dx12_Wrapper(HWND hwnd)
 		assert(0);
 		return;
 	}
-	if (FAILED(CreateSwapChain(hwnd)))
+	if (FAILED(CreateSwapChain(arg_hwnd)))
 	{
 		assert(0);
 		return;
@@ -56,11 +56,11 @@ KochaEngine::Dx12_Wrapper::Dx12_Wrapper(HWND hwnd)
 		return;
 	}
 
-	if (FAILED(CreatePeraResource()))
-	{
-		assert(0);
-		return;
-	}
+	//if (FAILED(CreatePeraResource()))
+	//{
+	//	assert(0);
+	//	return;
+	//}
 
 	_heapForImgui = CreateDescriptorHeapForImgui();
 	if (_heapForImgui == nullptr)
@@ -73,7 +73,7 @@ KochaEngine::Dx12_Wrapper::Dx12_Wrapper(HWND hwnd)
 		return;
 	}
 
-	if (!ImGui_ImplWin32_Init(hwnd)) {
+	if (!ImGui_ImplWin32_Init(arg_hwnd)) {
 		assert(0);
 		return;
 	}
@@ -141,7 +141,7 @@ HRESULT KochaEngine::Dx12_Wrapper::CreateDepthStencilView()
 	}
 
 	//深度のためのデスクリプタヒープ作成
-	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};//深度に使うよという事がわかればいい
+	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};//深度に使う
 	dsvHeapDesc.NumDescriptors = 1;//深度ビュー1つのみ
 	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;//デプスステンシルビューとして使う
 	dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
@@ -228,10 +228,10 @@ HRESULT KochaEngine::Dx12_Wrapper::InitializeDXGIDevice()
 }
 
 ///スワップチェイン生成関数
-HRESULT KochaEngine::Dx12_Wrapper::CreateSwapChain(const HWND& hwnd) 
+HRESULT KochaEngine::Dx12_Wrapper::CreateSwapChain(const HWND& arg_hwnd) 
 {
 	RECT rc = {};
-	::GetWindowRect(hwnd, &rc);
+	::GetWindowRect(arg_hwnd, &rc);
 
 	DXGI_SWAP_CHAIN_DESC1 swapchainDesc = {};
 	swapchainDesc.Width = _winSize.cx;
@@ -248,7 +248,7 @@ HRESULT KochaEngine::Dx12_Wrapper::CreateSwapChain(const HWND& hwnd)
 	swapchainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 	auto result = dxgiFactory->CreateSwapChainForHwnd(_cmdQueue.Get(),
-		hwnd,
+		arg_hwnd,
 		&swapchainDesc,
 		nullptr,
 		nullptr,
@@ -277,7 +277,7 @@ HRESULT KochaEngine::Dx12_Wrapper::InitializeCommand()
 	cmdQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;//タイムアウトなし
 	cmdQueueDesc.NodeMask = 0;
 	cmdQueueDesc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;//プライオリティ特に指定なし
-	cmdQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;//ここはコマンドリストと合わせてください
+	cmdQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;//コマンドリストと合わせる
 	result = _dev->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(_cmdQueue.ReleaseAndGetAddressOf()));//コマンドキュー生成
 	assert(SUCCEEDED(result));
 	return result;
@@ -478,10 +478,10 @@ void KochaEngine::Dx12_Wrapper::BeginDraw(float r,float g,float b)
 	auto resBarrier = CD3DX12_RESOURCE_BARRIER::Transition(_backBuffers[bbIdx].Get(),
 		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
-	auto _resBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
-		_peraResource.Get(),
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-		D3D12_RESOURCE_STATE_RENDER_TARGET);
+	//auto _resBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
+	//	_peraResource.Get(),
+	//	D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+	//	D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 	_cmdList->ResourceBarrier(1, &resBarrier);
 	//_cmdList->ResourceBarrier(1, &_resBarrier);
@@ -490,7 +490,7 @@ void KochaEngine::Dx12_Wrapper::BeginDraw(float r,float g,float b)
 	auto rtvH = _rtvHeaps->GetCPUDescriptorHandleForHeapStart();
 	rtvH.ptr += bbIdx * _dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-	auto rtvHeapPointer = _peraRTVHeap->GetCPUDescriptorHandleForHeapStart();
+	//auto rtvHeapPointer = _peraRTVHeap->GetCPUDescriptorHandleForHeapStart();
 
 	//深度を指定
 	auto dsvH = _dsvHeap->GetCPUDescriptorHandleForHeapStart();
@@ -524,13 +524,8 @@ void KochaEngine::Dx12_Wrapper::EndDraw()
 	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
 	auto resBarrier = CD3DX12_RESOURCE_BARRIER::Transition(_backBuffers[bbIdx].Get(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-	auto _resBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
-		_peraResource.Get(),
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-		D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 	_cmdList->ResourceBarrier(1, &resBarrier);
-	//_cmdList->ResourceBarrier(1, &_resBarrier);
 
 	//命令のクローズ
 	_cmdList->Close();
@@ -554,6 +549,11 @@ void KochaEngine::Dx12_Wrapper::EndDraw()
 ComPtr < IDXGISwapChain4> KochaEngine::Dx12_Wrapper::GetSwapchain()
 {
 	return _swapchain;
+}
+
+ComPtr<ID3D12CommandQueue> KochaEngine::Dx12_Wrapper::GetQue()
+{
+	return _cmdQueue;
 }
 
 ComPtr<ID3D12DescriptorHeap> KochaEngine::Dx12_Wrapper::GetHeapForImgui()

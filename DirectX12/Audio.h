@@ -82,16 +82,14 @@ namespace KochaEngine
 		~Audio();
 
 		void Init();
-		void LoadSound();
 
-
-		void PlayWave(const char* strFileName, float volume);
-		void LoopPlayWave(const char* strFileName, float volume);
+		void PlayWave(const char* arg_strFileName, const float arg_volume);
+		void LoopPlayWave(const char* arg_strFileName, const float arg_volume);
 		void Stop();
 		void Pause();
 		void ReStart();
-		void SetVolume(float volume);
+		void SetVolume(const float arg_volume);
 
-		void SetPlaySpeed(float speed);
+		void SetPlaySpeed(const float arg_speed);
 	};
 }

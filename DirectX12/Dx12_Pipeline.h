@@ -18,6 +18,7 @@ namespace KochaEngine
 
 		void CreateSpriteGraphicsPipelineState();
 		void CreateOBJGraphicsPipelineState();
+		void CreateAlphaOBJGraphicsPipelineState();
 		void CreatePMDGraphicsPipelineState();
 		void CreateFBXGraphicsPipelineState();
 		void CreatePeraGraphicsPipelineState();
@@ -27,10 +28,13 @@ namespace KochaEngine
 		~Dx12_Pipeline();
 
 		static ComPtr<ID3D12PipelineState> spritePipelineState;
+		static ComPtr<ID3D12PipelineState> spriteAlphaPipelineState;
 		static ComPtr<ID3D12PipelineState> objPipelineState;
+		static ComPtr<ID3D12PipelineState> alphaObjPipelineState;
 		static ComPtr<ID3D12PipelineState> pmdPipelineState;
 		static ComPtr<ID3D12PipelineState> fbxPipelineState;
 		static ComPtr<ID3D12PipelineState> peraPipelineState;
+		static ComPtr<ID3D12PipelineState> shadowPipelineState;
 		static ComPtr<ID3D12PipelineState> vignettePipelineState;
 		static ComPtr<ID3D12PipelineState> bloomPipelineState;
 		static ComPtr<ID3D12PipelineState> gameBoyPipelineState;
@@ -39,5 +43,6 @@ namespace KochaEngine
 		static ComPtr<ID3D12PipelineState> grayScalePipelineState;
 		static ComPtr<ID3D12PipelineState> mosaicPipelineState;
 		static ComPtr<ID3D12PipelineState> blurPipelineState;
+		static ComPtr<ID3D12PipelineState> dofPipelineState;
 	};
 }

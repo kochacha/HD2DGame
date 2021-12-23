@@ -2,9 +2,13 @@
 
 float4 main(Output input) : SV_TARGET
 {
-    //デフォルト
+    ////デフォルト
     float4 col = tex0.Sample(smp, input.uv);
     return col;
+
+    //深度値の出力
+    //float dep = pow(depthTex.Sample(smp, input.uv),300);
+    //return float4(dep, dep, dep, 1);
 
     //色反転
     //float4 col = tex0.Sample(smp, input.uv);

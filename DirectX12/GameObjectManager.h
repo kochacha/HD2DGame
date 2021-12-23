@@ -5,31 +5,35 @@
 
 namespace KochaEngine
 {
+	class Player;
+	class Fighter;
+
 	class GameObjectManager
 	{
 	private:
 		Camera* camera;
+		LightManager* lightManager;
 		std::vector<GameObject*> gameObjects;
 
 	public:
 		GameObjectManager();
 		~GameObjectManager();
 
-		void AddObject(GameObject* gameObject);
+		void AddObject(GameObject* arg_gameObject);
 		void Initialize();
 		void Update();
-		void ObjDraw(Camera* camera);
+		void AlphaObjDrawFieldScene(Camera* arg_camera, LightManager* arg_lightManager);
+		void AlphaObjDrawBattleScene(Camera* arg_camera, LightManager* arg_lightManager);
+		void ObjDrawFieldScene(Camera* arg_camera, LightManager* arg_lightManager);
+		void ObjDrawBattleScene(Camera* arg_camera, LightManager* arg_lightManager);
 		void SpriteDraw();
-		void CheckBlock(GameObject* obj, GameObjectType otherType);
-		void CheckHitSphere(GameObject* obj, GameObjectType otherType);
-		bool HitSphereToSphere(GameObject* obj, GameObjectType otherType);
-		bool HitSphereToBox(GameObject* obj, GameObjectType otherType);
-		bool HitPlayerKnockBack(GameObject* obj, GameObjectType otherType);
-		bool HitPlayerKnockBack2(GameObject* obj, GameObjectType otherType);
-		bool CheckBombAlive();
+		void CheckBlock(GameObject* arg_obj, const GameObjectType& arg_otherType);
 		int GetEnemyCount();
 
+		Player* GetPlayer();
+		Fighter* GetFighter();
+
 		void Remove();
-		void RemoveAll();
+		void Clear();
 	};
 }

@@ -10,17 +10,15 @@ namespace KochaEngine
 	class Title : public Scene
 	{
 	private:
-		Camera* camera;
 		Object* obj;
+		Texture2D* backTexture;
+		Texture2D* fadeTexture;
 
 		bool bgmFlag;
 		bool fadeFlag;
 		float fadeAlpha;
-		float down;
 
-		int count;
-
-		void Fade();
+		void FadeUpdate();
 
 	public:
 		Title();
@@ -29,6 +27,7 @@ namespace KochaEngine
 		void Update() override;
 		void SpriteDraw() override;
 		void ObjDraw() override;
+		void DrawGUI() override;
 		void Load() override;
 		Scenes Next() override;
 	};

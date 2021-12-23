@@ -10,9 +10,9 @@ KochaEngine::ParticleManager::~ParticleManager()
 	RemoveAll();
 }
 
-void KochaEngine::ParticleManager::AddParticle(Particle * particle)
+void KochaEngine::ParticleManager::AddParticle(Particle* arg_particle)
 {
-	particles.push_back(particle);
+	particles.push_back(arg_particle);
 }
 
 void KochaEngine::ParticleManager::Update()
@@ -25,13 +25,15 @@ void KochaEngine::ParticleManager::Update()
 	Remove();
 }
 
-void KochaEngine::ParticleManager::Draw(Camera* camera)
+void KochaEngine::ParticleManager::Draw(Camera* arg_camera, LightManager* arg_lightManager)
 {
-	if (camera == nullptr) return;
+	if (arg_camera == nullptr) return;
+	if (arg_lightManager == nullptr) return;
+
 	auto end = particles.end();
 	for (auto it = particles.begin(); it != end; ++it)
 	{
-		(*it)->Draw(camera);
+		(*it)->Draw(arg_camera, arg_lightManager);
 	}
 }
 

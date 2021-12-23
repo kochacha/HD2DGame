@@ -1,5 +1,7 @@
 #include "Scene.h"
 
+int KochaEngine::Scene::mapNum = 0;
+
 KochaEngine::Scene::Scene()
 {
 }
@@ -26,6 +28,14 @@ void KochaEngine::Scene::SpriteDraw()
 }
 
 void KochaEngine::Scene::ObjDraw()
+{
+}
+
+void KochaEngine::Scene::AlphaObjDraw()
+{
+}
+
+void KochaEngine::Scene::DrawGUI()
 {
 }
 

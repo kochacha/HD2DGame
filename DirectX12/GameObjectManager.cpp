@@ -1,5 +1,8 @@
 #include "GameObjectManager.h"
 #include "Collision.h"
+#include "Player.h"
+#include "Fighter.h"
+#include <map>
 
 KochaEngine::GameObjectManager::GameObjectManager()
 {
@@ -7,16 +10,19 @@ KochaEngine::GameObjectManager::GameObjectManager()
 
 KochaEngine::GameObjectManager::~GameObjectManager()
 {
-	RemoveAll();
+	//ゲームオブジェクトの全削除
+	Clear();
 }
 
-void KochaEngine::GameObjectManager::AddObject(GameObject* gameObject)
+void KochaEngine::GameObjectManager::AddObject(GameObject* arg_gameObject)
 {
-	gameObjects.push_back(gameObject);
+	//ゲームオブジェクトの追加
+	gameObjects.push_back(arg_gameObject);
 }
 
 void KochaEngine::GameObjectManager::Initialize()
 {
+	//全てのゲームオブジェクトの初期化
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
 	{
@@ -26,212 +32,138 @@ void KochaEngine::GameObjectManager::Initialize()
 
 void KochaEngine::GameObjectManager::Update()
 {
+	//全てのゲームオブジェクトの更新
 	for (int i = 0; i != gameObjects.size(); i++)
 	{
 		gameObjects[i]->Update();
 	}
+	//IsDeleteがtrueならそのオブジェクトを削除
 	Remove();
 }
 
-void KochaEngine::GameObjectManager::ObjDraw(Camera* camera)
+void KochaEngine::GameObjectManager::AlphaObjDrawFieldScene(Camera* arg_camera, LightManager* arg_lightManager)
 {
-	if (camera == nullptr) return;
-	this->camera = camera;
+	//フィールドシーン用の透明オブジェクトの描画
+	if (arg_camera == nullptr) return;
+	if (arg_lightManager == nullptr) return;
+
+	this->camera = arg_camera;
+	this->lightManager = arg_lightManager;
+
+	float cameraPosZ = camera->GetEye().z + 18;
+
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
 	{
-		if ((*it)->IsDead())
-		{
-			continue;
-		}	
-		(*it)->ObjDraw(this->camera);
+		if (!(*it)->IsAlphaObject()) continue; //AlphaObjectじゃない場合は描画しない
+		if ((*it)->IsDead()) continue;
+		if ((*it)->GetPosition().z < cameraPosZ) continue; //AlphaObjectがCameraよりも手前にあったら描画しない
+
+		(*it)->ObjDraw(this->camera, this->lightManager);
 	}
+
+}
+
+void KochaEngine::GameObjectManager::AlphaObjDrawBattleScene(Camera* arg_camera, LightManager* arg_lightManager)
+{
+	//バトルシーン用の透明オブジェクトの描画
+	if (arg_camera == nullptr) return;
+	if (arg_lightManager == nullptr) return;
+
+	this->camera = arg_camera;
+	this->lightManager = arg_lightManager;
+
+	float cameraPosZ = camera->GetEye().z + 80;
+
+	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
 	{
-		if ((*it)->IsDead())
-		{
-			continue;
-		}
-		(*it)->ObjDraw(this->camera);
+		auto type = (*it)->GetType();
+		if (!(*it)->IsAlphaObject()) continue; //AlphaObjectじゃない場合は描画しない
+		if ((*it)->IsDead()) continue;
+		if ((*it)->GetPosition().z < cameraPosZ) continue; //AlphaObjectが画面の少し奥よりも更に奥にあったら描画しない
+
+		(*it)->ObjDraw(this->camera, this->lightManager);
+	}
+}
+
+void KochaEngine::GameObjectManager::ObjDrawFieldScene(Camera* arg_camera, LightManager* arg_lightManager)
+{
+	//フィールドシーン用の不透明オブジェクトの描画
+	if (arg_camera == nullptr) return;
+	if (arg_lightManager == nullptr) return;
+
+	this->camera = arg_camera;
+	this->lightManager = arg_lightManager;
+
+	auto end = gameObjects.end();
+	for (auto it = gameObjects.begin(); it != end; ++it)
+	{
+		if ((*it)->IsAlphaObject()) continue; //AlphaObjectの場合は描画しない
+		if ((*it)->IsDead()) continue;
+
+		(*it)->ObjDraw(this->camera, this->lightManager);
+	}
+}
+
+void KochaEngine::GameObjectManager::ObjDrawBattleScene(Camera* arg_camera, LightManager* arg_lightManager)
+{
+	//バトルシーン用の不透明オブジェクトの描画
+	if (arg_camera == nullptr) return;
+	if (arg_lightManager == nullptr) return;
+
+	camera = arg_camera;
+	lightManager = arg_lightManager;
+
+	float cameraPosZ = camera->GetEye().z + 100;
+
+	auto end = gameObjects.end();
+	for (auto it = gameObjects.begin(); it != end; ++it)
+	{
+		if ((*it)->IsAlphaObject()) continue; //AlphaObjectの場合は描画しない
+		if ((*it)->IsDead()) continue;
+
+		(*it)->ObjDraw(this->camera, this->lightManager);
 	}
 }
 
 void KochaEngine::GameObjectManager::SpriteDraw()
 {
+	//平行投影テクスチャの描画
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
 	{
-		if ((*it)->IsDead())
-		{
-			continue;
-		}
+		if ((*it)->IsDead()) continue;
+
 		(*it)->SpriteDraw();
 	}
 }
 
-void KochaEngine::GameObjectManager::CheckBlock(GameObject * obj, GameObjectType otherType)
+void KochaEngine::GameObjectManager::CheckBlock(GameObject* arg_obj, const GameObjectType& arg_otherType)
 {
-	_Sphere objSphere = obj->GetSphere();
-	GameObjectType objType = obj->GetType();
-	XMFLOAT3 objPos = obj->GetPosition();
+	//自分以外のオブジェクトと当たっていないかのチェック
+	_Sphere objSphere = arg_obj->GetSphere();
+	GameObjectType objType = arg_obj->GetType();
+	XMFLOAT3 objPos = arg_obj->GetPosition();
 
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
 	{
 		if ((*it)->GetType() == objType) continue; //自分と同じオブジェクトだったら無視
-		if ((*it)->GetType() != otherType) continue; //指定のオブジェクト以外だったら無視
+		if ((*it)->GetType() != arg_otherType) continue; //指定のオブジェクト以外だったら無視
 		if ((*it)->IsDead()) continue; //オブジェクトが死んでいたら無視
 
 		if (Collision::HitSphereToBox(objSphere,(*it)->GetBox()))
 		{
-			obj->HitBlock((*it)->GetBox());					
+			arg_obj->HitBlock((*it)->GetBox());
 		}
 	}
 
-}
-
-void KochaEngine::GameObjectManager::CheckHitSphere(GameObject * obj, GameObjectType otherType)
-{
-	_Sphere objSphere = obj->GetSphere();
-	GameObjectType objType = obj->GetType();
-
-	auto end = gameObjects.end();
-	for (auto it = gameObjects.begin(); it != end; ++it)
-	{
-		if ((*it)->GetType() == objType) continue; //自分と同じオブジェクトだったら無視
-		if ((*it)->GetType() != otherType) continue; //指定のオブジェクト以外だったら無視
-		if ((*it)->IsDead()) continue; //オブジェクトが死んでいたら無視
-
-		if (Collision::HitSphereToSphere(objSphere, (*it)->GetSphere()))
-		{
-			(*it)->Hit();
-		}
-	}
-}
-
-bool KochaEngine::GameObjectManager::HitSphereToSphere(GameObject * obj, GameObjectType otherType)
-{
-	if (obj == nullptr) return false;
-
-	_Sphere objSphere = obj->GetSphere();
-	GameObjectType objType = obj->GetType();
-	XMFLOAT3 objPos = obj->GetPosition();
-	XMFLOAT3 objVel = obj->GetVelocity();
-	float objSpeed = obj->GetSpeed();
-
-	auto end = gameObjects.end();
-	for (auto it = gameObjects.begin(); it != end; ++it)
-	{
-		if ((*it)->GetType() == objType) continue; //自分と同じオブジェクトだったら無視
-		if ((*it)->GetType() != otherType) continue; //指定のオブジェクト以外だったら無視
-		if ((*it)->IsDead()) continue; //オブジェクトが死んでいたら無視
-
-		if (Collision::HitSphereToSphere(objSphere, (*it)->GetSphere()))
-		{
-			(*it)->Hit();
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool KochaEngine::GameObjectManager::HitSphereToBox(GameObject * obj, GameObjectType otherType)
-{
-	if (obj == nullptr) return false;
-
-	_Sphere objSphere = obj->GetSphere();
-	GameObjectType objType = obj->GetType();
-	XMFLOAT3 objPos = obj->GetPosition();
-	XMFLOAT3 objVel = obj->GetVelocity();
-	float objSpeed = obj->GetSpeed();
-
-	auto end = gameObjects.end();
-	for (auto it = gameObjects.begin(); it != end; ++it)
-	{
-		if ((*it)->GetType() == objType) continue; //自分と同じオブジェクトだったら無視
-		if ((*it)->GetType() != otherType) continue; //指定のオブジェクト以外だったら無視
-		if ((*it)->IsDead()) continue; //オブジェクトが死んでいたら無視
-
-		if (Collision::HitSphereToBox(objSphere, (*it)->GetBox()))
-		{
-			(*it)->Hit();
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool KochaEngine::GameObjectManager::HitPlayerKnockBack(GameObject * obj, GameObjectType otherType)
-{
-	if (obj == nullptr) return false;
-
-	_Sphere objSphere = obj->GetSphere();
-	GameObjectType objType = obj->GetType();
-	XMFLOAT3 objPos = obj->GetPosition();
-	XMFLOAT3 objVel = obj->GetVelocity();
-	float objSpeed = obj->GetSpeed();
-
-	auto end = gameObjects.end();
-	for (auto it = gameObjects.begin(); it != end; ++it)
-	{
-		if ((*it)->GetType() == objType) continue; //自分と同じオブジェクトだったら無視
-		if ((*it)->GetType() != otherType) continue; //指定のオブジェクト以外だったら無視
-		if ((*it)->IsDead()) continue; //オブジェクトが死んでいたら無視
-
-		if (Collision::HitSphereToSphere(objSphere, (*it)->GetSphere()))
-		{	
-			obj->SetKnockBackVel((*it)->GetVelocity());		
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool KochaEngine::GameObjectManager::HitPlayerKnockBack2(GameObject * obj, GameObjectType otherType)
-{
-	if (obj == nullptr) return false;
-
-	_Sphere objSphere = obj->GetSphere();
-	GameObjectType objType = obj->GetType();
-	XMFLOAT3 objPos = obj->GetPosition();
-	XMFLOAT3 objVel = obj->GetVelocity();
-	float objSpeed = obj->GetSpeed();
-
-	auto end = gameObjects.end();
-	for (auto it = gameObjects.begin(); it != end; ++it)
-	{
-		if ((*it)->GetType() == objType) continue; //自分と同じオブジェクトだったら無視
-		if ((*it)->GetType() != otherType) continue; //指定のオブジェクト以外だったら無視
-		if ((*it)->IsDead()) continue; //オブジェクトが死んでいたら無視
-
-		if (Collision::HitSphereToSphere(objSphere, (*it)->GetSphere()))
-		{	
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool KochaEngine::GameObjectManager::CheckBombAlive()
-{
-
-	auto end = gameObjects.end();
-	for (auto it = gameObjects.begin(); it != end; ++it)
-	{		
-		//if ((*it)->GetType() == TYPE)  //指定のオブジェクト以外だったら無視
-		//{
-		//	return true;
-		//}
-	}
-	return false;
 }
 
 int KochaEngine::GameObjectManager::GetEnemyCount()
 {
+	//エネミーの数を数えて返す
 	int count = 0;
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
@@ -246,6 +178,7 @@ int KochaEngine::GameObjectManager::GetEnemyCount()
 
 void KochaEngine::GameObjectManager::Remove()
 {
+	//isDeleteフラグがtrueのオブジェクトは削除
 	for (auto it = gameObjects.begin(); it != gameObjects.end();)
 	{
 		if (!(*it)->IsDelete()) { ++it; continue; }
@@ -254,8 +187,9 @@ void KochaEngine::GameObjectManager::Remove()
 	}
 }
 
-void KochaEngine::GameObjectManager::RemoveAll()
+void KochaEngine::GameObjectManager::Clear()
 {
+	//ゲームオブジェクトの全削除
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
 	{
@@ -264,45 +198,52 @@ void KochaEngine::GameObjectManager::RemoveAll()
 	gameObjects.clear();
 }
 
-//
-//Player * KochaEngine::GameObjectManager::GetPlayer()
+//void KochaEngine::GameObjectManager::RemoveBattleObject()
 //{
-//	auto end = gameObjects.end();
-//	for (auto it = gameObjects.begin(); it != end; ++it)
+//	//バトルシーン用のオブジェクトの削除
+//	//バトル終了時に呼ぶ
+//	for (auto it = gameObjects.begin(); it != gameObjects.end();)
 //	{
-//		if ((*it)->GetType() == PLAYER)
+//		auto type = (*it)->GetType();
+//		if (!(*it)->IsDelete() &&
+//			type != ENEMY &&
+//			type != BATTLE_PLAYER && 
+//			type != BATTLE_FIGHTER)
 //		{
-//			Player* player = static_cast<Player*>(static_cast<void*>(*it));
-//			return player;
+//			++it; 
+//			continue; 
 //		}
+//		delete* it;
+//		it = gameObjects.erase(it);
 //	}
-//	return nullptr;
 //}
-//
-//Tower * KochaEngine::GameObjectManager::GetTower()
-//{
-//	auto end = gameObjects.end();
-//	for (auto it = gameObjects.begin(); it != end; ++it)
-//	{
-//		if ((*it)->GetType() == TOWER)
-//		{
-//			Tower* tower = static_cast<Tower*>(static_cast<void*>(*it));
-//			return tower;
-//		}
-//	}
-//	return nullptr;
-//}
-//
-//Boss * KochaEngine::GameObjectManager::GetBoss()
-//{
-//	auto end = gameObjects.end();
-//	for (auto it = gameObjects.begin(); it != end; ++it)
-//	{
-//		if ((*it)->GetType() == BOSS)
-//		{
-//			Boss* boss = static_cast<Boss*>(static_cast<void*>(*it));
-//			return boss;
-//		}
-//	}
-//	return nullptr;
-//}
+
+KochaEngine::Player* KochaEngine::GameObjectManager::GetPlayer()
+{
+	//プレイヤーを探して返す
+	auto end = gameObjects.end();
+	for (auto it = gameObjects.begin(); it != end; ++it)
+	{
+		if ((*it)->GetType() == FIELD_PLAYER)
+		{
+			Player* player = static_cast<Player*>(static_cast<void*>(*it));
+			return player;
+		}
+	}
+	return nullptr;
+}
+
+KochaEngine::Fighter* KochaEngine::GameObjectManager::GetFighter()
+{
+	//ファイターを探して返す
+	auto end = gameObjects.end();
+	for (auto it = gameObjects.begin(); it != end; ++it)
+	{
+		if ((*it)->GetType() == FIELD_FIGHTER)
+		{
+			Fighter* fighter = static_cast<Fighter*>(static_cast<void*>(*it));
+			return fighter;
+		}
+	}
+	return nullptr;
+}

@@ -11,16 +11,18 @@ ID3D12GraphicsCommandList* KochaEngine::Texture2D::cmdList{};
 SIZE KochaEngine::Texture2D::winSize{};
 UINT KochaEngine::Texture2D::descriptorHandleIncrementSize{};
 
-KochaEngine::Texture2D::Texture2D(const std::string& texName, Vector2 position, Vector2 size, float rotate)
-	: texName(texName), position(position), size(size), rotate(rotate)
+KochaEngine::Texture2D::Texture2D(const std::string& arg_texName, const Vector2& arg_position,
+	const Vector2& arg_size, const float arg_rotate)
+	: texName(arg_texName), position(arg_position), size(arg_size), rotate(arg_rotate)
 {
 	SetVertices();
 	CreateDepthStencilView();
 	CreateBufferView();
 }
 
-KochaEngine::Texture2D::Texture2D(const std::string& texName, UINT x, UINT y, UINT texNum, Vector2 position, Vector2 size, float rotate)
-	: texName(texName), cutX(x), cutY(y), texNum(texNum), position(position), size(size), rotate(rotate)
+KochaEngine::Texture2D::Texture2D(const std::string& arg_texName, const UINT arg_x, const UINT arg_y,
+	const UINT arg_texNum, const Vector2& arg_position, const Vector2& arg_size, const float arg_rotate)
+	: texName(arg_texName), cutX(arg_x), cutY(arg_y), texNum(arg_texNum), position(arg_position), size(arg_size), rotate(arg_rotate)
 {
 	maxTex = cutX * cutY;
 	cutSizeX = 1.0f / (float)cutX;
@@ -34,20 +36,30 @@ KochaEngine::Texture2D::~Texture2D()
 {
 }
 
-void KochaEngine::Texture2D::StaticInit(ID3D12Device* device, SIZE winSize)
+void KochaEngine::Texture2D::StaticInit(ID3D12Device* arg_device, const SIZE arg_winSize)
 {
-	KochaEngine::Texture2D::winSize = winSize;
+	KochaEngine::Texture2D::winSize = arg_winSize;
 
-	if (device == nullptr) return;
-	KochaEngine::Texture2D::device = device;
+	if (arg_device == nullptr) return;
+	KochaEngine::Texture2D::device = arg_device;
 
 	descriptorHandleIncrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
-void KochaEngine::Texture2D::BeginDraw(ID3D12GraphicsCommandList* cmdList)
+void KochaEngine::Texture2D::BeginDrawAlphaSort(ID3D12GraphicsCommandList* arg_cmdList)
 {
-	if (cmdList == nullptr) return;
-	KochaEngine::Texture2D::cmdList = cmdList;
+	if (arg_cmdList == nullptr) return;
+	KochaEngine::Texture2D::cmdList = arg_cmdList;
+
+	cmdList->SetPipelineState(Dx12_Pipeline::spriteAlphaPipelineState.Get());
+	cmdList->SetGraphicsRootSignature(Dx12_RootSignature::GetSpriteRootSignature().Get());
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+}
+
+void KochaEngine::Texture2D::BeginDraw(ID3D12GraphicsCommandList* arg_cmdList)
+{
+	if (arg_cmdList == nullptr) return;
+	KochaEngine::Texture2D::cmdList = arg_cmdList;
 
 	cmdList->SetPipelineState(Dx12_Pipeline::spritePipelineState.Get());
 	cmdList->SetGraphicsRootSignature(Dx12_RootSignature::GetSpriteRootSignature().Get());
@@ -67,12 +79,12 @@ void KochaEngine::Texture2D::SetVertices()
 	vertices[3] = { {size.x,0,0},{1.0f,0.0f} };
 }
 
-void KochaEngine::Texture2D::SetSize(Vector2 size)
+void KochaEngine::Texture2D::SetSize(const Vector2& arg_size)
 {
-	vertices[0] = { {0,size.y,0},{0.0f,1.0f} };
+	vertices[0] = { {0,arg_size.y,0},{0.0f,1.0f} };
 	vertices[1] = { {0,0,0},{0.0f,0.0f} };
-	vertices[2] = { {size.x,size.y,0},{1.0f,1.0f} };
-	vertices[3] = { {size.x,0,0},{1.0f,0.0f} };
+	vertices[2] = { {arg_size.x,arg_size.y,0},{1.0f,1.0f} };
+	vertices[3] = { {arg_size.x,0,0},{1.0f,0.0f} };
 	auto result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 
 	for (int i = 0; i < _countof(vertices); i++)
@@ -228,14 +240,14 @@ void KochaEngine::Texture2D::Draw()
 	cmdList->DrawInstanced(4, 1, 0, 0);
 }
 
-void KochaEngine::Texture2D::Draw(Vector2 position)
+void KochaEngine::Texture2D::Draw(const Vector2& arg_position)
 {
 	auto result = constBuff->Map(0, nullptr, (void**)&constMap);
 
 	matWorld = DirectX::XMMatrixIdentity();
 
 	matWorld *= DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(rotate));
-	matWorld *= DirectX::XMMatrixTranslation(position.x, position.y, 0);
+	matWorld *= DirectX::XMMatrixTranslation(arg_position.x, arg_position.y, 0);
 	constMap->mat = matWorld * matProjection;
 
 	constBuff->Unmap(0, nullptr);
@@ -254,10 +266,10 @@ void KochaEngine::Texture2D::Draw(Vector2 position)
 	cmdList->DrawInstanced(4, 1, 0, 0);
 }
 
-void KochaEngine::Texture2D::AnimationDraw(UINT animationRate, Vector2 position)
+void KochaEngine::Texture2D::AnimationDraw(const UINT arg_animationRate, const Vector2& arg_position)
 {
 
-	if (animationCount >= animationRate)
+	if (animationCount >= arg_animationRate)
 	{
 		if (texNum > maxTex)
 		{
@@ -281,7 +293,7 @@ void KochaEngine::Texture2D::AnimationDraw(UINT animationRate, Vector2 position)
 	matWorld = DirectX::XMMatrixIdentity();
 
 	matWorld *= DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(rotate));
-	matWorld *= DirectX::XMMatrixTranslation(position.x, position.y, 0);
+	matWorld *= DirectX::XMMatrixTranslation(arg_position.x, arg_position.y, 0);
 	constMap->mat = matWorld * matProjection;
 
 	constBuff->Unmap(0, nullptr);
@@ -300,7 +312,7 @@ void KochaEngine::Texture2D::AnimationDraw(UINT animationRate, Vector2 position)
 	cmdList->DrawInstanced(4, 1, 0, 0);
 }
 
-void KochaEngine::Texture2D::SetTexNum(UINT texNum)
+void KochaEngine::Texture2D::SetTexNum(const UINT arg_texNum)
 {
 	int a = 0;
 	int b, c;
@@ -310,7 +322,7 @@ void KochaEngine::Texture2D::SetTexNum(UINT texNum)
 		for (UINT x = 0; x < cutX; x++)
 		{
 			a++;
-			if (a == texNum)
+			if (a == arg_texNum)
 			{
 				b = x;
 				c = y;

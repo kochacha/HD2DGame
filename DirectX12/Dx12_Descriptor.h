@@ -12,6 +12,7 @@ namespace KochaEngine
 
 		static ComPtr<ID3D12DescriptorHeap> heap;
 		static ComPtr<ID3D12DescriptorHeap> fbxHeap;
+		static ComPtr<ID3D12DescriptorHeap> depthHeap;
 
 		HRESULT CreateHeap();
 
@@ -27,5 +28,6 @@ namespace KochaEngine
 
 		static ComPtr<ID3D12DescriptorHeap> GetHeap() { return heap; }
 		static ComPtr<ID3D12DescriptorHeap> GetFBXHeap() { return fbxHeap; }
+		static ComPtr<ID3D12DescriptorHeap> GetDepthHeap() { return depthHeap; }
 	};
 }

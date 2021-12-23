@@ -40,7 +40,7 @@ bool KochaEngine::Window::Create()
 	hwnd = CreateWindow(w.lpszClassName,//クラス名指定
 		L"MyEngine",//タイトルバーの文字
 		WS_OVERLAPPEDWINDOW,//タイトルバーと境界線があるウィンドウです
-		CW_USEDEFAULT ,//表示X座標はOSにお任せします
+		CW_USEDEFAULT,//表示X座標はOSにお任せします
 		CW_USEDEFAULT,//表示Y座標はOSにお任せします
 		wrc.right - wrc.left,//ウィンドウ幅
 		wrc.bottom - wrc.top,//ウィンドウ高
@@ -84,19 +84,4 @@ bool KochaEngine::Window::Show()
 
 	ShowWindow(this->hwnd, SW_SHOW);
 	return true;
-}
-
-HWND KochaEngine::Window::GetHwnd()
-{
-	return hwnd;
-}
-
-const unsigned int KochaEngine::Window::GetWIN_WIDTH()
-{
-	return WIN_WIDTH;
-}
-
-const unsigned int KochaEngine::Window::GetWIN_HEIGHT()
-{
-	return WIN_HEIGHT;
 }

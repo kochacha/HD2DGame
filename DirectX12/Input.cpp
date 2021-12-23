@@ -21,7 +21,7 @@ DIMOUSESTATE2 mouseStatePre;
 XINPUT_VIBRATION vibration;
 int time = 0;
 
-void KochaEngine::Input::Init(HWND hwnd)
+void KochaEngine::Input::Init(const HWND arg_hwnd)
 {
 	memset(&keys, 0, sizeof(keys));
 	memset(&olds, 0, sizeof(olds));
@@ -29,10 +29,10 @@ void KochaEngine::Input::Init(HWND hwnd)
 	result = DirectInput8Create(GetModuleHandle(0), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)(&dinput), NULL);
 	result = dinput->CreateDevice(GUID_SysKeyboard, &key, NULL);
 	result = key->SetDataFormat(&c_dfDIKeyboard);
-	result = key->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND | DISCL_NOWINKEY);
+	result = key->SetCooperativeLevel(arg_hwnd, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND | DISCL_NOWINKEY);
 	result = dinput->CreateDevice(GUID_SysMouse, &devMouse, NULL);
 	result = devMouse->SetDataFormat(&c_dfDIMouse2);
-	result = devMouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	result = devMouse->SetCooperativeLevel(arg_hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	key->Acquire();
 	ZeroMemory(&padState, sizeof(XINPUT_STATE));
 	ZeroMemory(&prevPadState, sizeof(XINPUT_STATE));
@@ -66,39 +66,39 @@ void KochaEngine::Input::Terminate()
 	Release(devMouse);
 }
 
-bool KochaEngine::Input::CheckKey(UINT index)
+bool KochaEngine::Input::CheckKey(const UINT arg_index)
 {
 	bool flag = false;
 	key->GetDeviceState(sizeof(keys), &keys);
-	if (keys[index] & 0x80)
+	if (keys[arg_index] & 0x80)
 	{
 		flag = true;
 	}
-	olds[index] = keys[index];
+	olds[arg_index] = keys[arg_index];
 	return flag;
 }
 
-bool KochaEngine::Input::TriggerKey(UINT index)
+bool KochaEngine::Input::TriggerKey(const UINT arg_index)
 {
 	bool flag = false;
 	key->GetDeviceState(sizeof(keys), &keys);
-	if ((keys[index] & 0x80) && !(olds[index] & 0x80))
+	if ((keys[arg_index] & 0x80) && !(olds[arg_index] & 0x80))
 	{
 		flag = true;
 	}
-	olds[index] = keys[index];
+	olds[arg_index] = keys[arg_index];
 	return flag;
 }
 
-bool KochaEngine::Input::TriggerReleaseKey(UINT index)
+bool KochaEngine::Input::TriggerReleaseKey(const UINT arg_index)
 {
 	bool flag = false;
 	key->GetDeviceState(sizeof(keys), &keys);
-	if (!(keys[index] & 0x80) && (olds[index] & 0x80))
+	if (!(keys[arg_index] & 0x80) && (olds[arg_index] & 0x80))
 	{
 		flag = true;
 	}
-	olds[index] = keys[index];
+	olds[arg_index] = keys[arg_index];
 	return flag;
 }
 
@@ -159,14 +159,14 @@ KochaEngine::Input::MouseMove KochaEngine::Input::GetMouseMove()
 	return tmp;
 }
 
-bool KochaEngine::Input::CheckPadButton(int button)
+bool KochaEngine::Input::CheckPadButton(const int arg_button)
 {
-	return padState.Gamepad.wButtons & button;
+	return padState.Gamepad.wButtons & arg_button;
 }
 
-bool KochaEngine::Input::TriggerPadButton(int button)
+bool KochaEngine::Input::TriggerPadButton(const int arg_button)
 {
-	return (padState.Gamepad.wButtons & button) && !(prevPadState.Gamepad.wButtons & button);
+	return (padState.Gamepad.wButtons & arg_button) && !(prevPadState.Gamepad.wButtons & arg_button);
 }
 
 bool KochaEngine::Input::CheckPadRightTrigger()
@@ -329,21 +329,21 @@ KochaEngine::Input::float2 KochaEngine::Input::GetRStickDirection()
 }
 
 
-void KochaEngine::Input::LeftVibration(unsigned int power, int setTime)
+void KochaEngine::Input::LeftVibration(const unsigned int arg_power, const int arg_setTime)
 {
-	time = setTime;
-	vibration.wLeftMotorSpeed = power;
+	time = arg_setTime;
+	vibration.wLeftMotorSpeed = arg_power;
 }
 
-void KochaEngine::Input::RightVibration(unsigned int power, int setTime)
+void KochaEngine::Input::RightVibration(const unsigned int arg_power, const int arg_setTime)
 {
-	time = setTime;
-	vibration.wRightMotorSpeed = power;
+	time = arg_setTime;
+	vibration.wRightMotorSpeed = arg_power;
 }
 
-void KochaEngine::Input::Vibration(unsigned int power, int setTime)
+void KochaEngine::Input::Vibration(const unsigned int arg_power, const int arg_setTime)
 {
-	time = setTime;
-	vibration.wLeftMotorSpeed = power;
-	vibration.wRightMotorSpeed = power;
+	time = arg_setTime;
+	vibration.wLeftMotorSpeed = arg_power;
+	vibration.wRightMotorSpeed = arg_power;
 }

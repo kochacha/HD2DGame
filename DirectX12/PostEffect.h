@@ -23,6 +23,7 @@ namespace KochaEngine
 		GRAY_SCALE_SHADER,
 		MOSAIC_SHADER,
 		GAUSSIAN_BLUR_SHADER,
+		DEPTH_OF_FIELD_SHADER,
 	};
 
 	class PostEffect
@@ -44,6 +45,7 @@ namespace KochaEngine
 		PostEffect();
 		~PostEffect();
 
+		void PreDrawShadow(ID3D12GraphicsCommandList* cmdList);
 		void PreDrawScene(ID3D12GraphicsCommandList* cmdList);
 		void PostDrawScene(ID3D12GraphicsCommandList* cmdList);
 		void Draw();
@@ -59,9 +61,11 @@ namespace KochaEngine
 		ComPtr<ID3D12Resource> vertBuff;
 		ComPtr<ID3D12Resource> texBuff[TEX_BUFF_COUNT];
 		ComPtr<ID3D12Resource> depthBuff;
+		ComPtr<ID3D12Resource> lightDepthBuff;
 		ComPtr<ID3D12DescriptorHeap> descHeapSRV;
 		ComPtr<ID3D12DescriptorHeap> descHeapRTV;
 		ComPtr<ID3D12DescriptorHeap> descHeapDSV;
+		ComPtr<ID3D12DescriptorHeap> _depthSRVHeap;
 
 		ComPtr<ID3D12Resource> constBuff;
 		ConstBufferDataB0* constMap;

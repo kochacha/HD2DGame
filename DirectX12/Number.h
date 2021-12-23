@@ -15,14 +15,15 @@ namespace KochaEngine
 		int maxDigit;
 
 	public:
-		Number(Vector2 position, Vector2 size, int maxDigit);
+		Number(const Vector2& arg_position, const Vector2& arg_size, const int arg_maxDigit);
 		~Number();
 
 		void Init();
 
-		void SetColor(DirectX::XMFLOAT4 color);
+		void SetColor(const Vector4& arg_color);
 
-		void Draw(int num);
-		void Draw(Vector2 position, int num);
+		void Draw(const int arg_num);
+		void DrawAllDigit(const int arg_num);
+		void DrawAllDigit(const Vector2& arg_position, const int arg_num);
 	};
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include<DirectXMath.h>
+#include "Vector2.h"
 #include "Vector3.h"
 
 namespace KochaEngine
@@ -10,11 +11,14 @@ namespace KochaEngine
 		using XMVECTOR = DirectX::XMVECTOR;
 
 	private:
+		Vector2 winSize;
 		float cameraHAngle;
 		float cameraVAngle;
 		float cameraDistance;
 		float cameraSpeed;
 		float crrentAngle;
+		float nearZ;
+		float farZ;
 		int count;
 		int nowTime;
 		int shakeTime;
@@ -34,6 +38,11 @@ namespace KochaEngine
 		XMMATRIX matProjection;
 		XMMATRIX matView;
 
+		// ビルボード行列
+		XMMATRIX matBillboard;
+		// Y軸回りビルボード行列
+		XMMATRIX matBillboardY;
+
 	public:
 		Camera();
 		~Camera();
@@ -41,22 +50,28 @@ namespace KochaEngine
 		void Initialize(float WIN_WIDTH, float WIN_HEIGHT, float angle, float distance, Vector3 eye, Vector3 target, Vector3 up);
 		void Update();
 		void ViewUpdate();
+		void Billboard();
+		void DebugCamera();
 
-		void SetEye(Vector3 eye);
-		void SetTarget(Vector3 target);
-		void SetUp(Vector3 up);
+		void SetEye(const Vector3& eye);
+		void SetTarget(const Vector3& target);
+		void SetUp(const Vector3& up);
 		void SetAngle(float angle);
-		void MoveEye(Vector3 vel);
+		void MoveEye(const Vector3& vel);
+		void MoveTarget(const Vector3& vel);
 
 		void UpCamera();
 		void RightCamera();
 
-		Vector3 GetEye() { return eye; }
-		Vector3 GetTarget() { return target; }
-		Vector3 GetUp() { return up; }
+		inline const Vector3 GetEye() { return eye; }
+		inline const Vector3 GetTarget() { return target; }
+		inline const Vector3 GetUp() { return up; }
 		Vector3 GetVelocity();
-		XMMATRIX GetMatProjection() { return matProjection; }
-		XMMATRIX GetMatView() { return matView; }
+		inline const XMMATRIX GetMatProjection() { return matProjection; }
+		inline const XMMATRIX GetMatView() { return matView; }
+		inline const XMMATRIX GetBillboardMatrix() { return matBillboard; }
+		inline const XMMATRIX GetBillboardYMatrix() { return matBillboardY; }
+		XMMATRIX GetLightCameraMatrix();
 		float Getangle();
 
 		float GetCameraSpeed();

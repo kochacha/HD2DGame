@@ -93,12 +93,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex;$(SolutionDir)Effekseer/Dev/Cpp/Effekseer;$(SolutionDir)Effekseer/Dev/Cpp/EffekseerRendererDX12</AdditionalIncludeDirectories>
       <OpenMPSupport>false</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Effekseer/Dev/Cpp/Effekseer/Debug;$(SolutionDir)Effekseer/Dev/Cpp/EffekseerRendererDX12/Debug;$(SolutionDir)Effekseer/Dev/Cpp/3rdParty/LLGI/src/Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -108,13 +109,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex;$(SolutionDir)Effekseer\include\Effekseer;$(SolutionDir)Effekseer\include\EffekseerRendererDX12</AdditionalIncludeDirectories>
       <OpenMPSupport>false</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libfbxsdk-md.lib;libxml2-md.lib;zlib-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Effekseer\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -126,7 +128,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex;$(SolutionDir)Effekseer/Dev/Cpp/Effekseer;$(SolutionDir)Effekseer/Dev/Cpp/EffekseerRendererDX12</AdditionalIncludeDirectories>
       <OpenMPSupport>false</OpenMPSupport>
     </ClCompile>
     <Link>
@@ -134,6 +136,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Effekseer/Dev/Cpp/Effekseer/Debug;$(SolutionDir)Effekseer/Dev/Cpp/EffekseerRendererDX12/Debug;$(SolutionDir)Effekseer/Dev/Cpp/3rdParty/LLGI/src/Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,7 +148,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex;$(SolutionDir)Effekseer\include\Effekseer;$(SolutionDir)Effekseer\include\EffekseerRendererDX12</AdditionalIncludeDirectories>
       <OpenMPSupport>false</OpenMPSupport>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -155,14 +158,23 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Effekseer\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="Battle.cpp" />
+    <ClCompile Include="BattleCharacter.cpp" />
+    <ClCompile Include="BattleObject.cpp" />
+    <ClCompile Include="BattleObjectManager.cpp" />
+    <ClCompile Include="Block.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="CollisionBlock.cpp" />
     <ClCompile Include="CSVReader.cpp" />
+    <ClCompile Include="CustomGui.cpp" />
     <ClCompile Include="Dx12_Blob.cpp" />
     <ClCompile Include="Dx12_Descriptor.cpp" />
     <ClCompile Include="Dx12_Object.cpp" />
@@ -170,11 +182,27 @@
     <ClCompile Include="Dx12_RootSignature.cpp" />
     <ClCompile Include="Dx12_Texture.cpp" />
     <ClCompile Include="Dx12_Wrapper.cpp" />
+    <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="Ending.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyData.cpp" />
     <ClCompile Include="FBXLoader.cpp" />
     <ClCompile Include="FBXModel.cpp" />
     <ClCompile Include="FBXObject.cpp" />
+    <ClCompile Include="FieldAlphaObject.cpp" />
+    <ClCompile Include="FieldObject.cpp" />
+    <ClCompile Include="Fighter.cpp" />
     <ClCompile Include="Figure2D.cpp" />
+    <ClCompile Include="Font.cpp" />
+    <ClCompile Include="GameSetting.cpp" />
+    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="JsonLoader.cpp" />
+    <ClCompile Include="Number3D.cpp" />
+    <ClCompile Include="Number3DEmitter.cpp" />
+    <ClCompile Include="Number3DManager.cpp" />
+    <ClCompile Include="Number3DOperation.cpp" />
+    <ClCompile Include="SkillData.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="GameOver.cpp" />
@@ -187,12 +215,15 @@
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Number.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="ParticleEmitter.cpp" />
     <ClCompile Include="ParticleManager.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="PMDLoader.cpp" />
     <ClCompile Include="PMDModel.cpp" />
     <ClCompile Include="PostEffect.cpp" />
@@ -202,13 +233,13 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="StageSelect.cpp" />
     <ClCompile Include="Texture2D.cpp" />
-    <ClCompile Include="Texture3D.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="Vector3.cpp" />
     <ClCompile Include="Vector4.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="Wizard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectXTex\DirectXTex_Desktop_2017_Win10.vcxproj">
@@ -271,6 +302,14 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="DepthOfFieldShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
@@ -340,6 +379,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="PeraVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
@@ -425,11 +465,21 @@
     <None Include="TextureShaderHeader.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ActorParam.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Audio.h" />
+    <ClInclude Include="Battle.h" />
+    <ClInclude Include="BattleCharacter.h" />
+    <ClInclude Include="BattleObject.h" />
+    <ClInclude Include="BattleObjectManager.h" />
+    <ClInclude Include="Block.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraManager.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="CollisionBlock.h" />
     <ClInclude Include="CSVReader.h" />
+    <ClInclude Include="CustomGui.h" />
+    <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="Dx12_Blob.h" />
     <ClInclude Include="Dx12_Descriptor.h" />
     <ClInclude Include="Dx12_Object.h" />
@@ -437,11 +487,28 @@
     <ClInclude Include="Dx12_RootSignature.h" />
     <ClInclude Include="Dx12_Texture.h" />
     <ClInclude Include="Dx12_Wrapper.h" />
+    <ClInclude Include="EffectManager.h" />
     <ClInclude Include="Ending.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyData.h" />
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="FBXModel.h" />
     <ClInclude Include="FBXObject.h" />
+    <ClInclude Include="FieldAlphaObject.h" />
+    <ClInclude Include="FieldObject.h" />
+    <ClInclude Include="Fighter.h" />
     <ClInclude Include="Figure2D.h" />
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="GameSetting.h" />
+    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="JsonLoader.h" />
+    <ClInclude Include="Number3D.h" />
+    <ClInclude Include="Number3DEmitter.h" />
+    <ClInclude Include="Number3DManager.h" />
+    <ClInclude Include="Number3DOperation.h" />
+    <ClInclude Include="SkillData.h" />
+    <ClInclude Include="SkillParam.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="GameOver.h" />
@@ -455,14 +522,18 @@
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="LightManager.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="Number.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="ParticleEmitter.h" />
     <ClInclude Include="ParticleManager.h" />
     <ClInclude Include="ParticleParam.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="PMDLoader.h" />
     <ClInclude Include="PMDModel.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="PostEffect.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Scene.h" />
@@ -470,13 +541,13 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="StageSelect.h" />
     <ClInclude Include="Texture2D.h" />
-    <ClInclude Include="Texture3D.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Vector4.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="Wizard.h" />
     <ClInclude Include="XMFLOATHelper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

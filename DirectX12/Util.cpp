@@ -82,7 +82,7 @@ std::wstring KochaEngine::Util::StringToWstring(std::string string)
 	return std::wstring();
 }
 
-wchar_t* KochaEngine::Util::StringToWchar_t(std::string string)
+wchar_t* KochaEngine::Util::StringToWchar_t(const std::string& string)
 {
 	wchar_t wfilepath[128];
 	MultiByteToWideChar(CP_ACP, 0, string.c_str(), -1, wfilepath, _countof(wfilepath));

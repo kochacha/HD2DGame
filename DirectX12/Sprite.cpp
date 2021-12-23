@@ -19,8 +19,8 @@ void KochaEngine::Sprite::Draw()
 	tex->Draw();
 }
 
-void KochaEngine::Sprite::Draw(Vector2 position,DirectX::XMFLOAT4 color)
+void KochaEngine::Sprite::Draw(const Vector2& arg_position, const Vector4& arg_color)
 {
-	tex->SetColor(color);
-	tex->Draw(position);
+	tex->SetColor(arg_color);
+	tex->Draw(arg_position);
 }
