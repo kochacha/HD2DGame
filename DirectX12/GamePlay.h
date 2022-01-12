@@ -51,6 +51,7 @@ namespace KochaEngine
 
 		Object* floor;
 		Object* skyObj;
+		Object* house;
 
 		Texture2D* fadeTexture;
 		Texture2D* defaultWakuTexture;
@@ -70,6 +71,9 @@ namespace KochaEngine
 		Text* skillNameText[MAX_NAME_TEXT_COUNT_COMMAND];
 
 		Number* defaultNumberTex;
+		Number* costSPNumberTex;
+		Number* pageNumberTex;
+		Number* maxPageNumberTex;
 
 		int extraNum;
 
@@ -130,8 +134,12 @@ namespace KochaEngine
 		int selectSkillIndex;
 		//スキルタブのページ番号
 		int skillTabPageNum;
+		//スキルタブの最大ページ番号
+		int skillTabMaxPageNum;
 		//スキルタブの直前のページ番号
 		int preSkillTabPageNum;
+		//スキルの消費SP
+		int costSP;
 
 		//コマンド番号
 		unsigned int commandNum;

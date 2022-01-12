@@ -1,4 +1,4 @@
-#include "../Shader/BasicShaderHeader.hlsli"
+#include "BasicShaderHeader.hlsli"
 
 VSOutput VSmain(float4 pos : POSITION, float3 normal : NORMAL, float2 uv : TEXCOORD)
 {

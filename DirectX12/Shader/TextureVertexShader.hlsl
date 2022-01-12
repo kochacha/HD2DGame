@@ -1,4 +1,4 @@
-#include "../Shader/TextureShaderHeader.hlsli"
+#include "TextureShaderHeader.hlsli"
 
 VSOutput VSmain(float4 pos : POSITION, float2 uv : TEXCOORD)
 {

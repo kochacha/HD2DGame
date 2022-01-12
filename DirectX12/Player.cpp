@@ -14,8 +14,6 @@ KochaEngine::Player::Player(Camera* arg_camera, GameObjectManager* arg_gManager,
 	gManager = arg_gManager;
 	position = arg_position;
 
-	CameraTracking();
-
 	obj = new Object("plane");
 	Initialize();
 }
@@ -74,11 +72,6 @@ void KochaEngine::Player::Initialize()
 		skillMasterLevels.push_back(skills[e.first].get<double>());
 	}
 
-	//skillNames.insert(std::make_pair(1, "none"));
-	//skillNames.insert(std::make_pair(3, "fire_0"));
-	//skillMasterLevels.push_back(1);
-	//skillMasterLevels.push_back(3);
-
 	count = 0;
 	animationNum = 0;
 	animationRate = DEFAULT_ANIMATION_RATE;
@@ -96,7 +89,6 @@ void KochaEngine::Player::Update()
 	SkillUpdate();
 	Animation();
 	SetObjParam();
-	CameraTracking();
 }
 
 void KochaEngine::Player::Hit()
@@ -108,8 +100,8 @@ void KochaEngine::Player::HitBlock(_Box arg_box)
 	_Box _box = arg_box;
 	CollisionFace faceX = Collision::CheckHitFaceX(sphere, _box);
 	CollisionFace faceZ = Collision::CheckHitFaceZ(sphere, _box);
-	XMFLOAT3 minPos = Collision::GetLeftUpFront(_box.position, _box.edgeLength);
-	XMFLOAT3 maxPos = Collision::GetRightDownBack(_box.position, _box.edgeLength);
+	Vector3 minPos = _box.leftUpFront;
+	Vector3 maxPos = _box.rightDownBack;
 
 	switch (faceX)
 	{
@@ -222,14 +214,6 @@ void KochaEngine::Player::SetObjParam()
 	obj->SetPosition(position);
 }
 
-void KochaEngine::Player::CameraTracking()
-{
-	Vector3 cameraPos = Vector3(position.x, position.y + 20, position.z - 60);
-	Vector3 cameraTargetPos = Vector3(position.x, position.y, position.z + 20);
-	camera->SetEye(cameraPos);
-	camera->SetTarget(cameraTargetPos);
-}
-
 void KochaEngine::Player::EncountReset()
 {
 	isEncount = false;
@@ -238,7 +222,7 @@ void KochaEngine::Player::EncountReset()
 
 void KochaEngine::Player::EncountEnemy()
 {
-	if (encountCount <= 0)
+	if (encountCount <= 0 && GameSetting::isBattleField)
 	{
 		isEncount = true;
 	}

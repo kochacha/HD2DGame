@@ -1,4 +1,4 @@
-#include "../Shader/BasicShaderHeader.hlsli"
+#include "BasicShaderHeader.hlsli"
 
 [maxvertexcount(3)]
 void GSmain(

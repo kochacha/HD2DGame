@@ -1,4 +1,4 @@
-#include "../Shader/BasicShaderHeader.hlsli"
+#include "BasicShaderHeader.hlsli"
 
 Texture2D<float4> tex : register(t0);
 Texture2D<float> lightDepthTex : register(t1);
@@ -18,7 +18,7 @@ PSOutput PSmain(GSOutput input)/* : SV_TARGET*/
 	// テクスチャマッピング
 	float4 texColor = tex.Sample(smp, input.uv);
 	// 光沢度
-	const float SHININESS = 4.0f;
+	const float SHININESS = 3.0f;
 	// 頂点から視点への方向ベクトル
 	float3 eyedir = normalize(cameraPos - input.worldpos.xyz);
 	// 環境反射光
@@ -32,7 +32,7 @@ PSOutput PSmain(GSOutput input)/* : SV_TARGET*/
 	{
 		if (dirLights[i].isActive) 
 		{
-			light = dirLights[i].direction;
+			light = normalize(dirLights[i].direction);
 			float3 dotLightNormal = dot(dirLights[i].direction, input.normal);
 			float3 reflect = normalize(-dirLights[i].direction + 2.0f * dotLightNormal * input.normal);
 			float3 diffuse = dotLightNormal * m_diffuse;
@@ -71,8 +71,9 @@ PSOutput PSmain(GSOutput input)/* : SV_TARGET*/
     output.target0 = shaderColor * texColor * color;
 
 	//高輝度出力(ブルーム用)
-	float y = dot(float3(0.299f, 0.587f, 0.114f), shaderColor * texColor);
-    output.target1 = y > 0.8f ? shaderColor * texColor : 0.0f;
+	//float y = dot(float3(0.299f, 0.587f, 0.114f), shaderColor * texColor);
+    //output.target1 = y > 0.8f ? shaderColor * texColor : 0.0f;
+	output.target1 = shaderColor * texColor * color;
 
 	output.target2 = float4(1, 1, 1, 1); //shaderColor * texColor;
 

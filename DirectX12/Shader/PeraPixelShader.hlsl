@@ -1,4 +1,4 @@
-#include "../Shader/PeraShaderHeader.hlsli"
+#include "PeraShaderHeader.hlsli"
 
 float4 main(Output input) : SV_TARGET
 {
@@ -6,6 +6,7 @@ float4 main(Output input) : SV_TARGET
     float4 col = tex0.Sample(smp, input.uv);
     return col;
 
+    //[“x’l‚Ìo—Í
     //float dep = pow(depthTex.Sample(smp, input.uv),300);
     //return float4(dep, dep, dep, 1);
 

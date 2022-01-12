@@ -15,6 +15,8 @@ namespace KochaEngine
 		LightManager* lightManager;
 		std::vector<GameObject*> gameObjects;
 
+		Vector3 battleCameraDefaultPos;
+
 	public:
 		GameObjectManager();
 		~GameObjectManager();
@@ -28,6 +30,8 @@ namespace KochaEngine
 		void ObjDrawBattleScene(Camera* arg_camera, LightManager* arg_lightManager);
 		void SpriteDraw();
 		void CheckBlock(GameObject* arg_obj, const GameObjectType& arg_otherType);
+
+		void SetBattleCameraDefaultPos(const Vector3& arg_position) { battleCameraDefaultPos = arg_position; }
 		int GetEnemyCount();
 
 		Player* GetPlayer();

@@ -1,4 +1,4 @@
-#include "../Shader/PeraShaderHeader.hlsli"
+#include "PeraShaderHeader.hlsli"
 
 Output main( float4 pos : POSITION, float2 uv : TEXCOORD )
 {

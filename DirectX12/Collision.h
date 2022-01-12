@@ -19,7 +19,6 @@ namespace KochaEngine
 		float edgeLength;
 		Vector3 leftUpFront;
 		Vector3 rightDownBack;
-
 	};
 
 
@@ -67,7 +66,7 @@ namespace KochaEngine
 		static float Distance2D(Vector2 pos1, Vector2 pos2);
 		static float Distance3D(const Vector3& pos1, const Vector3& pos2);
 
-		static Vector3 GetLeftUpFront(Vector3 pos, float edgeLength);
-		static Vector3 GetRightDownBack(Vector3 pos, float edgeLength);
+		static Vector3 GetLeftUpFront(const Vector3& arg_pos, const float arg_edgeLength);
+		static Vector3 GetRightDownBack(const Vector3& arg_pos, const float arg_edgeLength);
 	};
 }

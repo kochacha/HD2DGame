@@ -33,7 +33,6 @@ namespace KochaEngine
 		void MoveX();
 		void MoveZ();
 		void SetObjParam();
-		void CameraTracking();
 		void EncountEnemy();
 		void SkillUpdate();
 		void SetAnimationType();

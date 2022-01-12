@@ -1,4 +1,4 @@
-#include "../Shader/PMDShaderHeader.hlsli"
+#include "PMDShaderHeader.hlsli"
 
 float4 PSmain(Output input) : SV_TARGET
 {

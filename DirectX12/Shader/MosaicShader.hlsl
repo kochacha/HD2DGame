@@ -1,4 +1,4 @@
-#include "../Shader/PeraShaderHeader.hlsli"
+#include "PeraShaderHeader.hlsli"
 
 float4 main(Output input) : SV_TARGET
 {

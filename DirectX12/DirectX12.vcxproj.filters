@@ -1,65 +1,65 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <FxCompile Include="BasicPixelShader.hlsl">
+    <FxCompile Include="Shader\BasicGeometryShader.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="BasicVertexShader.hlsl">
+    <FxCompile Include="Shader\BasicPixelShader.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="TextureVertexShader.hlsl">
+    <FxCompile Include="Shader\BasicVertexShader.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="TexturePixelShader.hlsl">
+    <FxCompile Include="Shader\FBXPixelShader.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="BasicGeometryShader.hlsl">
+    <FxCompile Include="Shader\FBXVertexShader.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="PMDVertexShader.hlsl">
+    <FxCompile Include="Shader\PMDPixelShader.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="PMDPixelShader.hlsl">
+    <FxCompile Include="Shader\PMDVertexShader.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="FBXVertexShader.hlsl">
+    <FxCompile Include="Shader\TexturePixelShader.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="FBXPixelShader.hlsl">
+    <FxCompile Include="Shader\TextureVertexShader.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="PeraVertexShader.hlsl">
-      <Filter>Shader</Filter>
+    <FxCompile Include="Shader\BloomShader.hlsl">
+      <Filter>Shader\PostEffect</Filter>
     </FxCompile>
-    <FxCompile Include="PeraPixelShader.hlsl">
-      <Filter>Shader</Filter>
+    <FxCompile Include="Shader\DepthOfFieldShader.hlsl">
+      <Filter>Shader\PostEffect</Filter>
     </FxCompile>
-    <FxCompile Include="VignetteShader.hlsl">
-      <Filter>Shader</Filter>
+    <FxCompile Include="Shader\ChromaticAberrationShader.hlsl">
+      <Filter>Shader\PostEffect</Filter>
     </FxCompile>
-    <FxCompile Include="BloomShader.hlsl">
-      <Filter>Shader</Filter>
+    <FxCompile Include="Shader\PeraPixelShader.hlsl">
+      <Filter>Shader\PostEffect</Filter>
     </FxCompile>
-    <FxCompile Include="GameBoyShader.hlsl">
-      <Filter>Shader</Filter>
+    <FxCompile Include="Shader\PeraVertexShader.hlsl">
+      <Filter>Shader\PostEffect</Filter>
     </FxCompile>
-    <FxCompile Include="ChromaticAberrationShader.hlsl">
-      <Filter>Shader</Filter>
+    <FxCompile Include="Shader\GaussianBlurShader.hlsl">
+      <Filter>Shader\PostEffect</Filter>
     </FxCompile>
-    <FxCompile Include="ToonShader.hlsl">
-      <Filter>Shader</Filter>
+    <FxCompile Include="Shader\GameBoyShader.hlsl">
+      <Filter>Shader\PostEffect</Filter>
     </FxCompile>
-    <FxCompile Include="GrayScaleShader.hlsl">
-      <Filter>Shader</Filter>
+    <FxCompile Include="Shader\GrayScaleShader.hlsl">
+      <Filter>Shader\PostEffect</Filter>
     </FxCompile>
-    <FxCompile Include="MosaicShader.hlsl">
-      <Filter>Shader</Filter>
+    <FxCompile Include="Shader\MosaicShader.hlsl">
+      <Filter>Shader\PostEffect</Filter>
     </FxCompile>
-    <FxCompile Include="GaussianBlurShader.hlsl">
-      <Filter>Shader</Filter>
+    <FxCompile Include="Shader\ToonShader.hlsl">
+      <Filter>Shader\PostEffect</Filter>
     </FxCompile>
-    <FxCompile Include="DepthOfFieldShader.hlsl">
-      <Filter>Shader</Filter>
+    <FxCompile Include="Shader\VignetteShader.hlsl">
+      <Filter>Shader\PostEffect</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -299,23 +299,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="BasicShaderHeader.hlsli">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="TextureShaderHeader.hlsli">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="PMDShaderHeader.hlsli">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="FBXHeader.hlsli">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="PeraShaderHeader.hlsli">
-      <Filter>Shader</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="Shader">
       <UniqueIdentifier>{f8be1c2c-48bf-4309-8839-0e263b9ec819}</UniqueIdentifier>
     </Filter>
@@ -387,6 +370,9 @@
     </Filter>
     <Filter Include="Header\GameObject\Actor">
       <UniqueIdentifier>{023294a7-9b89-4721-be7a-7ae5b4a3ae65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\PostEffect">
+      <UniqueIdentifier>{a30726d1-36b3-4835-bcf6-fddf7d2d2d98}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -642,5 +628,22 @@
     <ClInclude Include="Wizard.h">
       <Filter>Header\GameObject\Actor</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\BasicShaderHeader.hlsli">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\FBXHeader.hlsli">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\PMDShaderHeader.hlsli">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\TextureShaderHeader.hlsli">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\PeraShaderHeader.hlsli">
+      <Filter>Shader\PostEffect</Filter>
+    </None>
   </ItemGroup>
 </Project>

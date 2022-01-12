@@ -32,7 +32,7 @@ void KochaEngine::FieldAlphaObject::Initialize()
 		obj->SetTexture("Resources/Texture/Object/tree1.png");
 		obj->SetScale(Vector3(20, 25, 25));
 		break;
-	case KochaEngine::TREE2:
+	case KochaEngine::WITHER_TREE1:
 		obj->SetTexture("Resources/Texture/Object/tree2.png");
 		obj->SetScale(Vector3(20, 25, 25));
 		break;

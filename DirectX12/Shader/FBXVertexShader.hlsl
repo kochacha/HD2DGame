@@ -1,4 +1,4 @@
-#include "../Shader/FBXHeader.hlsli"
+#include "FBXHeader.hlsli"
 
 struct SkinOutput
 {

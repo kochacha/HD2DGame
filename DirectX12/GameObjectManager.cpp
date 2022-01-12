@@ -6,6 +6,7 @@
 
 KochaEngine::GameObjectManager::GameObjectManager()
 {
+	battleCameraDefaultPos.Zero();
 }
 
 KochaEngine::GameObjectManager::~GameObjectManager()
@@ -76,9 +77,8 @@ void KochaEngine::GameObjectManager::AlphaObjDrawBattleScene(Camera* arg_camera,
 	this->camera = arg_camera;
 	this->lightManager = arg_lightManager;
 
-	auto _eye = camera->GetEye();
-	float cameraNearPosZ = _eye.z + 80;
-	float cameraFarPosZ = _eye.z + 400;
+	float cameraNearPosZ = battleCameraDefaultPos.z + 80;
+	float cameraFarPosZ = battleCameraDefaultPos.z + 400;
 
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
@@ -124,7 +124,7 @@ void KochaEngine::GameObjectManager::ObjDrawBattleScene(Camera* arg_camera, Ligh
 	camera = arg_camera;
 	lightManager = arg_lightManager;
 
-	float cameraPosZ = camera->GetEye().z + 100;
+	float cameraPosZ = battleCameraDefaultPos.z + 100;
 
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)

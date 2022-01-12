@@ -12,27 +12,25 @@ KochaEngine::FieldObject::FieldObject(const FieldObjType arg_fieldObjType, const
 		obj = new Object("LowTree");
 		obj->SetScale(Vector3(2, 2, 2));
 		break;
-	case KochaEngine::SAKU_WOODEN_SIDEWAYS_UP:
-		position.z += 5;
-		obj = new Object("saku");
-		obj->SetScale(Vector3(0.73f, 1.25f, 1));
-		break;
-	case KochaEngine::SAKU_WOODEN_SIDEWAYS_DOWN:
-		position.z -= 5;
-		obj = new Object("saku");
-		obj->SetScale(Vector3(0.73f, 1.25f, 1));
-		break;
-	case KochaEngine::SAKU_WOODEN_VERTICAL_LEFT:
-		position.x -= 5;
-		obj = new Object("saku");
-		obj->SetScale(Vector3(0.73f, 1.25f, 1));
+	case KochaEngine::SAKU_WOODEN_VERTICAL:
+		obj = new Object("saku_0");
+		obj->SetScale(Vector3(13, 16, 13));
 		obj->SetRotate(Vector3(0, 90, 0));
 		break;
-	case KochaEngine::SAKU_WOODEN_VERTICAL_RIGHT:
-		position.x += 5;
-		obj = new Object("saku");
-		obj->SetScale(Vector3(0.73f, 1.25f, 1));
+	case KochaEngine::SAKU_WOODEN_SIDEWAYS:
+		obj = new Object("saku_0");
+		obj->SetScale(Vector3(13, 16, 13));
+		break;
+	case KochaEngine::WALL_SAND_SIDEWAYS:
+		obj = new Object("wall_0");
+		obj->SetScale(Vector3(20, 20, 20));
 		obj->SetRotate(Vector3(0, 90, 0));
+		obj->SetTexture("Resources/Texture/Tiling/wall_1.png");
+		break;
+	case KochaEngine::WALL_SAND_VERTICAL:
+		obj = new Object("wall_0");
+		obj->SetScale(Vector3(20, 20, 20));
+		obj->SetTexture("Resources/Texture/Tiling/wall_1.png");
 		break;
 	default:
 		obj = new Object("box");

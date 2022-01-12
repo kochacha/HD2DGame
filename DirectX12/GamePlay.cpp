@@ -54,6 +54,7 @@ KochaEngine::GamePlay::GamePlay(Dx12_Wrapper& arg_dx12) : dx12(arg_dx12)
 
 	floor = new Object("ground");
 	skyObj = new Object("skydome");
+	house = new Object("house_blue_0");
 
 	fadeTexture = new Texture2D("Resources/Texture/Color/white.png", Vector2(0, 0), SCREEN_SIZE, 0);
 	defaultWakuTexture = new Texture2D("Resources/Texture/UI/waku_0.png", DEFAULT_WAKU_POS, DEFAULT_WAKU_SIZE, 0);
@@ -80,6 +81,9 @@ KochaEngine::GamePlay::GamePlay(Dx12_Wrapper& arg_dx12) : dx12(arg_dx12)
 	}
 
 	defaultNumberTex = new Number(Vector2(TALK_LONG_TEXT_POS.x - 2, TALK_LONG_TEXT_POS.y + 4), Vector2(24, 24), 5);
+	costSPNumberTex = new Number(Vector2(TALK_SHORT_TEXT_POS.x + 34, TALK_SHORT_TEXT_POS.y - 58), Vector2(16, 16), 4);
+	pageNumberTex = new Number(Vector2(TALK_LONG_TEXT_POS.x - 2, TALK_LONG_TEXT_POS.y + 4), Vector2(24, 24), 2);
+	maxPageNumberTex = new Number(Vector2(TALK_LONG_TEXT_POS.x - 2, TALK_LONG_TEXT_POS.y + 4), Vector2(24, 24), 2);
 }
 
 KochaEngine::GamePlay::~GamePlay()
@@ -98,6 +102,7 @@ KochaEngine::GamePlay::~GamePlay()
 	delete map;
 	delete floor;
 	delete skyObj;
+	delete house;
 	delete fadeTexture;
 	delete defaultWakuTexture;
 	delete anotherWakuTexture;
@@ -117,6 +122,9 @@ KochaEngine::GamePlay::~GamePlay()
 		delete skillNameText[i];
 	}
 	delete defaultNumberTex;
+	delete costSPNumberTex;
+	delete pageNumberTex;
+	delete maxPageNumberTex;
 }
 
 void KochaEngine::GamePlay::Initialize()
@@ -143,18 +151,34 @@ void KochaEngine::GamePlay::Initialize()
 
 	camera->Initialize(SCREEN_SIZE.x, SCREEN_SIZE.y, 90, 100, { 0,1,0 }, { 0,0,0 }, { 0,1,0 });
 	lightManager->SetDirectionalLightColor(0, Vector3(1, 1, 1));
-	lightManager->SetDirectionalLightDirection(0, Vector3(1, 1, -1));
+	lightManager->SetDirectionalLightDirection(0, Vector3(0, 1, -1));
 	lightManager->SetDirectionalLightIsActive(0, true);
 	lightManager->SetLightCamera(camera);
 
 	//最初のフィールドのマップデータロード
 	map->CreateMap(GameSetting::HAZIMARINOTI);
 
+	//敵とエンカウントするフィールドかどうか
+	GameSetting::isBattleField = true;
+
 	floor->SetPosition(Vector3(0, 0, 0));
 	floor->SetTexture("Resources/Texture/Tiling/tiling_kusa0.png");
+	//if (GameSetting::HAZIMARINOTI)
+	//{
+	//	floor->SetTexture("Resources/Texture/Tiling/tiling_kusa0.png");
+	//}
+	//else
+	//{
+		//floor->SetTexture("Resources/Texture/Tiling/tiling_floor5.png");
+	//}
+
 
 	skyObj->SetScale(Vector3(8, 8, 8));
 	skyObj->SetPosition(Vector3(camera->GetEye().x, 0, camera->GetEye().z));
+
+	house->SetScale(Vector3(10, 10, 10));
+	house->MoveRotate(Vector3(0, 180, 0));
+	house->SetPosition(Vector3(-50, 0, 0));
 
 	fadeTexture->SetColor(Vector4(0, 0, 0.12f, 1));
 	currentTab = GamePlay::DEFAULT_TAB;
@@ -170,7 +194,9 @@ void KochaEngine::GamePlay::Initialize()
 	resultFlowWait = 0;
 	selectSkillIndex = 0;
 	skillTabPageNum = 1;
+	skillTabMaxPageNum = skillTabPageNum;
 	preSkillTabPageNum = skillTabPageNum;
+	costSP = 0;
 
 	preCommandNum = 0;
 	
@@ -234,6 +260,7 @@ void KochaEngine::GamePlay::SpriteDraw()
 
 void KochaEngine::GamePlay::ObjDraw()
 {
+	house->Draw(camera, lightManager);
 	if (isBattle)
 	{
 		BattleObjDraw();
@@ -271,6 +298,7 @@ void KochaEngine::GamePlay::DrawGUI()
 	}
 	ImGui::InputInt("#TalkSpeed", &KochaEngine::GameSetting::talkSpeed, 1);
 	ImGui::InputInt("#extraNum", &extraNum, 1);
+	ImGui::Checkbox("#isBattleField", &GameSetting::isBattleField);
 
 }
 
@@ -333,6 +361,9 @@ void KochaEngine::GamePlay::BattleInitialize()
 
 	const Vector3 cameraPos = camera->GetEye();
 
+	//戦闘開始時にカメラの初期位置をセットする
+	gManager->SetBattleCameraDefaultPos(cameraPos);
+
 	//ここにエネミーエミッタークラス的なの作って呼び出す
 	//EnemyDataと同様、jsonファイルから出現パターンを読み込めるようにする
 	{
@@ -384,15 +415,15 @@ void KochaEngine::GamePlay::BattleUpdate()
 {
 	//デバッグ用
 	{
-	//	if (Input::TriggerKey(DIK_F1))
-	//	{
-	//		//サンプルテキスト再生
-	//		battleLongText->ReText("Talk/Battle/CharaDestroy_0.txt");
-	//	}
+		if (Input::TriggerKey(DIK_F1))
+		{
+			//サンプルテキスト再生
+			battleLongText->SetText("sample99.txt");
+		}
 		if (Input::TriggerKey(DIK_P))
 		{
 			////サンプルテキスト再生
-			//battleLongText->ReText("yuma.txt");
+			//battleLongText->SetText("yuma.txt");
 			bManager->GetCharacter(BattleObjectType::BATTLE_PLAYER)->AddExp(extraNum);
 		}
 	//	if (Input::TriggerKey(DIK_E))
@@ -638,6 +669,9 @@ void KochaEngine::GamePlay::TurnInitialize()
 			currentActiveActor->GetType() == BATTLE_FIGHTER)
 		{
 			SkillNameUpdate();
+
+			//スキルタブの最大ページ数を更新する
+			skillTabMaxPageNum = (currentActiveActor->GetSkillCount() + MAX_NAME_TEXT_COUNT_COMMAND - 2) / MAX_NAME_TEXT_COUNT_COMMAND;
 		}
 	}
 
@@ -1045,6 +1079,12 @@ void KochaEngine::GamePlay::CommandDraw()
 		anotherWakuTexture->Draw();
 		pageCommandTexture->Draw();
 		spCommandTexture->Draw();
+
+		//costSPDraw
+		costSPNumberTex->Draw(costSP);
+		//skillTabNumDraw
+		//skillTabMaxNumDraw
+
 		for (int i = 0; i < MAX_NAME_TEXT_COUNT_COMMAND; i++)
 		{
 			skillNameText[i]->Draw(0);
@@ -1136,20 +1176,23 @@ void KochaEngine::GamePlay::MoveCursor()
 	case KochaEngine::GamePlay::SKILL_TAB: //スキルコマンド
 		if (InputManager::TriggerRight())
 		{
+			//直前のページ状態保存
 			preSkillTabPageNum = skillTabPageNum;
 			//ページを進める
-			skillTabPageNum = CommandNumRight(skillTabPageNum, (currentActiveActor->GetSkillCount() + MAX_NAME_TEXT_COUNT_COMMAND - 2) / MAX_NAME_TEXT_COUNT_COMMAND);
+			skillTabPageNum = CommandNumRight(skillTabPageNum, skillTabMaxPageNum);
 			//ページをまたいでいるのでスキルページを更新
 			if (preSkillTabPageNum != skillTabPageNum)
 			{
 				SkillNameUpdate();
 			}
+
 		}
 		else if (InputManager::TriggerLeft())
 		{
+			//直前のページ状態保存
 			preSkillTabPageNum = skillTabPageNum;
 			//ページを戻す
-			skillTabPageNum = CommandNumLeft(skillTabPageNum, (currentActiveActor->GetSkillCount() + MAX_NAME_TEXT_COUNT_COMMAND - 2) / MAX_NAME_TEXT_COUNT_COMMAND);
+			skillTabPageNum = CommandNumLeft(skillTabPageNum, skillTabMaxPageNum);
 			//ページをまたいでいるのでスキルページを更新
 			if (preSkillTabPageNum != skillTabPageNum)
 			{

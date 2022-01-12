@@ -326,7 +326,13 @@ void KochaEngine::Application::Load()
 		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_kusa0.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_kusa1.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_suna0.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_floor1.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_floor2.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_floor3.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_floor4.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_floor5.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/water_ball1.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/wall_1.png");
 	}
 
 	//.objのロード
@@ -339,7 +345,12 @@ void KochaEngine::Application::Load()
 	Dx12_Object::LoadObject("sphere");
 	Dx12_Object::LoadObject("Ground1");
 	Dx12_Object::LoadObject("skydome");
-	Dx12_Object::LoadObject("saku");
+	Dx12_Object::LoadObject("house_blue_0");
+	Dx12_Object::LoadObject("house_blue_1");
+	Dx12_Object::LoadObject("house_red_0");
+	Dx12_Object::LoadObject("house_red_1");
+	Dx12_Object::LoadObject("wall_0");
+	Dx12_Object::LoadObject("saku_0");
 
 }
 
@@ -401,16 +412,16 @@ void KochaEngine::Application::DrawGUI()
 
 	//画面効果切り替え
 	ImGui::Begin("PostEffect");
-	ImGui::Checkbox("isDof", &isDof);
+	ImGui::Checkbox("#isDof", &isDof);
 	int _effectType = peraEffectType;
-	ImGui::RadioButton("None", &_effectType, ShaderType::PERA_SHADER);
-	ImGui::RadioButton("Vignette", &_effectType, ShaderType::VIGNETTE_SHADER);
-	ImGui::RadioButton("GameBoy", &_effectType, ShaderType::GAME_BOY_SHADER);
-	ImGui::RadioButton("ChromaticAberration", &_effectType, ShaderType::CHROMATIC_ABERRATION_SHADER);
-	ImGui::RadioButton("Toon", &_effectType, ShaderType::TOON_SHADER);
-	ImGui::RadioButton("GrayScale", &_effectType, ShaderType::GRAY_SCALE_SHADER);
-	ImGui::RadioButton("Mosaic", &_effectType, ShaderType::MOSAIC_SHADER);
-	ImGui::RadioButton("GaussianBlur", &_effectType, ShaderType::GAUSSIAN_BLUR_SHADER);
+	ImGui::RadioButton("#None", &_effectType, ShaderType::PERA_SHADER);
+	ImGui::RadioButton("#Vignette", &_effectType, ShaderType::VIGNETTE_SHADER);
+	ImGui::RadioButton("#GameBoy", &_effectType, ShaderType::GAME_BOY_SHADER);
+	ImGui::RadioButton("#ChromaticAberration", &_effectType, ShaderType::CHROMATIC_ABERRATION_SHADER);
+	ImGui::RadioButton("#Toon", &_effectType, ShaderType::TOON_SHADER);
+	ImGui::RadioButton("#GrayScale", &_effectType, ShaderType::GRAY_SCALE_SHADER);
+	ImGui::RadioButton("#Mosaic", &_effectType, ShaderType::MOSAIC_SHADER);
+	ImGui::RadioButton("#GaussianBlur", &_effectType, ShaderType::GAUSSIAN_BLUR_SHADER);
 
 	if (_effectType == ShaderType::PERA_SHADER)
 	{

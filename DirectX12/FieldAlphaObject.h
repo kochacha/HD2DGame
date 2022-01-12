@@ -9,7 +9,7 @@ namespace KochaEngine
 		ROCK2,
 		ROCK3,
 		TREE1,
-		TREE2,
+		WITHER_TREE1,
 		GRASS1,
 		GRAVE_STONE,
 	};

@@ -48,17 +48,17 @@ bool KochaEngine::Collision::HitBoxToBox(_Box box1, _Box box2)
 
 KochaEngine::CollisionFace KochaEngine::Collision::CheckHitFaceX(const _Sphere & sphere, const _Box & box)
 {
-	XMFLOAT3 center = box.position;
-	XMFLOAT3 pos = { sphere.position.x , sphere.position.y , sphere.position.z };
+	Vector3 center = (box.leftUpFront + box.rightDownBack) * 0.5f;
+	Vector3 pos = sphere.position;
 
-	XMFLOAT3 distance{};
+	Vector3 distance{};
 	distance.x = pos.x - center.x;
 	distance.z = pos.z - center.z;
 	float direction = abs(distance.z / distance.x);
 
 	float tiltXZ = 0;
-	XMFLOAT3 maxPosition = GetLeftUpFront(box.position, box.edgeLength);
-	tiltXZ = abs((maxPosition.z - box.position.z) / (maxPosition.x - box.position.x));
+	Vector3 maxPosition = box.leftUpFront;
+	tiltXZ = abs((maxPosition.z - center.z) / (maxPosition.x - center.x));
 
 	if (direction > tiltXZ)
 	{
@@ -79,17 +79,17 @@ KochaEngine::CollisionFace KochaEngine::Collision::CheckHitFaceX(const _Sphere &
 
 KochaEngine::CollisionFace KochaEngine::Collision::CheckHitFaceZ(const _Sphere & sphere, const _Box & box)
 {
-	XMFLOAT3 center = box.position;
-	XMFLOAT3 pos = { sphere.position.x , sphere.position.y , sphere.position.z };
+	Vector3 center = (box.leftUpFront + box.rightDownBack) * 0.5f;
+	Vector3 pos = sphere.position;
 
-	XMFLOAT3 distance{};
+	Vector3 distance{};
 	distance.x = pos.x - center.x;
 	distance.z = pos.z - center.z;
 	float direction = abs(distance.z / distance.x);
 		
 	float tiltXZ = 0;
-	XMFLOAT3 maxPosition = GetLeftUpFront(box.position, box.edgeLength);
-	tiltXZ = abs((maxPosition.z - box.position.z) / (maxPosition.x - box.position.x));
+	Vector3 maxPosition = box.leftUpFront;
+	tiltXZ = abs((maxPosition.z - center.z) / (maxPosition.x - center.x));
 
 
 	if (direction < tiltXZ)
@@ -152,20 +152,20 @@ float KochaEngine::Collision::Distance3D(const Vector3& pos1, const Vector3& pos
 	return distance;
 }
 
-KochaEngine::Vector3 KochaEngine::Collision::GetLeftUpFront(Vector3 pos, float edgeLength)
+KochaEngine::Vector3 KochaEngine::Collision::GetLeftUpFront(const Vector3& arg_pos, const float arg_edgeLength)
 {
 	Vector3 result;
-	result.x = pos.x - edgeLength / 2;
-	result.y = pos.y + edgeLength / 2;
-	result.z = pos.z - edgeLength / 2;
+	result.x = arg_pos.x - arg_edgeLength * 0.5f;
+	result.y = arg_pos.y + arg_edgeLength * 0.5f;
+	result.z = arg_pos.z - arg_edgeLength * 0.5f;
 	return result;
 }
 
-KochaEngine::Vector3 KochaEngine::Collision::GetRightDownBack(Vector3 pos, float edgeLength)
+KochaEngine::Vector3 KochaEngine::Collision::GetRightDownBack(const Vector3& arg_pos, const float arg_edgeLength)
 {
 	Vector3 result;
-	result.x = pos.x + edgeLength / 2;
-	result.y = pos.y - edgeLength / 2;
-	result.z = pos.z + edgeLength / 2;
+	result.x = arg_pos.x + arg_edgeLength * 0.5f;
+	result.y = arg_pos.y - arg_edgeLength * 0.5f;
+	result.z = arg_pos.z + arg_edgeLength * 0.5f;
 	return result;
 }

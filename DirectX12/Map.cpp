@@ -38,61 +38,104 @@ void KochaEngine::Map::CreateMap(const int arg_mapNum)
 			float posX = CHIP_SIZE * (float)x - (x_Data - 1) * 0.5f * CHIP_SIZE;
 			switch (mapData[z][x])
 			{
-			case 10:
+			case 100: //何も置かない
 				
 				break;
-			case 11:
+			case 101: //当たり判定ボックス
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10));
 				break;
-			case 12:
+
+				//102番～199番 予備
+			case 102:
 				gManager->AddObject(new Block(KochaEngine::BlockType::SOIL_BLOCK, Vector3(posX, 8, posZ)));
 				break;
-			case 30:
-				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::TREE, Vector3(posX, 0, posZ)));
-				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 8));
-				break;
-			case 31:
-				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SAKU_WOODEN_SIDEWAYS_UP, Vector3(posX, 0, posZ)));
+
+				//200番～399番 通常の3Dオブジェクト 縦:横マス
+			case 200:  //柵(木)クロス + 判定 1:1
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SAKU_WOODEN_SIDEWAYS, Vector3(posX, 0, posZ)));
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SAKU_WOODEN_VERTICAL, Vector3(posX, 0, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10));
 				break;
-			case 32:
-				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SAKU_WOODEN_SIDEWAYS_DOWN, Vector3(posX, 0, posZ)));
+			case 201: //柵(木)上側 1:1
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SAKU_WOODEN_SIDEWAYS, Vector3(posX, 0, posZ)));
+				break;
+			case 202: //柵(木)上側 + 判定 1:1
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SAKU_WOODEN_SIDEWAYS, Vector3(posX, 0, posZ)));
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10, KochaEngine::COLLISION_DOWN));
+				break;
+			case 203: //柵(木)下側 1:1
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SAKU_WOODEN_SIDEWAYS, Vector3(posX, 0, posZ)));
+				break;
+			case 204: //柵(木)下側 + 判定 1:1
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SAKU_WOODEN_SIDEWAYS, Vector3(posX, 0, posZ)));
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10, KochaEngine::COLLISION_UP));
+				break;
+			case 205: //柵(木)左側 1:1
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SAKU_WOODEN_VERTICAL, Vector3(posX, 0, posZ)));
+				break;
+			case 206: //柵(木)左側 + 判定 1:1
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SAKU_WOODEN_VERTICAL, Vector3(posX, 0, posZ)));
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10, KochaEngine::COLLISION_RIGHT));
+				break;
+			case 207: //柵(木)右側 1:1
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SAKU_WOODEN_VERTICAL, Vector3(posX, 0, posZ)));
+				break;
+			case 208: //柵(木)右側 + 判定 1:1
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SAKU_WOODEN_VERTICAL, Vector3(posX, 0, posZ)));
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10, KochaEngine::COLLISION_LEFT));
+				break;
+			case 209: //壁(石レンガ)横 1:5
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::WALL_SAND_SIDEWAYS, Vector3(posX, 0, posZ)));
+				break;
+			case 210: //壁(石レンガ)横 + 判定 1:5
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::WALL_SAND_SIDEWAYS, Vector3(posX, 0, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10));
 				break;
-			case 33:
-				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SAKU_WOODEN_VERTICAL_LEFT, Vector3(posX, 0, posZ)));
+			case 211: //壁(石レンガ)縦 5:1
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::WALL_SAND_VERTICAL, Vector3(posX, 0, posZ)));
+				break;
+			case 212: //壁(石レンガ)縦 + 判定 5:1
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::WALL_SAND_VERTICAL, Vector3(posX, 0, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10));
 				break;
-			case 34:
-				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SAKU_WOODEN_VERTICAL_RIGHT, Vector3(posX, 0, posZ)));
-				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10));
+
+				//400番～799番 板ポリのアルファオブジェクト
+			case 400: //岩1
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::ROCK1, Vector3(posX, 4, posZ)));
 				break;
-			case 60: //岩
+			case 401: //岩1 + 判定
 				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::ROCK1, Vector3(posX, 4, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 5));
 				break;
-			case 61:
-				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::ROCK2, Vector3(posX, 10, posZ)));
+			case 402: //木1
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::TREE1, Vector3(posX, 12, posZ)));
 				break;
-			case 62:
-				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::ROCK3, Vector3(posX, 4, posZ)));
-				break;
-			case 63: //木
+			case 403: //木1 + 判定
 				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::TREE1, Vector3(posX, 12, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 8));
 				break;
-			case 64: //枯れ木
-				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::TREE2, Vector3(posX, 12, posZ)));
+			case 404: //枯れ木1
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::WITHER_TREE1, Vector3(posX, 12, posZ)));
+				break;
+			case 405: //枯れ木1 + 判定
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::WITHER_TREE1, Vector3(posX, 12, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 8));
 				break;
-			case 65: //草
-				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::GRASS1, Vector3(posX, 2, posZ)));
+			case 406: //墓石
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::GRAVE_STONE, Vector3(posX, 4, posZ)));
 				break;
-			case 66: //墓石
+			case 407: //墓石 + 判定
 				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::GRAVE_STONE, Vector3(posX, 4, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 4));
 				break;
-			case 99:
+			case 408: //草1
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::GRASS1, Vector3(posX, 2, posZ)));
+				break;
+				//800番～999番 NPC等キャラクター
+			case 800:
+
+				break;
+			case 999: //キャラクター
 				gManager->AddObject(new Player(camera, gManager, Vector3(posX, 5, posZ)));
 				gManager->AddObject(new Fighter(camera, Vector3(posX, 5, posZ)));
 				break;
