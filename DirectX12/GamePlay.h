@@ -65,6 +65,7 @@ namespace KochaEngine
 
 		Text* battleLongText;
 		Text* battleShortText;
+		Text* summaryText;
 		Text* battleNameText;
 		Text* commandTitleText;
 		Text* enemyNameText[MAX_NAME_TEXT_COUNT_COMMAND];
@@ -111,6 +112,8 @@ namespace KochaEngine
 		bool isResultOnce;
 		//デフォルトウィンドウに数字を描画するか
 		bool isShowNumber;
+		//コマンド説明文更新用
+		bool isUpdateCommandExplanation;
 
 		//フェードの透明度
 		float fadeAlpha;
@@ -169,6 +172,7 @@ namespace KochaEngine
 		void RewardCalc();
 		void EnemyNameUpdate();
 		void SkillNameUpdate();
+		void SkillExplanationUpdate();
 		void CommandDraw();
 		void MoveCursor();
 		void CursorPosSetting();

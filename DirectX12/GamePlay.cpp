@@ -71,6 +71,8 @@ KochaEngine::GamePlay::GamePlay(Dx12_Wrapper& arg_dx12) : dx12(arg_dx12)
 	battleLongText = new Text(TALK_LONG_TEXT_POS, Vector2(32, 32));
 	battleShortText = new Text(TALK_SHORT_TEXT_POS, Vector2(32, 32));
 	battleShortText->SetOneLineFonts(20);
+	summaryText = new Text(TALK_SHORT_TEXT_POS, Vector2(32, 32));
+	summaryText->SetOneLineFonts(20);
 	battleNameText = new Text(TALK_LONG_TEXT_POS, Vector2(32, 32));
 	commandTitleText = new Text(DEFAULT_COMMAND_POS + Vector2(5, 5), Vector2(32, 32));
 	for (int i = 0; i < MAX_NAME_TEXT_COUNT_COMMAND; i++)
@@ -114,6 +116,7 @@ KochaEngine::GamePlay::~GamePlay()
 	delete cursorTexture;
 	delete battleLongText;
 	delete battleShortText;
+	delete summaryText;
 	delete battleNameText;
 	delete commandTitleText;
 	for (int i = 0; i < MAX_NAME_TEXT_COUNT_COMMAND; i++)
@@ -143,6 +146,7 @@ void KochaEngine::GamePlay::Initialize()
 	isEnemyDestroy = false;
 	isResultOnce = false;
 	isShowNumber = false;
+	isUpdateCommandExplanation = false;
 
 	gManager->Clear();
 	bManager->Clear();
@@ -1055,6 +1059,31 @@ void KochaEngine::GamePlay::SkillNameUpdate()
 	}
 }
 
+void KochaEngine::GamePlay::SkillExplanationUpdate()
+{
+	if (!isUpdateCommandExplanation) return;
+	isUpdateCommandExplanation = false;
+
+	selectSkillIndex = (skillTabPageNum - 1) * MAX_NAME_TEXT_COUNT_COMMAND + commandNum + 1;
+	std::string _skillName = currentActiveActor->GetSkillName(selectSkillIndex);
+	if (_skillName != "noSkill")
+	{
+		auto _skillData = SkillData::GetSkillParam(_skillName);
+		auto _textName = _skillData.summaryName;
+		//スキル説明文の更新
+		summaryText->SetText(_textName);
+		//表示用スキル消費SP更新
+		costSP = _skillData.cost;
+	}
+	else
+	{
+		//スキル説明文の更新
+		summaryText->SetText("default.txt");
+		//表示用スキル消費SP更新
+		costSP = 0;
+	}
+}
+
 void KochaEngine::GamePlay::CommandDraw()
 {
 	//auto enemyCount = bManager->GetEnemyCount();
@@ -1089,7 +1118,7 @@ void KochaEngine::GamePlay::CommandDraw()
 		{
 			skillNameText[i]->Draw(0);
 		}
-		battleShortText->Draw(KochaEngine::GameSetting::talkSpeed);
+		summaryText->Draw(0);
 		break;
 	case KochaEngine::GamePlay::ITEM_TAB: //どうぐコマンド
 		anotherWakuTexture->Draw();
@@ -1109,15 +1138,18 @@ void KochaEngine::GamePlay::MoveCursor()
 	if (InputManager::TriggerUp())
 	{	
 		commandNum = CommandNumUp(commandNum);
+		isUpdateCommandExplanation = true;
 	}
 	else if (InputManager::TriggerDown())
 	{
 		commandNum = CommandNumDown(commandNum);
+		isUpdateCommandExplanation = true;
 	}
 	//決定ボタンを押したとき
 	if (InputManager::TriggerDecision())
 	{
 		preCommandNum = commandNum; //直前の入力の保存
+		isUpdateCommandExplanation = true;
 
 		switch (currentTab)
 		{
@@ -1149,10 +1181,12 @@ void KochaEngine::GamePlay::MoveCursor()
 			//battleLongText->SetText("Talk/Battle/ChooseAction.txt");
 			break;
 		case KochaEngine::GamePlay::TARGET_SELECT_TAB: //ターゲット選択コマンド
+			isUpdateCommandExplanation = true;
 			commandNum = preCommandNum;
 			currentTab = previousTab;
 			break;
 		case KochaEngine::GamePlay::SKILL_TAB: //スキルコマンド
+			isUpdateCommandExplanation = true;
 			commandNum = preCommandNum;
 			currentTab = GamePlay::DEFAULT_TAB;
 			break;
@@ -1199,7 +1233,7 @@ void KochaEngine::GamePlay::MoveCursor()
 				SkillNameUpdate();
 			}
 		}
-
+		SkillExplanationUpdate();
 		break;
 	case KochaEngine::GamePlay::ITEM_TAB: //どうぐコマンド
 

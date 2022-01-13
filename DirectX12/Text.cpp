@@ -11,6 +11,7 @@ KochaEngine::Text::Text(const Vector2& arg_position, const Vector2& arg_fontSize
 
 	se = new Audio();
 
+	oneLineFonts = 23;
 	SetText("default.txt");
 }
 
@@ -21,6 +22,7 @@ KochaEngine::Text::Text(const std::string& arg_textName, const Vector2& arg_posi
 
 	se = new Audio();
 
+	oneLineFonts = 23;
 	SetText(arg_textName);
 }
 
@@ -29,7 +31,6 @@ void KochaEngine::Text::Initialize()
 	textDataSize = 0;
 	addTextCount = 0;
 	addCount = 0;
-	oneLineFonts = 23;
 	isSkip = false;
 	isPlayEndText = false;
 	isSound = false;
