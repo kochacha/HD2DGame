@@ -31,6 +31,23 @@ KochaEngine::Object::Object(const std::string& arg_objName) : objName(arg_objNam
 	//CreateDepthStencilView();
 }
 
+KochaEngine::Object::Object(const std::string& arg_objName, const Vector3& arg_position, const Vector3& arg_rotate, const Vector3& arg_scale) 
+	: objName(arg_objName), position(arg_position), rotate(arg_rotate), scale(arg_scale)
+{
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+	std::wstring ws = converter.from_bytes(arg_objName);
+	std::string modelname(ws.begin(), ws.end());
+	std::string filename = KochaEngine::Dx12_Object::GetMaterial(arg_objName).objFilename;
+	std::string directoryPath = "Resources/Object/" + modelname + "/";
+	texName = directoryPath + modelname + ".png";
+
+	//ファイルパスを結合
+	std::string filepath = directoryPath + filename;
+
+	CreateBufferView();
+	//CreateDepthStencilView();
+}
+
 KochaEngine::Object::~Object()
 {
 }

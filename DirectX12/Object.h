@@ -89,6 +89,7 @@ namespace KochaEngine
 
 	public:
 		Object(const std::string& arg_objName);
+		Object(const std::string& arg_objName, const Vector3& arg_position, const Vector3& arg_rotate, const Vector3& arg_scale);
 		~Object();
 
 		void Draw(Camera* arg_camera, LightManager* arg_lightManager);

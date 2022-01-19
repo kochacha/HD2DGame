@@ -205,9 +205,7 @@ void KochaEngine::Application::Run()
 			//↑SpriteDraw↑//
 			Texture2D::EndDraw();
 			
-#ifdef _DEBUG
 			DrawGUI();
-#endif
 
 			dx12->EndDraw();
 		}
@@ -623,7 +621,7 @@ bool KochaEngine::Application::Initialize()
 	peraEffect = new PostEffect();
 	peraDof = new PostEffect();
 	peraEffectType = ShaderType::VIGNETTE_SHADER;
-	isDof = true;
+	isDof = false;
 
 	//effectManager = new EffectManager(*dx12);
 	//effectManager->LoadEffect("light.efk", 10.0f);
