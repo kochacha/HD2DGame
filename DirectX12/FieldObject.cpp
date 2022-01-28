@@ -32,6 +32,26 @@ KochaEngine::FieldObject::FieldObject(const FieldObjType arg_fieldObjType, const
 		obj->SetScale(Vector3(20, 20, 20));
 		obj->SetTexture("Resources/Texture/Tiling/wall_1.png");
 		break;
+	case KochaEngine::SMALL_HOUSE_WOODEN_BLUE:
+		obj = new Object("house_blue_1");
+		obj->SetScale(Vector3(10, 10, 10));
+		obj->MoveRotate(Vector3(0, 180, 0));
+		break;
+	case KochaEngine::LARGE_HOUSE_WOODEN_BLUE:
+		obj = new Object("house_blue_0");
+		obj->SetScale(Vector3(10, 10, 10));
+		obj->MoveRotate(Vector3(0, 180, 0));
+		break;
+	case KochaEngine::SMALL_HOUSE_WOODEN_RED:
+		obj = new Object("house_red_1");
+		obj->SetScale(Vector3(10, 10, 10));
+		obj->MoveRotate(Vector3(0, 180, 0));
+		break;
+	case KochaEngine::LARGE_HOUSE_WOODEN_RED:
+		obj = new Object("house_red_0");
+		obj->SetScale(Vector3(10, 10, 10));
+		obj->MoveRotate(Vector3(0, 180, 0));
+		break;
 	default:
 		obj = new Object("box");
 		obj->SetScale(Vector3(8, 8, 8));

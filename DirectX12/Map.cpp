@@ -41,12 +41,54 @@ void KochaEngine::Map::CreateMap(const int arg_mapNum)
 			case 100: //何も置かない
 				
 				break;
-			case 101: //当たり判定ボックス
+			case 101: //当たり判定ボックス(中)
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10));
 				break;
+			case 102: //当たり判定ボックス(小)
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 3.5f, posZ), 7));
+				break;
+			case 103: //当たり判定ボックス(大)
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 7.5f, posZ), 15));
+				break;
+			case 104: //当たり判定ボックス上寄り(中)
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10, KochaEngine::COLLISION_UP));
+				break;
+			case 105: //当たり判定ボックス下寄り(中)
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10, KochaEngine::COLLISION_DOWN));
+				break;
+			case 106: //当たり判定ボックス左寄り(中)
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10, KochaEngine::COLLISION_LEFT));
+				break;
+			case 107: //当たり判定ボックス右寄り(中)
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10, KochaEngine::COLLISION_RIGHT));
+				break;
+			case 108: //当たり判定ボックス上寄り(小)
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 3.5f, posZ), 7, KochaEngine::COLLISION_UP));
+				break;
+			case 109: //当たり判定ボックス下寄り(小)
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 3.5f, posZ), 7, KochaEngine::COLLISION_DOWN));
+				break;
+			case 110: //当たり判定ボックス左寄り(小)
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 3.5f, posZ), 7, KochaEngine::COLLISION_LEFT));
+				break;
+			case 111: //当たり判定ボックス右寄り(小)
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 3.5f, posZ), 7, KochaEngine::COLLISION_RIGHT));
+				break;
+			case 112: //当たり判定ボックス上寄り(大)
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 7.5f, posZ), 15, KochaEngine::COLLISION_UP));
+				break;
+			case 113: //当たり判定ボックス下寄り(大)
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 7.5f, posZ), 15, KochaEngine::COLLISION_DOWN));
+				break;
+			case 114: //当たり判定ボックス左寄り(大)
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 7.5f, posZ), 15, KochaEngine::COLLISION_LEFT));
+				break;
+			case 115: //当たり判定ボックス右寄り(大)
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 7.5f, posZ), 15, KochaEngine::COLLISION_RIGHT));
+				break;
 
-				//102番～199番 予備
-			case 102:
+				//116番～199番 予備
+			case 116:
 				gManager->AddObject(new Block(KochaEngine::BlockType::SOIL_BLOCK, Vector3(posX, 8, posZ)));
 				break;
 
@@ -96,6 +138,22 @@ void KochaEngine::Map::CreateMap(const int arg_mapNum)
 				break;
 			case 212: //壁(石レンガ)縦 + 判定 5:1
 				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::WALL_SAND_VERTICAL, Vector3(posX, 0, posZ)));
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10));
+				break;
+			case 213: //小さい家(木)青屋根 + 判定 3:3
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SMALL_HOUSE_WOODEN_BLUE, Vector3(posX, 0, posZ)));
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 40));
+				break;
+			case 214: //大きい家(木)青屋根 + 判定 3:3
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::LARGE_HOUSE_WOODEN_BLUE, Vector3(posX, 0, posZ)));
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 35));
+				break;
+			case 215: //小さい家(木)赤屋根 + 判定 3:3
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::SMALL_HOUSE_WOODEN_RED, Vector3(posX, 0, posZ)));
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10));
+				break;
+			case 216: //大きい家(木)赤屋根 + 判定 3:3
+				gManager->AddObject(new FieldObject(KochaEngine::FieldObjType::LARGE_HOUSE_WOODEN_RED, Vector3(posX, 0, posZ)));
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10));
 				break;
 
