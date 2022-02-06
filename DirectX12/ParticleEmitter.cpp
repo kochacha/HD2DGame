@@ -49,3 +49,20 @@ void KochaEngine::ParticleEmitter::SmashStar(const Vector3& arg_position)
 	pManager->AddParticle(new Particle(param));
 
 }
+
+void KochaEngine::ParticleEmitter::Kiri0(const Vector3& arg_position)
+{
+	ParticleParam param;
+	param.position = arg_position;
+	param.life = 10000;
+	param.moveColor = Vector4(0, 0, 0, 0);
+	param.moveRotate = Vector3(0, 0, 0);
+	param.moveScale = Vector3(0, 0, 0);
+	param.scale = Vector3(50, 50, 1);
+	param.textureName = "Resources/Texture/Object/kiri0.png";
+	param.velocity = Vector3(0.05f, 0, 0);
+	param.color = Vector4(1, 1, 1, 1);
+	param.rotate = Vector3(0, 0, 0);
+
+	pManager->AddParticle(new Particle(param));
+}

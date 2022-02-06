@@ -234,7 +234,7 @@ void KochaEngine::Dx12_Pipeline::CreateAlphaOBJGraphicsPipelineState()
 
 	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
 	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+	blenddesc.DestBlendAlpha = D3D12_BLEND_ONE;
 
 	// ブレンドステートの設定
 	gpipeline.BlendState.AlphaToCoverageEnable = true;

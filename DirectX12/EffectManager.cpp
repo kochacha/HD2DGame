@@ -51,7 +51,7 @@ void KochaEngine::EffectManager::Play(const std::string& arg_efkName, const Vect
 
 void KochaEngine::EffectManager::Update(Camera* arg_camera)
 {
-	if (arg_camera == nullptr) return;
+	if (!arg_camera) return;
 
 	auto cameraEye = arg_camera->GetEye();
 	auto cameraTarget = arg_camera->GetTarget();

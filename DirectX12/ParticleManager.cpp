@@ -1,5 +1,9 @@
 #include "ParticleManager.h"
 
+void KochaEngine::ParticleManager::Zsort()
+{
+}
+
 KochaEngine::ParticleManager::ParticleManager()
 {
 	RemoveAll();

@@ -12,6 +12,8 @@ namespace KochaEngine
 	private:
 		std::vector<Particle*> particles;
 
+		void Zsort();
+
 	public:
 		ParticleManager();
 		~ParticleManager();

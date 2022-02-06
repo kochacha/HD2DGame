@@ -127,6 +127,7 @@ void KochaEngine::PostEffect::Draw()
 	time++;
 	auto result = constBuff->Map(0, nullptr, (void**)&constMap);
 	constMap->color = color;
+	constMap->spare = spare;
 	constMap->value = value;
 	constMap->time = time;
 	constBuff->Unmap(0, nullptr);
@@ -142,15 +143,16 @@ void KochaEngine::PostEffect::Draw()
 
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
 
-	cmdList->SetGraphicsRootDescriptorTable(1, 
-		CD3DX12_GPU_DESCRIPTOR_HANDLE(descHeapSRV->GetGPUDescriptorHandleForHeapStart(), 0,
-			device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+	auto _descriptorHandle = descHeapSRV->GetGPUDescriptorHandleForHeapStart();
+	auto _descriptorIncrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	cmdList->SetGraphicsRootDescriptorTable(1,
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(_descriptorHandle, 0, _descriptorIncrementSize));
 	cmdList->SetGraphicsRootDescriptorTable(2,
-		CD3DX12_GPU_DESCRIPTOR_HANDLE(descHeapSRV->GetGPUDescriptorHandleForHeapStart(), 1,
-			device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(_descriptorHandle, 1, _descriptorIncrementSize));
 	cmdList->SetGraphicsRootDescriptorTable(3,
-		CD3DX12_GPU_DESCRIPTOR_HANDLE(descHeapSRV->GetGPUDescriptorHandleForHeapStart(), 2,
-			device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(_descriptorHandle, 2, _descriptorIncrementSize));
+
 	//深度バッファテクスチャ
 	cmdList->SetDescriptorHeaps(1, _depthSRVHeap.GetAddressOf());
 	//auto handle = _depthSRVHeap->GetGPUDescriptorHandleForHeapStart();
@@ -165,6 +167,7 @@ void KochaEngine::PostEffect::Draw(const ShaderType& arg_type)
 	time++;
 	auto result = constBuff->Map(0, nullptr, (void**)&constMap);
 	constMap->color = color;
+	constMap->spare = spare;
 	constMap->value = value;
 	constMap->time = time;
 	constBuff->Unmap(0, nullptr);
@@ -216,15 +219,16 @@ void KochaEngine::PostEffect::Draw(const ShaderType& arg_type)
 
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
 
+	auto _descriptorHandle = descHeapSRV->GetGPUDescriptorHandleForHeapStart();
+	auto _descriptorIncrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	
 	cmdList->SetGraphicsRootDescriptorTable(1,
-		CD3DX12_GPU_DESCRIPTOR_HANDLE(descHeapSRV->GetGPUDescriptorHandleForHeapStart(), 0,
-			device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(_descriptorHandle, 0,_descriptorIncrementSize));
 	cmdList->SetGraphicsRootDescriptorTable(2,
-		CD3DX12_GPU_DESCRIPTOR_HANDLE(descHeapSRV->GetGPUDescriptorHandleForHeapStart(), 1,
-			device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(_descriptorHandle, 1,_descriptorIncrementSize));
 	cmdList->SetGraphicsRootDescriptorTable(3,
-		CD3DX12_GPU_DESCRIPTOR_HANDLE(descHeapSRV->GetGPUDescriptorHandleForHeapStart(), 2,
-			device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(_descriptorHandle, 2,_descriptorIncrementSize));
+
 	//深度バッファテクスチャ
 	cmdList->SetDescriptorHeaps(1, _depthSRVHeap.GetAddressOf());
 	//auto handle = _depthSRVHeap->GetGPUDescriptorHandleForHeapStart();
@@ -238,16 +242,17 @@ void KochaEngine::PostEffect::StaticInit(ID3D12Device* device, ID3D12GraphicsCom
 {
 	KochaEngine::PostEffect::winSize = winSize;
 
-	if (device == nullptr) return;
+	if (!device) return;
 	KochaEngine::PostEffect::device = device;
 
-	if (cmdList == nullptr) return;
+	if (!cmdList) return;
 	KochaEngine::PostEffect::cmdList = cmdList;
 }
 
 void KochaEngine::PostEffect::Initialize()
 {
 	color = Vector4(1, 1, 1, 1);
+	spare = Vector4(1, 1, 1, 1);
 	time = 0;
 	value = 0;
 

@@ -245,5 +245,5 @@ void KochaEngine::Enemy::SetObjParam()
 
 KochaEngine::BattleObjectType KochaEngine::Enemy::GetType()
 {
-	return ENEMY;
+	return BATTLE_ENEMY;
 }

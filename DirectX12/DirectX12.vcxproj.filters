@@ -297,6 +297,9 @@
     <ClCompile Include="Wizard.cpp">
       <Filter>Source\GameObject\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="SceneChangeBlock.cpp">
+      <Filter>Source\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shader">
@@ -627,6 +630,9 @@
     </ClInclude>
     <ClInclude Include="Wizard.h">
       <Filter>Header\GameObject\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneChangeBlock.h">
+      <Filter>Header\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -39,9 +39,12 @@ void KochaEngine::Player::Initialize()
 	sphere.radius = 4.0f;
 	sphere.position = this->position;
 
+	fakeAlpha = 1.0f;
+
 	obj->SetPosition(position);
 	obj->SetRotate(Vector3(0, 0, 0));
 	obj->SetScale(Vector3(-10, 10, 10));
+	obj->SetColor(Vector4(1, 1, 1, fakeAlpha));
 	obj->SetTexture("Resources/Texture/Character/player/player_wait_f_0.png");
 	obj->SetBillboardType(Object::BILLBOARD_Y);
 
@@ -89,6 +92,16 @@ void KochaEngine::Player::Update()
 	SkillUpdate();
 	Animation();
 	SetObjParam();
+
+	if (Input::TriggerKey(DIK_UP))
+	{
+		fakeAlpha += 0.01f;
+	}
+	if (Input::TriggerKey(DIK_DOWN))
+	{
+		fakeAlpha -= 0.01f;
+	}
+	obj->SetColor(Vector4(1, 1, 1, fakeAlpha));
 }
 
 void KochaEngine::Player::Hit()

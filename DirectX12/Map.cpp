@@ -6,11 +6,13 @@
 #include "Player.h"
 #include "Fighter.h"
 #include "CollisionBlock.h"
+#include "SceneChangeBlock.h"
+#include "GameSetting.h"
 
 KochaEngine::Map::Map(GameObjectManager* arg_gManager, Camera* arg_camera)
 {
-	if (arg_gManager == nullptr) return;
-	if (arg_camera == nullptr) return;
+	if (!arg_gManager) return;
+	if (!arg_camera) return;
 	gManager = arg_gManager;
 	camera = arg_camera;
 }
@@ -29,11 +31,14 @@ void KochaEngine::Map::CreateMap(const int arg_mapNum)
 	auto x_Data = mapData[0].size();
 	auto z_Data = mapData.size();
 
+	//マップチップの一番左上の数字によって環境が変わる(森林、砂漠、雪原、洞窟など)
+	GameSetting::environmentNumber = mapData[0][0];
+	GameSetting::isEnvironmentUpdate = true;
+
 	for (int x = 0; x < x_Data; x++)
 	{
 		for (int z = 0; z < z_Data; z++)
 		{
-			//auto randZ = (float)(Util::GetIntRand(0,100)) * 0.10f;
 			float posZ = -CHIP_SIZE * (float)z + (z_Data - 1) * 0.5f * CHIP_SIZE;
 			float posX = CHIP_SIZE * (float)x - (x_Data - 1) * 0.5f * CHIP_SIZE;
 			switch (mapData[z][x])
@@ -166,18 +171,18 @@ void KochaEngine::Map::CreateMap(const int arg_mapNum)
 				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 5));
 				break;
 			case 402: //木1
-				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::TREE1, Vector3(posX, 12, posZ)));
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::TREE1, Vector3(posX, 17, posZ)));
 				break;
 			case 403: //木1 + 判定
-				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::TREE1, Vector3(posX, 12, posZ)));
-				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 8));
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::TREE1, Vector3(posX, 17, posZ)));
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10));
 				break;
 			case 404: //枯れ木1
-				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::WITHER_TREE1, Vector3(posX, 12, posZ)));
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::WITHER_TREE1, Vector3(posX, 17, posZ)));
 				break;
 			case 405: //枯れ木1 + 判定
-				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::WITHER_TREE1, Vector3(posX, 12, posZ)));
-				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 8));
+				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::WITHER_TREE1, Vector3(posX, 17, posZ)));
+				gManager->AddObject(new CollisionBlock(Vector3(posX, 5, posZ), 10));
 				break;
 			case 406: //墓石
 				gManager->AddObject(new FieldAlphaObject(KochaEngine::FieldAlphaObjType::GRAVE_STONE, Vector3(posX, 4, posZ)));

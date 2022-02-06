@@ -201,6 +201,7 @@
     <ClCompile Include="Number3DEmitter.cpp" />
     <ClCompile Include="Number3DManager.cpp" />
     <ClCompile Include="Number3DOperation.cpp" />
+    <ClCompile Include="SceneChangeBlock.cpp" />
     <ClCompile Include="SkillData.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -543,6 +544,7 @@
     <ClInclude Include="Number3DEmitter.h" />
     <ClInclude Include="Number3DManager.h" />
     <ClInclude Include="Number3DOperation.h" />
+    <ClInclude Include="SceneChangeBlock.h" />
     <ClInclude Include="SkillData.h" />
     <ClInclude Include="SkillParam.h" />
     <ClInclude Include="Text.h" />

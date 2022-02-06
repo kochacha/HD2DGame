@@ -9,6 +9,17 @@ namespace KochaEngine
 
 	class Player : public GameObject
 	{
+	public:
+
+		enum MoveState
+		{
+			MOVE_STOP,
+			MOVE_UP,
+			MOVE_DOWN,
+			MOVE_LEFT,
+			MOVE_RIGHT,
+		};
+
 	private:
 		GameObjectManager* gManager;
 
@@ -28,6 +39,8 @@ namespace KochaEngine
 		int animationRate;
 
 		float speed;
+
+		float fakeAlpha;
 
 		void InputMove();
 		void MoveX();

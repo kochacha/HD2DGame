@@ -45,13 +45,13 @@ void KochaEngine::Object::StaticInit(ID3D12Device* arg_device, SIZE arg_winSize)
 {
 	KochaEngine::Object::winSize = arg_winSize;
 
-	if (arg_device == nullptr) return;
+	if (!arg_device) return;
 	KochaEngine::Object::device = arg_device;
 }
 
 void KochaEngine::Object::BeginDraw(ID3D12GraphicsCommandList* arg_cmdList)
 {
-	if (arg_cmdList == nullptr) return;
+	if (!arg_cmdList) return;
 	KochaEngine::Object::cmdList = arg_cmdList;
 
 	arg_cmdList->SetPipelineState(Dx12_Pipeline::objPipelineState.Get());
@@ -61,7 +61,7 @@ void KochaEngine::Object::BeginDraw(ID3D12GraphicsCommandList* arg_cmdList)
 
 void KochaEngine::Object::BeginAlphaDraw(ID3D12GraphicsCommandList* arg_cmdList)
 {
-	if (arg_cmdList == nullptr) return;
+	if (!arg_cmdList) return;
 	KochaEngine::Object::cmdList = arg_cmdList;
 
 	arg_cmdList->SetPipelineState(Dx12_Pipeline::alphaObjPipelineState.Get());
@@ -71,7 +71,7 @@ void KochaEngine::Object::BeginAlphaDraw(ID3D12GraphicsCommandList* arg_cmdList)
 
 void KochaEngine::Object::BeginDrawFromLight(ID3D12GraphicsCommandList* arg_cmdList)
 {
-	if (arg_cmdList == nullptr) return;
+	if (!arg_cmdList) return;
 	KochaEngine::Object::cmdList = arg_cmdList;
 
 	arg_cmdList->SetPipelineState(Dx12_Pipeline::shadowPipelineState.Get());
@@ -171,8 +171,8 @@ void KochaEngine::Object::CreateDepthStencilView()
 
 void KochaEngine::Object::Draw(Camera* arg_camera, LightManager* arg_lightManager)
 {
-	if (arg_camera == nullptr)	return;
-	if (arg_lightManager == nullptr) return;
+	if (!arg_camera) return;
+	if (!arg_lightManager) return;
 
 	HRESULT result;
 	DirectX::XMMATRIX matScale, matRot, matTrans;
@@ -204,7 +204,6 @@ void KochaEngine::Object::Draw(Camera* arg_camera, LightManager* arg_lightManage
 	default:
 		break;
 	}
-
 
 	matView = arg_camera->GetMatView();
 	matProjection = arg_camera->GetMatProjection();
@@ -251,8 +250,8 @@ void KochaEngine::Object::Draw(Camera* arg_camera, LightManager* arg_lightManage
 
 void KochaEngine::Object::Draw(Camera* arg_camera, LightManager* arg_lightManager, const Vector3& arg_position, const Vector3& arg_scale, const Vector3& arg_rotate)
 {
-	if (arg_camera == nullptr)	return;
-	if (arg_lightManager == nullptr) return;
+	if (!arg_camera)	return;
+	if (!arg_lightManager) return;
 
 	HRESULT result;
 	DirectX::XMMATRIX matScale, matRot, matTrans;
@@ -289,7 +288,7 @@ void KochaEngine::Object::Draw(Camera* arg_camera, LightManager* arg_lightManage
 	matProjection = arg_camera->GetMatProjection();
 
 	// 親オブジェクトがあれば
-	if (parent != nullptr) {
+	if (parent) {
 		// 親オブジェクトのワールド行列を掛ける
 		matWorld *= parent->matWorld;
 	}
@@ -308,7 +307,6 @@ void KochaEngine::Object::Draw(Camera* arg_camera, LightManager* arg_lightManage
 	constMap1->specular = material.specular;
 	constMap1->alpha = material.alpha;
 	constBuffB1->Unmap(0, nullptr);
-
 
 	auto vbView = KochaEngine::Dx12_Object::GetVBView(objName);
 	auto ibView = KochaEngine::Dx12_Object::GetIBView(objName);
@@ -349,7 +347,11 @@ void KochaEngine::Object::SetRotate(const Vector3& arg_rotate)
 
 void KochaEngine::Object::SetColor(const Vector4& arg_color)
 {
-	this->color = arg_color;
+	color = arg_color;
+	//this->color.x = arg_color.x;
+	//this->color.y = arg_color.y;
+	//this->color.z = arg_color.z;
+	//this->color.w = 0.5f + arg_color.w * 0.5f;
 }
 
 void KochaEngine::Object::SetAlpha(const float arg_alpha)

@@ -92,6 +92,7 @@ namespace KochaEngine
 		void DrawGUI();
 		void MeraMera();
 		void EngineLogo();
+		void EnvironmentUpdate();
 		bool UpdateFPS();
 
 	public:

@@ -69,7 +69,7 @@ void KochaEngine::LightManager::Update()
 
 void KochaEngine::LightManager::Draw(ID3D12GraphicsCommandList* arg_cmdList, const UINT arg_rootParameterIndex)
 {
-	if (arg_cmdList == nullptr) return;
+	if (!arg_cmdList) return;
 	arg_cmdList->SetGraphicsRootConstantBufferView(arg_rootParameterIndex, constBuff->GetGPUVirtualAddress());
 }
 
@@ -164,6 +164,6 @@ void KochaEngine::LightManager::SetPointLightAtten(const int arg_index, const Ve
 
 void KochaEngine::LightManager::SetLightCamera(Camera* arg_lightCamera)
 {
-	if (arg_lightCamera == nullptr)return;
+	if (!arg_lightCamera)return;
 	lightCamera = arg_lightCamera;
 }

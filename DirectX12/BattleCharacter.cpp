@@ -127,7 +127,7 @@ void KochaEngine::BattleCharacter::Initialize()
 
 	startPosX = position.x;
 	prePosX = startPosX + Util::GetIntRand(0, 3) - 57;
-	activePosX = prePosX - 22;
+	activePosX = prePosX - 20;
 }
 
 void KochaEngine::BattleCharacter::Update()

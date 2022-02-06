@@ -1,4 +1,5 @@
 #include "FieldAlphaObject.h"
+#include "GameSetting.h"
 
 KochaEngine::FieldAlphaObject::FieldAlphaObject(const FieldAlphaObjType& arg_fieldAlphaObjType, const Vector3& arg_position)
 {
@@ -18,6 +19,10 @@ KochaEngine::FieldAlphaObject::~FieldAlphaObject()
 void KochaEngine::FieldAlphaObject::Initialize()
 {
 	isAlpha = true;
+
+	preEnvironmentNum = GameSetting::environmentNumber;
+	std::string extension = std::to_string(preEnvironmentNum) + ".png";
+
 	switch (fieldAlphaObjType)
 	{
 	case KochaEngine::ROCK1:
@@ -29,12 +34,12 @@ void KochaEngine::FieldAlphaObject::Initialize()
 		obj->SetScale(Vector3(15, 15, 15));
 		break;
 	case KochaEngine::TREE1:
-		obj->SetTexture("Resources/Texture/Object/tree1.png");
-		obj->SetScale(Vector3(20, 25, 25));
+		obj->SetTexture("Resources/Texture/Object/tree1_" + extension);
+		obj->SetScale(Vector3(28, 35, 35));
 		break;
 	case KochaEngine::WITHER_TREE1:
-		obj->SetTexture("Resources/Texture/Object/tree2.png");
-		obj->SetScale(Vector3(20, 25, 25));
+		obj->SetTexture("Resources/Texture/Object/tree2_" + extension);
+		obj->SetScale(Vector3(28, 35, 35));
 		break;
 	case KochaEngine::GRASS1:
 		obj->SetTexture("Resources/Texture/Object/grass1.png");
@@ -53,9 +58,30 @@ void KochaEngine::FieldAlphaObject::Initialize()
 
 void KochaEngine::FieldAlphaObject::Update()
 {
+	UpdateEnvironment();
 }
 
 void KochaEngine::FieldAlphaObject::ObjDraw(Camera* camera, LightManager* arg_ligtManager)
 {
 	obj->Draw(camera, arg_ligtManager);
+}
+
+void KochaEngine::FieldAlphaObject::UpdateEnvironment()
+{
+	if (preEnvironmentNum == GameSetting::environmentNumber) return;
+	preEnvironmentNum = GameSetting::environmentNumber;
+
+	std::string extension = std::to_string(preEnvironmentNum) + ".png";
+
+	switch (fieldAlphaObjType)
+	{
+	case KochaEngine::TREE1:
+		obj->SetTexture("Resources/Texture/Object/tree1_" + extension);
+		break;
+	case KochaEngine::WITHER_TREE1:
+		obj->SetTexture("Resources/Texture/Object/tree2_" + extension);
+		break;
+	default:
+		break;
+	}
 }

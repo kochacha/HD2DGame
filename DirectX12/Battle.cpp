@@ -369,7 +369,7 @@ void KochaEngine::Battle::TurnInitialize()
 	currentActiveActor = bManager->GetCurrentActive();
 
 	//キャラ・エネミーを行動中状態にする
-	if (currentActiveActor != nullptr)
+	if (currentActiveActor)
 	{
 		currentActiveActor->CurrentActive();
 
@@ -464,6 +464,7 @@ void KochaEngine::Battle::EnemyActionSelect()
 	//もらった名前をKeyにしてスキルのデータを持ってくる
 	SkillParam activeSkill = SkillData::GetSkillParam(activeSkillName);
 
+	//ここでエネミーのAI(これも別でクラス作って管理したい)
 	//スキルの効果対象を調べる(敵か味方か)
 	if (activeSkill.isAllies) //エネミー側
 	{
@@ -549,7 +550,7 @@ void KochaEngine::Battle::ActiveMotionUpdate()
 		cameraManager->SetBattleTargetPositionZ(targetZ);
 
 		//カメラのフォーカス(左右)をターゲットに寄せる
-		if (currentActiveActor->GetType() == BattleObjectType::ENEMY)
+		if (currentActiveActor->GetType() == BattleObjectType::BATTLE_ENEMY)
 		{
 			cameraManager->MoveBattleEyePositionX(ATTACK_FOCUS_X);
 			cameraManager->MoveBattleTargetPositionX(ATTACK_FOCUS_X);
@@ -573,7 +574,7 @@ void KochaEngine::Battle::ActiveMotionUpdate()
 		currentActiveActor->SetAttackTextureIndex(1);
 
 		//ダメージ受けた時のカメラ揺れ
-		if (targetActor->GetType() != BattleObjectType::ENEMY)
+		if (targetActor->GetType() != BattleObjectType::BATTLE_ENEMY)
 		{
 			cameraManager->SetCameraShake(5.0f);
 		}
@@ -703,33 +704,40 @@ void KochaEngine::Battle::ResultUpdate()
 	}
 }
 
+//リザルト時の経験値とお金を追加
 void KochaEngine::Battle::RewardCalc()
 {
 	BattleObject* character = nullptr;
-	const float EXP_RATE = 1.1f - (float)battleCharaCount * 0.1f;
+
+	//バトル参加キャラ数に応じて1キャラあたりの獲得経験値が変動する
+	//経験値レート = 基礎倍率1.0倍 / 参加キャラ数(1人の時等倍)
+	const float EXP_RATE = 1.0f / (float)battleCharaCount;
+	//一人当たり獲得経験値 = 総獲得経験値 × 経験値レート
 	getExp = (float)bManager->GetTotalExp() * EXP_RATE;
-	if (getExp <= 0) getExp = 1; //最低でも１の経験値は保障
+
+	//経験値がマイナスにならないように補正
+	if (getExp < 0) getExp = 0;
 
 	character = bManager->GetCharacter(BattleObjectType::BATTLE_PLAYER);
 	if (character)
 	{
+		//棺桶状態だと経験値が入らない
 		if (!character->IsKnockDown())
 		{
 			character->AddExp(getExp);
 		}
+		//プレイヤーのみ、お金を追加
 		character->AddMoney(bManager->GetTotalMoney());
 	}
 	character = bManager->GetCharacter(BattleObjectType::BATTLE_FIGHTER);
-	if (character && !character->IsKnockDown())
+	if (character)
 	{
-		character->AddExp(getExp);
+		//棺桶状態だと経験値が入らない
+		if (!character->IsKnockDown())
+		{
+			character->AddExp(getExp);
+		}
 	}
-	//character = bManager->GetCharacter(BattleObjectType::BATTLE_PLAYER);
-	//if (character != nullptr)
-	//{
-	//	character->AddExp(getExp);
-	//}
-
 }
 
 void KochaEngine::Battle::EnemyNameUpdate()
@@ -738,11 +746,13 @@ void KochaEngine::Battle::EnemyNameUpdate()
 	for (int i = 0; i < MAX_NAME_TEXT_COUNT_COMMAND; i++)
 	{
 		auto enemy = bManager->GetEnemy(i + 1);
-		if (enemy == nullptr)
+		if (!enemy)
 		{
+			//エネミーがいない場合、「なし」を描画
 			enemyNameText[i]->SetText("none.txt");
 			continue;
 		}
+		//エネミーの名前を設定
 		enemyNameText[i]->SetText(enemy->GetBaseParam().name);
 	}
 }
@@ -757,9 +767,11 @@ void KochaEngine::Battle::SkillNameUpdate()
 		auto skill = currentActiveActor->GetSkillName(_indexNum);
 		if (skill == "noSkill")
 		{
+			//スキルが無い場合、「なし」を描画
 			skillNameText[i]->SetText("none.txt");
 			continue;
 		}
+		//スキルの名前を設定
 		skillNameText[i]->SetText(SkillData::GetSkillParam(skill).name);
 	}
 }
@@ -791,7 +803,6 @@ void KochaEngine::Battle::SkillExplanationUpdate()
 
 void KochaEngine::Battle::CommandDraw()
 {
-	//auto enemyCount = bManager->GetEnemyCount();
 	switch (currentTab)
 	{
 	case KochaEngine::Battle::DEFAULT_TAB: //デフォルトコマンド
@@ -814,10 +825,9 @@ void KochaEngine::Battle::CommandDraw()
 		pageCommandTexture->Draw();
 		spCommandTexture->Draw();
 
-		//costSPDraw
 		costSPNumberTex->Draw(costSP);
-		//skillTabNumDraw
-		//skillTabMaxNumDraw
+		//ここにskillTabNumDraw追加
+		//ここにskillTabMaxNumDraw追加
 
 		for (int i = 0; i < MAX_NAME_TEXT_COUNT_COMMAND; i++)
 		{
@@ -958,6 +968,7 @@ void KochaEngine::Battle::MoveCursor()
 
 }
 
+//カーソルのポジションを設定
 void KochaEngine::Battle::CursorPosSetting()
 {
 	switch (commandNum)
@@ -1049,8 +1060,11 @@ void KochaEngine::Battle::TargetSelectTab()
 
 void KochaEngine::Battle::SkillTab()
 {
+	//現在選択中のカーソル番号を算出
 	selectSkillIndex = (skillTabPageNum - 1) * MAX_NAME_TEXT_COUNT_COMMAND + commandNum + 1;
+	//キャラのスキルデータからその番号に当てはまるスキルの名前をもってくる
 	std::string _skillName = currentActiveActor->GetSkillName(selectSkillIndex);
+
 	if (_skillName != "noSkill")
 	{
 		SkillParam _skillData = SkillData::GetSkillParam(_skillName);
@@ -1063,6 +1077,7 @@ void KochaEngine::Battle::SkillTab()
 		}
 		if (!_skillData.isOverall)
 		{
+			//単体攻撃
 			commandNum = 0;
 			currentTab = Battle::TARGET_SELECT_TAB; //ターゲット選択コマンドへ
 		}

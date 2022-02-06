@@ -39,6 +39,7 @@ namespace KochaEngine
 
 		Vector2 size;
 		Vector2 position;
+		Vector2 anchorPoint;
 		float rotate;
 
 		std::string texName;
@@ -82,7 +83,7 @@ namespace KochaEngine
 
 	public:
 		Texture2D(const std::string& arg_texName, const Vector2& arg_position,
-			const Vector2& arg_size, const float arg_rotate);
+			const Vector2& arg_size, const float arg_rotate, Vector2 arg_anchorPoint = Vector2(0, 0));
 		Texture2D(const std::string& arg_texName, const UINT arg_x, const UINT arg_y, 
 			const UINT arg_texNum, const Vector2& arg_position, const Vector2& arg_size, const float arg_rotate);
 		~Texture2D();
@@ -94,6 +95,7 @@ namespace KochaEngine
 		void SetTexNum(const UINT arg_texNum);
 		void SetColor(const Vector4& arg_color) { this->color = arg_color; }
 		void SetSize(const Vector2& arg_size);
+		void SetAnchorPoint(const Vector2& arg_anchorPoint);
 
 		static void StaticInit(ID3D12Device* arg_device, const SIZE arg_winSize);
 		static void BeginDrawAlphaSort(ID3D12GraphicsCommandList* arg_cmdList);

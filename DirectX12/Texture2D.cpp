@@ -12,8 +12,8 @@ SIZE KochaEngine::Texture2D::winSize{};
 UINT KochaEngine::Texture2D::descriptorHandleIncrementSize{};
 
 KochaEngine::Texture2D::Texture2D(const std::string& arg_texName, const Vector2& arg_position,
-	const Vector2& arg_size, const float arg_rotate)
-	: texName(arg_texName), position(arg_position), size(arg_size), rotate(arg_rotate)
+	const Vector2& arg_size, const float arg_rotate, Vector2 arg_anchorPoint)
+	: texName(arg_texName), position(arg_position), size(arg_size), rotate(arg_rotate), anchorPoint(arg_anchorPoint)
 {
 	SetVertices();
 	CreateDepthStencilView();
@@ -73,18 +73,17 @@ void KochaEngine::Texture2D::EndDraw()
 
 void KochaEngine::Texture2D::SetVertices()
 {
-	vertices[0] = { {0,size.y,0},{0.0f,1.0f} };
-	vertices[1] = { {0,0,0},{0.0f,0.0f} };
-	vertices[2] = { {size.x,size.y,0},{1.0f,1.0f} };
-	vertices[3] = { {size.x,0,0},{1.0f,0.0f} };
+	vertices[0] = { {-size.x * anchorPoint.x,  size.y * (1.0f - anchorPoint.y), 0},{0.0f,1.0f} };
+	vertices[1] = { {-size.x * anchorPoint.x, -size.y * anchorPoint.y, 0},{0.0f,0.0f} };
+	vertices[2] = { { size.x * (1.0f - anchorPoint.x),  size.y * (1.0f - anchorPoint.y), 0},{1.0f,1.0f} };
+	vertices[3] = { { size.x * (1.0f - anchorPoint.x), -size.y * anchorPoint.y, 0},{1.0f,0.0f} };
 }
 
 void KochaEngine::Texture2D::SetSize(const Vector2& arg_size)
 {
-	vertices[0] = { {0,arg_size.y,0},{0.0f,1.0f} };
-	vertices[1] = { {0,0,0},{0.0f,0.0f} };
-	vertices[2] = { {arg_size.x,arg_size.y,0},{1.0f,1.0f} };
-	vertices[3] = { {arg_size.x,0,0},{1.0f,0.0f} };
+	size = arg_size;
+	SetVertices();
+
 	auto result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 
 	for (int i = 0; i < _countof(vertices); i++)
@@ -94,6 +93,21 @@ void KochaEngine::Texture2D::SetSize(const Vector2& arg_size)
 
 	vertBuff->Unmap(0, nullptr);
 
+}
+
+void KochaEngine::Texture2D::SetAnchorPoint(const Vector2& arg_anchorPoint)
+{
+	anchorPoint = arg_anchorPoint;
+	SetVertices();
+
+	auto result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+
+	for (int i = 0; i < _countof(vertices); i++)
+	{
+		vertMap[i] = vertices[i];
+	}
+
+	vertBuff->Unmap(0, nullptr);
 }
 
 void KochaEngine::Texture2D::SetCutVertices(UINT texNum)

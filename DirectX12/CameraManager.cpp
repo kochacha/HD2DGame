@@ -1,6 +1,7 @@
 #include "CameraManager.h"
 #include "Player.h"
 #include "Util.h"
+#include "GameSetting.h"
 
 KochaEngine::CameraManager::CameraManager(Camera& arg_camera) : camera(arg_camera)
 {
@@ -52,8 +53,8 @@ void KochaEngine::CameraManager::DefaultCameraUpdate()
 {
 	//プレイヤーに追従するカメラ
 	Vector3 playerPos = player->GetPosition();
-	Vector3 cameraPos = Vector3(playerPos.x, playerPos.y + 20, playerPos.z - 60);
-	Vector3 cameraTargetPos = Vector3(playerPos.x, playerPos.y, playerPos.z + 20);
+	Vector3 cameraPos = Vector3(playerPos.x, playerPos.y + CAMERA_POS_Y, playerPos.z + CAMERA_POS_Z);
+	Vector3 cameraTargetPos = Vector3(playerPos.x, playerPos.y + CAMERA_TARGET_POS_Y, playerPos.z + CAMERA_TARGET_POS_Z);
 
 	currentEyePosition = cameraPos;
 	defaultEyePosition = cameraPos;

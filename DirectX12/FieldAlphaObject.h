@@ -18,6 +18,9 @@ namespace KochaEngine
 	{
 	private:
 		FieldAlphaObjType fieldAlphaObjType;
+		int preEnvironmentNum;
+
+		void UpdateEnvironment();
 
 	public:
 		FieldAlphaObject(const FieldAlphaObjType& arg_fieldAlphaObjType, const Vector3& arg_position);

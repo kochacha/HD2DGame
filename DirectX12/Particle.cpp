@@ -5,7 +5,7 @@
 KochaEngine::Particle::Particle(const ParticleParam& arg_param) : param(arg_param)
 {
 	obj = new Object("plane");
-	obj->SetBillboardType(Object::BILLBOARD);
+	obj->SetBillboardType(Object::BILLBOARD_Y);
 	obj->SetPosition(arg_param.position);
 	obj->SetScale(arg_param.scale);
 	obj->SetRotate(arg_param.rotate);

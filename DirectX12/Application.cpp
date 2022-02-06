@@ -116,6 +116,9 @@ void KochaEngine::Application::Run()
 		//ライトマネージャーの更新
 		lightManager->Update();*/
 
+		//環境(画面効果)の更新
+		EnvironmentUpdate();
+
 		////↑毎フレーム処理↑//
 		
 		auto _cmdList = dx12->GetCmdList().Get();
@@ -148,7 +151,6 @@ void KochaEngine::Application::Run()
 
 			//↑AlphaObjDraw↑//
 			Object::EndDraw();
-
 
 			//effectManager->Update(camera);
 
@@ -309,10 +311,16 @@ void KochaEngine::Application::Load()
 		Dx12_Texture::LoadTexture("Resources/Texture/Object/rock1.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Object/rock2.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Object/rock3.png");
-		Dx12_Texture::LoadTexture("Resources/Texture/Object/tree1.png");
-		Dx12_Texture::LoadTexture("Resources/Texture/Object/tree2.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Object/tree1_1.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Object/tree2_1.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Object/tree3_1.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Object/tree1_2.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Object/tree2_2.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Object/tree1_3.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Object/tree2_3.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Object/grass1.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Object/graveStone.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Object/kiri0.png");
 
 		//Tilingフォルダ
 		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_stone1.png");
@@ -326,6 +334,9 @@ void KochaEngine::Application::Load()
 		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_kusa0.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_kusa1.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_suna0.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_suna1.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_yuki0.png");
+		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_yuki1.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_floor1.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_floor2.png");
 		Dx12_Texture::LoadTexture("Resources/Texture/Tiling/tiling_floor3.png");
@@ -430,7 +441,7 @@ void KochaEngine::Application::DrawGUI()
 	else if (_effectType == ShaderType::VIGNETTE_SHADER)
 	{
 		ImGui::Text("VignetteScale");
-		ImGui::SliderFloat(" ", &vignetteScale, 0.0f, 5.0f);
+		ImGui::SliderFloat(" ", &vignetteScale, 0.0f, 4.0f);
 		peraEffectType = ShaderType::VIGNETTE_SHADER;
 		peraEffect->SetValue(vignetteScale);
 	}
@@ -474,12 +485,12 @@ void KochaEngine::Application::DrawGUI()
 		peraEffect->SetValue(blurScale);
 	}
 
-	ImGui::Text("ShaderColor");
-	ImGui::ColorPicker4(" Color", color);
-	shaderColor.x = color[0];
-	shaderColor.y = color[1];
-	shaderColor.z = color[2];
-	peraEffect->SetColor(shaderColor);
+	//ImGui::Text("ShaderColor");
+	//ImGui::ColorPicker4(" Color", color);
+	//shaderColor.x = color[0];
+	//shaderColor.y = color[1];
+	//shaderColor.z = color[2];
+	//peraEffect->SetColor(shaderColor);
 
 	ImGui::End();
 }
@@ -535,6 +546,67 @@ void KochaEngine::Application::EngineLogo()
 			isLogoFlag = true;
 		}
 	}
+}
+
+void KochaEngine::Application::EnvironmentUpdate()
+{
+	if (!GameSetting::isEnvironmentUpdate) return;
+	GameSetting::isEnvironmentUpdate = false;
+
+	switch (GameSetting::environmentNumber)
+	{
+	case 1: //環境設定:森林
+
+		//フォグ
+		peraDof->SetValue(0.2f);
+
+		//ビネット効果の設定
+		vignetteScale = 0.25f;
+		peraEffect->SetColor(Vector4(1.0f, 1.0f, 1.0f, 0.0f));
+		peraEffect->SetSpare(Vector4(0.01f, 0.05f, 0.9f, 0.0f));
+		peraEffect->SetValue(vignetteScale);
+
+		break;
+	case 2: //環境設定:砂漠
+
+		//フォグ
+		peraDof->SetValue(0.15f);
+
+		//ビネット効果の設定
+		vignetteScale = 0.3f;
+		peraEffect->SetColor(Vector4(1.0f, 1.2f, 1.8f, 0.0f));
+		peraEffect->SetSpare(Vector4(0.02f, 0.08f, 0.95f, 0.0f));
+		peraEffect->SetValue(vignetteScale);
+
+		break;
+	case 3: //環境設定:雪原
+
+		//フォグ
+		peraDof->SetValue(0.0f);
+
+		//ビネット効果の設定
+		vignetteScale = 0.4f;
+		peraEffect->SetColor(Vector4(1.05f, 1.05f, 1.0f, 0.25f));
+		peraEffect->SetSpare(Vector4(0.2f, 0.0f, 1.0f, 0.0f));
+		peraEffect->SetValue(vignetteScale);
+
+		break;
+	case 4: //環境設定:洞窟
+		//フォグ
+		peraDof->SetValue(0.6f);
+
+		//ビネット効果の設定
+		vignetteScale = 0.5f;
+		peraEffect->SetColor(Vector4(1.0f, 1.0f, 1.0f, 0.0f));
+		peraEffect->SetSpare(Vector4(0.01f, 0.05f, 0.9f, 0.0f));
+		peraEffect->SetValue(vignetteScale);
+
+		break;
+
+	default:
+		break;
+	}
+
 }
 
 bool KochaEngine::Application::UpdateFPS()
@@ -637,7 +709,7 @@ bool KochaEngine::Application::Initialize()
 	/*lightManager->SetPointLightColor(0, pointLightColor);
 	lightManager->SetPointLightAtten(0, pointLightAtten);*/
 
-	vignetteScale = 0.3f;
+	vignetteScale = 0.40f;
 	gBoyPixelSize = 4.0f;
 	mosaicSize = 4.0f;
 	sepiaScale = 0.2f;

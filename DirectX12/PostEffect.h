@@ -37,6 +37,7 @@ namespace KochaEngine
 		struct ConstBufferDataB0
 		{
 			Vector4 color;
+			Vector4 spare;
 			float time;
 			float value;
 		};
@@ -53,6 +54,7 @@ namespace KochaEngine
 
 		void SetValue(const float arg_value) { value = arg_value; }
 		void SetColor(const Vector4& arg_color) { color = arg_color; }
+		void SetSpare(const Vector4& arg_spare) { spare = arg_spare; }
 
 		static void StaticInit(ID3D12Device* device, ID3D12GraphicsCommandList* cmdList, const SIZE winSize);
 	private:
@@ -70,6 +72,7 @@ namespace KochaEngine
 		ComPtr<ID3D12Resource> constBuff;
 		ConstBufferDataB0* constMap;
 		Vector4 color;
+		Vector4 spare;
 		float value;
 		float time;
 

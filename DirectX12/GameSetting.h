@@ -1,6 +1,7 @@
 #pragma once
 #include "Vector2.h"
 #include "Vector3.h"
+#include "Vector4.h"
 
 namespace KochaEngine
 {
@@ -27,10 +28,14 @@ namespace KochaEngine
 		//現在のフィールド
 		static int nowField;
 		
-		//ボリューム関連
+		//サウンドボリューム関連
 		static float masterVolume;
 		static float seVolume;
 		static float bgmVolume;
+
+		//環境設定更新用
+		static bool isEnvironmentUpdate;
+		static int environmentNumber;
 	};
 
 #define MAX_BATTLE_CHARA 3
@@ -91,18 +96,29 @@ namespace KochaEngine
 	//ベース(レベル1状態)となる必要経験値
 	const int BASE_EXP = 10;
 
+	//プレイヤーからの相対位置
+	const float CAMERA_POS_Y = 28;
+	const float CAMERA_POS_Z = -60;
+	const float CAMERA_TARGET_POS_Y = -5;
+	const float CAMERA_TARGET_POS_Z = 25;
+
 	//バトル時敵出現ポジション
 	//小サイズの敵
 	const Vector3 SMALL_ENEMY_POS[4] =
-	{ Vector3(-20, -20, 65),Vector3(-25, -20, 55),Vector3(-40, -20, 70),Vector3(-45, -20, 60) };
+	{ Vector3(-20, -CAMERA_POS_Y, 55),Vector3(-25, -CAMERA_POS_Y, 45),Vector3(-40, -CAMERA_POS_Y, 60),Vector3(-45, -CAMERA_POS_Y, 50) };
 	//中サイズの敵、又は飛んでいる敵
 	const Vector3 MEDIUM_ENEMY_POS[4] =
-	{ Vector3(-20, -15, 65),Vector3(-25, -15, 55),Vector3(-40, -15, 70),Vector3(-45, -15, 60) };
+	{ Vector3(-20, -CAMERA_POS_Y + 5, 55),Vector3(-25, -CAMERA_POS_Y + 5, 45),Vector3(-40, -CAMERA_POS_Y + 5, 60),Vector3(-45, -CAMERA_POS_Y + 5, 50) };
 	//大サイズの敵
 	const Vector3 LARGE_ENEMY_POS[4] =
-	{ Vector3(-20, -10, 65),Vector3(-25, -10, 55),Vector3(-40, -10, 70),Vector3(-45, -10, 60) };
+	{ Vector3(-20, -CAMERA_POS_Y + 10, 55),Vector3(-25, -CAMERA_POS_Y + 10, 45),Vector3(-40, -CAMERA_POS_Y + 10, 60),Vector3(-45, -CAMERA_POS_Y + 10, 50) };
 
 	//バトル時キャラクター出現ポジション
 	const Vector3 BATTLE_CHARACTOR_POS[4] =
-	{ Vector3(80, -20, 56),Vector3(77, -20, 60),Vector3(74, -20, 64),Vector3(71, -20, 68) };
+	{ Vector3(80, -CAMERA_POS_Y, 46),Vector3(77, -CAMERA_POS_Y, 50),Vector3(74, -CAMERA_POS_Y, 54),Vector3(71, -CAMERA_POS_Y, 58) };
+
+	//ポストエフェクト関連
+	
+	//ビネットカラー
+	//const Vector4 DEFAULT_VIGNETTE_COLOR = Vector4();
 }

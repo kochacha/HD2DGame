@@ -45,8 +45,8 @@ void KochaEngine::GameObjectManager::Update()
 void KochaEngine::GameObjectManager::AlphaObjDrawFieldScene(Camera* arg_camera, LightManager* arg_lightManager)
 {
 	//フィールドシーン用の透明オブジェクトの描画
-	if (arg_camera == nullptr) return;
-	if (arg_lightManager == nullptr) return;
+	if (!arg_camera) return;
+	if (!arg_lightManager) return;
 
 	this->camera = arg_camera;
 	this->lightManager = arg_lightManager;
@@ -71,8 +71,8 @@ void KochaEngine::GameObjectManager::AlphaObjDrawFieldScene(Camera* arg_camera, 
 void KochaEngine::GameObjectManager::AlphaObjDrawBattleScene(Camera* arg_camera, LightManager* arg_lightManager)
 {
 	//バトルシーン用の透明オブジェクトの描画
-	if (arg_camera == nullptr) return;
-	if (arg_lightManager == nullptr) return;
+	if (!arg_camera) return;
+	if (!arg_lightManager) return;
 
 	this->camera = arg_camera;
 	this->lightManager = arg_lightManager;
@@ -96,8 +96,8 @@ void KochaEngine::GameObjectManager::AlphaObjDrawBattleScene(Camera* arg_camera,
 void KochaEngine::GameObjectManager::ObjDrawFieldScene(Camera* arg_camera, LightManager* arg_lightManager)
 {
 	//フィールドシーン用の不透明オブジェクトの描画
-	if (arg_camera == nullptr) return;
-	if (arg_lightManager == nullptr) return;
+	if (!arg_camera) return;
+	if (!arg_lightManager) return;
 
 	this->camera = arg_camera;
 	this->lightManager = arg_lightManager;
@@ -118,8 +118,8 @@ void KochaEngine::GameObjectManager::ObjDrawFieldScene(Camera* arg_camera, Light
 void KochaEngine::GameObjectManager::ObjDrawBattleScene(Camera* arg_camera, LightManager* arg_lightManager)
 {
 	//バトルシーン用の不透明オブジェクトの描画
-	if (arg_camera == nullptr) return;
-	if (arg_lightManager == nullptr) return;
+	if (!arg_camera) return;
+	if (!arg_lightManager) return;
 
 	camera = arg_camera;
 	lightManager = arg_lightManager;
@@ -151,10 +151,11 @@ void KochaEngine::GameObjectManager::SpriteDraw()
 
 void KochaEngine::GameObjectManager::CheckBlock(GameObject* arg_obj, const GameObjectType& arg_otherType)
 {
+	if (!arg_obj) return;
+
 	//自分以外のオブジェクトと当たっていないかのチェック
 	_Sphere objSphere = arg_obj->GetSphere();
 	GameObjectType objType = arg_obj->GetType();
-	XMFLOAT3 objPos = arg_obj->GetPosition();
 
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)

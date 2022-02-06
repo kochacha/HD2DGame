@@ -22,6 +22,7 @@ namespace KochaEngine
 	class Dx12_Wrapper;
 	class CameraManager;
 	class Battle;
+	class Player;
 
 	class GamePlay : public Scene
 	{
@@ -41,23 +42,27 @@ namespace KochaEngine
 		LightManager* lightManager;
 
 		Battle* battleScene;
+		Player* fieldPlayer;
 
 		Object* floor;
 		Object* skyObj;
 
 		Texture2D* fadeTexture;
 
-		int extraNum;
-
 		//フェードアウトするかどうか
 		bool fadeFlag;
+		//シーン切り替え用フラグ
+		bool isChangeScene;
 		
 		//フェードの透明度
 		float fadeAlpha;
 
+		//フレームカウント用の変数
 		int frameCount;
+		//秒数(60フレームで1秒)
 		int seconds;
-		int endCount;
+		//GUIで操作する予備の変数
+		int extraNum;
 
 		void BattleUpdate();
 		void BattleObjDraw();

@@ -16,6 +16,7 @@ namespace KochaEngine
 		FIELD_FIGHTER,
 		BLOCK,
 		COLLISION_BLOCK,
+		SCENE_CHANGE_BLOCK,
 	};
 
 	enum AnimationType
