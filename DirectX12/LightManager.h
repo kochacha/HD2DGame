@@ -3,6 +3,7 @@
 #include "DirectionalLight.h"
 #include "d3dx12.h"
 #include <wrl.h>
+#include <memory>
 
 namespace KochaEngine
 {
@@ -42,10 +43,10 @@ namespace KochaEngine
 		void SetPointLightPos(const int arg_index, const Vector3& arg_lightPos);
 		void SetPointLightColor(const int arg_index, const Vector3& arg_lightColor);
 		void SetPointLightAtten(const int arg_index, const Vector3& arg_lightAtten);
-		void SetLightCamera(Camera* arg_lightCamera);
+		void SetLightCamera(std::weak_ptr<Camera> arg_lightCamera);
 
 	private:
-		Camera* lightCamera;
+		std::weak_ptr<Camera> lightCamera;
 
 		ComPtr<ID3D12Resource> constBuff;
 		Vector3 ambientColor = { 1,1,1 };

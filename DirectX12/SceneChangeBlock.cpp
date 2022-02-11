@@ -1,9 +1,10 @@
 #include "SceneChangeBlock.h"
 
-KochaEngine::SceneChangeBlock::SceneChangeBlock(const Vector3& arg_position, const float arg_size)
+KochaEngine::SceneChangeBlock::SceneChangeBlock(const SceneChangePoint& arg_sceneChangePoint, const Vector3& arg_position, const float arg_size)
 {
 	position = arg_position;
 	size = arg_size;
+	sceneChangePoint = arg_sceneChangePoint;
 	Initialize();
 }
 

@@ -300,6 +300,7 @@
     <ClCompile Include="SceneChangeBlock.cpp">
       <Filter>Source\GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="SceneSpawnBlock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shader">
@@ -634,6 +635,7 @@
     <ClInclude Include="SceneChangeBlock.h">
       <Filter>Header\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="SceneSpawnBlock.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\BasicShaderHeader.hlsli">

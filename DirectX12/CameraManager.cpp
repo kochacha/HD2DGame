@@ -3,7 +3,7 @@
 #include "Util.h"
 #include "GameSetting.h"
 
-KochaEngine::CameraManager::CameraManager(Camera& arg_camera) : camera(arg_camera)
+KochaEngine::CameraManager::CameraManager(std::weak_ptr<Camera> arg_camera) : camera(arg_camera)
 {
 	Initialize();
 }
@@ -40,7 +40,7 @@ void KochaEngine::CameraManager::Update()
 		break;
 	}
 
-	camera.Update();
+	camera.lock()->Update();
 }
 
 void KochaEngine::CameraManager::SetDefaultPosition()
@@ -63,8 +63,8 @@ void KochaEngine::CameraManager::DefaultCameraUpdate()
 	defaultTargetPosition = cameraTargetPos;
 	battleTargetPosition = cameraTargetPos;
 
-	camera.SetEye(cameraPos);
-	camera.SetTarget(cameraTargetPos);
+	camera.lock()->SetEye(cameraPos);
+	camera.lock()->SetTarget(cameraTargetPos);
 }
 
 void KochaEngine::CameraManager::BattleCameraUpdate()
@@ -77,6 +77,6 @@ void KochaEngine::CameraManager::BattleCameraUpdate()
 	currentTargetPosition.y = Util::EaseIn(currentTargetPosition.y, battleTargetPosition.y, EASING_RATE);
 	currentTargetPosition.z = Util::EaseIn(currentTargetPosition.z, battleTargetPosition.z, EASING_RATE);
 
-	camera.SetEye(currentEyePosition);
-	camera.SetTarget(currentTargetPosition);
+	camera.lock()->SetEye(currentEyePosition);
+	camera.lock()->SetTarget(currentTargetPosition);
 }

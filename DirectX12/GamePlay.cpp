@@ -27,19 +27,19 @@
 KochaEngine::GamePlay::GamePlay(Dx12_Wrapper& arg_dx12) : dx12(arg_dx12)
 {
 	//カメラの生成
-	camera = new Camera();
-	cameraManager = new CameraManager(*camera);
+	camera = std::make_shared<Camera>();
+	cameraManager = std::make_shared <CameraManager>(camera);
 
 	//ゲームオブジェクト管理クラスの生成
-	gManager = new GameObjectManager();
-	bManager = new BattleObjectManager();
+	gManager = std::make_shared<GameObjectManager>();
+	bManager = std::make_shared<BattleObjectManager>();
 
 	//パーティクル関連の生成
-	pManager = new ParticleManager();
-	pEmitter = new ParticleEmitter(pManager);
+	pManager = std::make_shared<ParticleManager>();
+	pEmitter = std::make_shared<ParticleEmitter>(pManager.get());
 
 	//エフェクト管理クラス生成
-	effectManager = new EffectManager(dx12);
+	effectManager = std::make_shared<EffectManager>(dx12);
 	//エフェクトのロード
 	effectManager->LoadEffect("hit.efk", 3.0f); //仮エフェクト
 	effectManager->LoadEffect("none.efk", 5.0f); //通常攻撃(斬撃)エフェクト
@@ -51,48 +51,33 @@ KochaEngine::GamePlay::GamePlay(Dx12_Wrapper& arg_dx12) : dx12(arg_dx12)
 	//effectManager->LoadEffect("slash1.efk", 3.0f);
 
 	//3D空間用数字描画管理クラス等生成
-	n3DManager = new Number3DManager();
-	n3DEmitter = new Number3DEmitter(n3DManager);
+	n3DManager = std::make_shared<Number3DManager>();
+	n3DEmitter = std::make_shared<Number3DEmitter>(n3DManager.get());
 
 	//フィールド作成用クラスの生成
-	map = new Map(gManager, camera);
+	map = std::make_unique<Map>(gManager, camera);
 
 	//ライト管理クラスの生成
-	lightManager = new LightManager();
-	lightManager = LightManager::Create();
+	lightManager = std::make_shared<LightManager>();
+	lightManager.reset(LightManager::Create());
 
 	//バトル用クラスの生成
-	battleScene = new Battle(camera, cameraManager, gManager, bManager, effectManager, n3DEmitter, lightManager);
+	battleScene = std::make_unique<Battle>(camera, cameraManager, gManager, bManager, effectManager, n3DEmitter, lightManager);
 
 	EnemyData::StaticInit(); //エネミーデータの読み込み
 	SkillData::StaticInit(); //スキルデータの読み込み
 
 	//地面＆天球の生成
-	floor = new Object("ground");
-	skyObj = new Object("skydome");
+	floor = std::make_unique<Object>("ground");
+	skyObj = std::make_unique<Object>("skydome");
 
 	//フェードアウト用テクスチャの生成
-	fadeTexture = new Texture2D("Resources/Texture/Color/white.png", Vector2(0, 0), SCREEN_SIZE, 0);
+	fadeTexture = std::make_unique<Texture2D>("Resources/Texture/Color/white.png", Vector2(0, 0), SCREEN_SIZE, 0);
 }
 
 KochaEngine::GamePlay::~GamePlay()
 {
 	gManager->Clear();
-	delete camera;
-	delete cameraManager;
-	delete lightManager;
-	delete gManager;
-	delete bManager;
-	delete pManager;
-	delete pEmitter;
-	delete effectManager;
-	delete n3DManager;
-	delete n3DEmitter;
-	delete battleScene;
-	delete map;
-	delete floor;
-	delete skyObj;
-	delete fadeTexture;
 }
 
 void KochaEngine::GamePlay::Initialize()
@@ -119,6 +104,22 @@ void KochaEngine::GamePlay::Initialize()
 
 	//最初のフィールドのマップデータロード
 	map->CreateMap(GameSetting::nowField);
+
+	//フィールドにプレイヤーの生成
+	auto _spawnPoint = gManager.get()->GetSpawnPoint(GameObjectManager::nextFieldSpawnPoint);
+	if (!_spawnPoint)
+	{
+		//スポーン地点が無かった場合は(0,0)地点にとりあえず生成
+		gManager.get()->AddObject(new Player(gManager, Vector3(0, 5, 0)));
+		gManager.get()->AddObject(new Fighter(Vector3(0, 5, 0)));
+	}
+	else
+	{
+		//スポーン地点に生成
+		auto _spawnPos = _spawnPoint->GetPosition();
+		gManager.get()->AddObject(new Player(gManager, _spawnPos));
+		gManager.get()->AddObject(new Fighter(_spawnPos));
+	}
 
 	//バトルシーンの初期化
 	battleScene->Initialize();
@@ -201,6 +202,7 @@ void KochaEngine::GamePlay::Update()
 		GameSetting::isEnvironmentUpdate = true;
 	}
 
+	//デバッグキー(パーティクルチェック)
 	if (Input::TriggerKey(DIK_P))
 	{
 		Vector3 _kiriPos = Vector3(fieldPlayer->GetPosition().x - 20, fieldPlayer->GetPosition().y, fieldPlayer->GetPosition().z - 3);
@@ -209,6 +211,11 @@ void KochaEngine::GamePlay::Update()
 
 	//デバッグキー(別フィールドへの遷移)
 	if (Input::TriggerKey(DIK_H))
+	{
+		fadeFlag = true;
+		isChangeScene = true;
+	}
+	if (fieldPlayer->IsNextFieldScene())
 	{
 		fadeFlag = true;
 		isChangeScene = true;
@@ -279,8 +286,8 @@ void KochaEngine::GamePlay::ObjDraw()
 	}
 
 	//地面と天球の描画
-	floor->Draw(camera, lightManager);
-	skyObj->Draw(camera, lightManager);
+	floor->Draw(camera.get(), lightManager.get());
+	skyObj->Draw(camera.get(), lightManager.get());
 }
 
 void KochaEngine::GamePlay::AlphaObjDraw()
@@ -297,11 +304,11 @@ void KochaEngine::GamePlay::AlphaObjDraw()
 	}
 
 	//各種マネージャーによる描画
-	pManager->Draw(camera, lightManager);
-	n3DManager->Draw(camera, lightManager);
+	pManager->Draw(camera.get(), lightManager.get());
+	n3DManager->Draw(camera.get(), lightManager.get());
 
 	//エフェクトの更新＆描画
-	effectManager->Update(camera);
+	effectManager->Update(camera.get());
 }
 
 //GUIの描画関連
@@ -418,12 +425,12 @@ void KochaEngine::GamePlay::BattleUpdate()
 
 void KochaEngine::GamePlay::BattleObjDraw()
 {
-	gManager->ObjDrawBattleScene(camera, lightManager);
+	gManager->ObjDrawBattleScene(camera.get(), lightManager.get());
 }
 
 void KochaEngine::GamePlay::BattleAlphaObjDraw()
 {
-	gManager->AlphaObjDrawBattleScene(camera, lightManager);
+	gManager->AlphaObjDrawBattleScene(camera.get(), lightManager.get());
 	battleScene->AlphaObjDraw();
 }
 
@@ -435,12 +442,12 @@ void KochaEngine::GamePlay::FieldUpdate()
 
 void KochaEngine::GamePlay::FieldObjDraw()
 {
-	gManager->ObjDrawFieldScene(camera, lightManager);
+	gManager->ObjDrawFieldScene(camera.get(), lightManager.get());
 }
 
 void KochaEngine::GamePlay::FieldAlphaObjDraw()
 {
-	gManager->AlphaObjDrawFieldScene(camera, lightManager);
+	gManager->AlphaObjDrawFieldScene(camera.get(), lightManager.get());
 }
 
 void KochaEngine::GamePlay::FieldSpriteDraw()

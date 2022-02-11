@@ -36,8 +36,13 @@ namespace KochaEngine
 
 		Player* GetPlayer();
 		Fighter* GetFighter();
+		SceneChangePoint CheckSceneChangePoint(GameObject* arg_obj, const GameObjectType& arg_otherType);
+		GameObject* GetSpawnPoint(const SceneChangePoint& arg_sceneChangePoint);
 
 		void Remove();
 		void Clear();
+
+		//次のシーンのスポーン地点
+		static SceneChangePoint nextFieldSpawnPoint;
 	};
 }

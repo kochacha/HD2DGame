@@ -79,8 +79,7 @@ namespace KochaEngine
 	const Vector3 LARGE_ENEMY_SIZE = Vector3(30, 30, 30);
 
 	//テクスチャアニメーションレート
-	const int DEFAULT_ANIMATION_RATE = 12;
-	const int DASH_ANIMATION_RATE = 8;
+	const int DEFAULT_ANIMATION_RATE = 10;
 
 	//攻撃時アニメーション時間
 	const int ATTACK_MOTION_TIME = 180;

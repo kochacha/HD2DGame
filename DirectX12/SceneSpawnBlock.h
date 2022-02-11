@@ -3,15 +3,15 @@
 
 namespace KochaEngine
 {
-	class SceneChangeBlock : public GameObject
+	class SceneSpawnBlock : public GameObject
 	{
 	private:
 		int collisionType;
 		float size;
 
 	public:
-		SceneChangeBlock(const SceneChangePoint& arg_sceneChangePoint, const Vector3& arg_position, const float arg_size);
-		~SceneChangeBlock() override;
+		SceneSpawnBlock(const SceneChangePoint& arg_sceneChangePoint, const Vector3& arg_position, const float arg_size);
+		~SceneSpawnBlock() override;
 
 		void Initialize() override;
 		void Update() override;

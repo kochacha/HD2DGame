@@ -4,6 +4,8 @@
 #include "Fighter.h"
 #include <map>
 
+KochaEngine::SceneChangePoint KochaEngine::GameObjectManager::nextFieldSpawnPoint = KochaEngine::SceneChangePoint::SPAWN_POINT_1;
+
 KochaEngine::GameObjectManager::GameObjectManager()
 {
 	battleCameraDefaultPos.Zero();
@@ -164,6 +166,7 @@ void KochaEngine::GameObjectManager::CheckBlock(GameObject* arg_obj, const GameO
 		if ((*it)->GetType() != arg_otherType) continue; //指定のオブジェクト以外だったら無視
 		if ((*it)->IsDead()) continue; //オブジェクトが死んでいたら無視
 
+		//球とボックスの判定
 		if (Collision::HitSphereToBox(objSphere,(*it)->GetBox()))
 		{
 			arg_obj->HitBlock((*it)->GetBox());
@@ -255,6 +258,45 @@ KochaEngine::Fighter* KochaEngine::GameObjectManager::GetFighter()
 			Fighter* fighter = static_cast<Fighter*>(static_cast<void*>(*it));
 			return fighter;
 		}
+	}
+	return nullptr;
+}
+
+KochaEngine::SceneChangePoint KochaEngine::GameObjectManager::CheckSceneChangePoint(GameObject* arg_obj, const GameObjectType& arg_otherType)
+{
+	if (!arg_obj) return POINT_NONE;
+
+	//自分以外のオブジェクトと当たっていないかのチェック
+	_Sphere objSphere = arg_obj->GetSphere();
+	GameObjectType objType = arg_obj->GetType();
+
+	auto end = gameObjects.end();
+	for (auto it = gameObjects.begin(); it != end; ++it)
+	{
+		if ((*it)->GetType() == objType) continue; //自分と同じオブジェクトだったら無視
+		if ((*it)->GetType() != arg_otherType) continue; //指定のオブジェクト以外だったら無視
+		if ((*it)->IsDead()) continue; //オブジェクトが死んでいたら無視
+
+		//球とボックスの判定
+		if (Collision::HitSphereToBox(objSphere, (*it)->GetBox()))
+		{
+			return (*it)->GetSceneChangePoint();
+		}
+	}
+	return POINT_NONE;
+}
+
+KochaEngine::GameObject* KochaEngine::GameObjectManager::GetSpawnPoint(const SceneChangePoint& arg_sceneChangePoint)
+{
+
+	auto end = gameObjects.end();
+	for (auto it = gameObjects.begin(); it != end; ++it)
+	{
+		if ((*it)->GetType() != SCENE_SPAWN_BLOCK) continue; //指定のオブジェクト以外だったら無視
+		if ((*it)->IsDead()) continue; //オブジェクトが死んでいたら無視
+		if ((*it)->GetSceneChangePoint() != arg_sceneChangePoint) continue; //指定のスポーンポイント以外だったら無視
+
+		return *it;
 	}
 	return nullptr;
 }

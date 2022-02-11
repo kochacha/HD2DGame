@@ -17,6 +17,7 @@ namespace KochaEngine
 		BLOCK,
 		COLLISION_BLOCK,
 		SCENE_CHANGE_BLOCK,
+		SCENE_SPAWN_BLOCK,
 	};
 
 	enum AnimationType
@@ -31,6 +32,21 @@ namespace KochaEngine
 		WAIT_RIGHT,
 	};
 
+	enum SceneChangePoint
+	{
+		POINT_NONE,
+		CHANGE_POINT_1,
+		CHANGE_POINT_2,
+		CHANGE_POINT_3,
+		CHANGE_POINT_4,
+		CHANGE_POINT_5,
+		SPAWN_POINT_1,
+		SPAWN_POINT_2,
+		SPAWN_POINT_3,
+		SPAWN_POINT_4,
+		SPAWN_POINT_5,
+	};
+
 	class GameObject
 	{
 	protected:
@@ -40,6 +56,7 @@ namespace KochaEngine
 		Object* obj;
 
 		AnimationType animType;
+		SceneChangePoint sceneChangePoint;
 
 		bool isDead = false;
 		bool isDelete = false;
@@ -87,6 +104,7 @@ namespace KochaEngine
 		inline const Vector3 GetVelocity() { return velocity; }
 		inline const _Sphere GetSphere() { return sphere; }
 		inline const _Box GetBox() { return box; }
+		inline const SceneChangePoint GetSceneChangePoint() { return sceneChangePoint; }
 		inline void SetFaceX(const CollisionFace& arg_faceX) { this->faceX = arg_faceX; }
 		inline void SetFaceZ(const CollisionFace& arg_faceZ) { this->faceZ = arg_faceZ; }
 		inline void SetPosition(const Vector3& arg_position) { this->position = arg_position; }

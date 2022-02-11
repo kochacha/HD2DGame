@@ -17,7 +17,7 @@ namespace KochaEngine
 		void SkillUpdate();
 
 	public:
-		Fighter(Camera* arg_camera, const Vector3& arg_position);
+		Fighter(const Vector3& arg_position);
 		~Fighter() override;
 
 		void Initialize() override;

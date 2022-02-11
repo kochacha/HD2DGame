@@ -6,12 +6,9 @@
 #include "JsonLoader.h"
 #include "SkillData.h"
 
-KochaEngine::Player::Player(Camera* arg_camera, GameObjectManager* arg_gManager, const Vector3& arg_position)
+KochaEngine::Player::Player(std::weak_ptr<GameObjectManager> arg_gManager, const Vector3& arg_position)
+	:gManager(arg_gManager)
 {
-	if (arg_camera == nullptr) return;
-	if (arg_gManager == nullptr) return;
-	camera = arg_camera;
-	gManager = arg_gManager;
 	position = arg_position;
 
 	obj = new Object("plane");
@@ -28,13 +25,14 @@ void KochaEngine::Player::Initialize()
 	isAlpha = true;
 	isBattle = false;
 	isSkillUpdate = true;
+	isNextFieldScene = false;
 	animType = AnimationType::WAIT_FLONT;
 
 	EncountReset();
 
 	velocity.Zero();
 	preVelocity.Zero();
-	speed = 0.5f;
+	speed = 0.6f;
 
 	sphere.radius = 4.0f;
 	sphere.position = this->position;
@@ -82,9 +80,19 @@ void KochaEngine::Player::Initialize()
 
 void KochaEngine::Player::Update()
 {
-	gManager->CheckBlock(this, COLLISION_BLOCK);
-	
+	gManager.lock()->CheckBlock(this, COLLISION_BLOCK);
+
+	//シーン移動をするかのチェック
+	SceneChangeCheck();
+
+	//キーボード&コントローラー入力時処理
 	InputMove();
+
+	if (isBattle || isEncount)
+	{
+		velocity.Zero();
+	}
+
 	MoveX();
 	MoveZ();
 	EncountEnemy();
@@ -150,11 +158,47 @@ KochaEngine::GameObjectType KochaEngine::Player::GetType()
 	return FIELD_PLAYER;
 }
 
+void KochaEngine::Player::SceneChangeCheck()
+{
+	//シーンチェンジポイントに触れていたらそのポイントの情報をもらってくる
+	auto _sceneChangePoint = gManager.lock()->CheckSceneChangePoint(this, SCENE_CHANGE_BLOCK);
+
+	switch (_sceneChangePoint)
+	{
+	case KochaEngine::POINT_NONE:
+		GameObjectManager::nextFieldSpawnPoint = KochaEngine::POINT_NONE;
+		isNextFieldScene = false;
+		break;
+	case KochaEngine::CHANGE_POINT_1:
+		GameObjectManager::nextFieldSpawnPoint = KochaEngine::SPAWN_POINT_1;
+		isNextFieldScene = true;
+		break;
+	case KochaEngine::CHANGE_POINT_2:
+		GameObjectManager::nextFieldSpawnPoint = KochaEngine::SPAWN_POINT_2;
+		isNextFieldScene = true;
+		break;
+	case KochaEngine::CHANGE_POINT_3:
+		GameObjectManager::nextFieldSpawnPoint = KochaEngine::SPAWN_POINT_3;
+		isNextFieldScene = true;
+		break;
+	case KochaEngine::CHANGE_POINT_4:
+		GameObjectManager::nextFieldSpawnPoint = KochaEngine::SPAWN_POINT_4;
+		isNextFieldScene = true;
+		break;
+	case KochaEngine::CHANGE_POINT_5:
+		GameObjectManager::nextFieldSpawnPoint = KochaEngine::SPAWN_POINT_5;
+		isNextFieldScene = true;
+		break;
+	default:
+		break;
+	}
+}
+
 void KochaEngine::Player::InputMove()
 {
-	velocity.Zero();
-	speed = 0.5f;
-	animationRate = DEFAULT_ANIMATION_RATE;
+	//velocity.Zero();
+	//speed = 1.5f;
+	//animationRate = DEFAULT_ANIMATION_RATE;
 
 	if (isBattle || isEncount) return;
 
@@ -162,7 +206,40 @@ void KochaEngine::Player::InputMove()
 
 	SetAnimationType();
 
-	if (InputManager::MoveUp())
+	//動いているとき
+	if (velocity.x != 0 || velocity.z != 0)
+	{
+		encountCount--;
+		preVelocity = velocity;
+	}
+
+	if (InputManager::TriggerUp())
+	{
+		velocity.Zero();
+		velocity.z = 1;
+	}
+	else if (InputManager::TriggerDown())
+	{
+		velocity.Zero();
+		velocity.z = -1;
+	}
+	else if (InputManager::TriggerLeft())
+	{
+		velocity.Zero();
+		velocity.x = -1;
+	}
+	else if (InputManager::TriggerRight())
+	{
+		velocity.Zero();
+		velocity.x = 1;
+	}
+
+	if (InputManager::TriggerDecision())
+	{
+		velocity.Zero();
+	}
+
+	/*if (InputManager::MoveUp())
 	{
 		preVelocity.Zero();
 		velocity.z = 1;
@@ -197,18 +274,18 @@ void KochaEngine::Player::InputMove()
 		isDash = true;
 		encountCount--;
 		animType = AnimationType::WALK_RIGHT;
-	}
-	velocity.Normalize();
+	}*/
+	//velocity.Normalize();
 
-	if (isDash)
-	{
-		if (InputManager::MoveDash())
-		{
-			speed = 0.8f;
-			encountCount--;
-			animationRate = DASH_ANIMATION_RATE;
-		}
-	}
+	//if (isDash)
+	//{
+	//	if (InputManager::MoveDash())
+	//	{
+	//		speed = 0.8f;
+	//		encountCount--;
+	//		animationRate = DASH_ANIMATION_RATE;
+	//	}
+	//}
 }
 
 void KochaEngine::Player::MoveX()
@@ -267,7 +344,7 @@ void KochaEngine::Player::SetAnimationType()
 	{
 		animType = AnimationType::WAIT_FLONT;
 	}
-	if (preVelocity.x > 0)
+	else if (preVelocity.x > 0)
 	{
 		animType = AnimationType::WAIT_RIGHT;
 	}
@@ -275,12 +352,32 @@ void KochaEngine::Player::SetAnimationType()
 	{
 		animType = AnimationType::WAIT_LEFT;
 	}
+
+	if (velocity.z > 0)
+	{
+		animType = AnimationType::WALK_BACK;
+	}
+	else if (velocity.z < 0)
+	{
+		animType = AnimationType::WALK_FLONT;
+	}
+	else if (velocity.x > 0)
+	{
+		animType = AnimationType::WALK_RIGHT;
+	}
+	else if (velocity.x < 0)
+	{
+		animType = AnimationType::WALK_LEFT;
+	}
 }
 
 void KochaEngine::Player::Animation()
 {
+	//バトル中やエンカウント中はアニメーションさせない
+	if (isBattle || isEncount) return;
+
 	count++;
-	if (count % animationRate == 0)
+	if (count % DEFAULT_ANIMATION_RATE == 0)
 	{
 		animationNum++;
 	}

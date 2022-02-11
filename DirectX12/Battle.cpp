@@ -21,82 +21,45 @@
 #include "InputManager.h"
 #include "Util.h"
 
-KochaEngine::Battle::Battle(Camera* arg_camera, CameraManager* arg_cameraManager, 
-	GameObjectManager* arg_gManager,BattleObjectManager* arg_bManager, 
-	EffectManager* arg_effectManager,Number3DEmitter* arg_n3DEmitter, 
-	LightManager* arg_lightManager)
+KochaEngine::Battle::Battle(std::weak_ptr<Camera> arg_camera, std::weak_ptr<CameraManager> arg_cameraManager,
+	std::weak_ptr<GameObjectManager> arg_gManager, std::weak_ptr<BattleObjectManager> arg_bManager,
+	std::weak_ptr<EffectManager> arg_effectManager, std::weak_ptr<Number3DEmitter> arg_n3DEmitter,
+	std::weak_ptr<LightManager> arg_lightManager)
+	: camera(arg_camera), cameraManager(arg_cameraManager), gManager(arg_gManager), bManager(arg_bManager), effectManager(arg_effectManager), n3DEmitter(arg_n3DEmitter), lightManager(arg_lightManager)
 {
-	if (!arg_camera) return;
-	if (!arg_cameraManager) return;
-	if (!arg_gManager) return;
-	if (!arg_bManager) return;
-	if (!arg_effectManager) return;
-	if (!arg_n3DEmitter) return;
-	if (!arg_lightManager) return;
-
-	camera = arg_camera;
-	cameraManager = arg_cameraManager;
-	gManager = arg_gManager;
-	bManager = arg_bManager;
-	effectManager = arg_effectManager;
-	n3DEmitter = arg_n3DEmitter;
-	lightManager = arg_lightManager;
-
-	defaultWakuTexture = new Texture2D("Resources/Texture/UI/waku_0.png", DEFAULT_WAKU_POS, DEFAULT_WAKU_SIZE, 0);
-	anotherWakuTexture = new Texture2D("Resources/Texture/UI/waku_1.png", ANOTHER_WAKU_POS, ANOTHER_WAKU_SIZE, 0);
-	defaultCommandTexture = new Texture2D("Resources/Texture/UI/command_1.png", DEFAULT_COMMAND_POS, DEFAULT_COMMAND_SIZE, 0);
-	waitCommandTexture = new Texture2D("Resources/Texture/UI/command_0.png", DEFAULT_COMMAND_POS, DEFAULT_COMMAND_SIZE, 0);
-	anotherCommandTexture = new Texture2D("Resources/Texture/UI/command_3.png", DEFAULT_COMMAND_POS, ANOTHER_COMMAND_SIZE, 0);
-	pageCommandTexture = new Texture2D("Resources/Texture/UI/command_4.png", DEFAULT_COMMAND_POS, ANOTHER_COMMAND_SIZE + Vector2(0, 32), 0);
-	spCommandTexture = new Texture2D("Resources/Texture/UI/command_5.png", ANOTHER_WAKU_POS + Vector2(0, -55), SP_COMMAND_SIZE, 0);
+	defaultWakuTexture = std::make_unique<Texture2D>("Resources/Texture/UI/waku_0.png", DEFAULT_WAKU_POS, DEFAULT_WAKU_SIZE, 0);
+	anotherWakuTexture = std::make_unique<Texture2D>("Resources/Texture/UI/waku_1.png", ANOTHER_WAKU_POS, ANOTHER_WAKU_SIZE, 0);
+	defaultCommandTexture = std::make_unique<Texture2D>("Resources/Texture/UI/command_1.png", DEFAULT_COMMAND_POS, DEFAULT_COMMAND_SIZE, 0);
+	waitCommandTexture = std::make_unique<Texture2D>("Resources/Texture/UI/command_0.png", DEFAULT_COMMAND_POS, DEFAULT_COMMAND_SIZE, 0);
+	anotherCommandTexture = std::make_unique<Texture2D>("Resources/Texture/UI/command_3.png", DEFAULT_COMMAND_POS, ANOTHER_COMMAND_SIZE, 0);
+	pageCommandTexture = std::make_unique<Texture2D>("Resources/Texture/UI/command_4.png", DEFAULT_COMMAND_POS, ANOTHER_COMMAND_SIZE + Vector2(0, 32), 0);
+	spCommandTexture = std::make_unique<Texture2D>("Resources/Texture/UI/command_5.png", ANOTHER_WAKU_POS + Vector2(0, -55), SP_COMMAND_SIZE, 0);
 
 	cursorPos = DEFAULT_COMMAND_POS + Vector2(10, 52);
-	cursorTexture = new Texture2D("Resources/Texture/UI/cursor.png", cursorPos, Vector2(16, 16), 0);
+	cursorTexture = std::make_unique<Texture2D>("Resources/Texture/UI/cursor.png", cursorPos, Vector2(16, 16), 0);
 
-	battleLongText = new Text(TALK_LONG_TEXT_POS, Vector2(32, 32));
-	battleShortText = new Text(TALK_SHORT_TEXT_POS, Vector2(32, 32));
+	battleLongText = std::make_unique<Text>(TALK_LONG_TEXT_POS, Vector2(32, 32));
+	battleShortText = std::make_unique<Text>(TALK_SHORT_TEXT_POS, Vector2(32, 32));
 	battleShortText->SetOneLineFonts(20);
-	summaryText = new Text(TALK_SHORT_TEXT_POS, Vector2(32, 32));
+	summaryText = std::make_unique<Text>(TALK_SHORT_TEXT_POS, Vector2(32, 32));
 	summaryText->SetOneLineFonts(20);
-	battleNameText = new Text(TALK_LONG_TEXT_POS, Vector2(32, 32));
-	commandTitleText = new Text(DEFAULT_COMMAND_POS + Vector2(5, 5), Vector2(32, 32));
+	battleNameText = std::make_unique<Text>(TALK_LONG_TEXT_POS, Vector2(32, 32));
+	commandTitleText = std::make_unique<Text>(DEFAULT_COMMAND_POS + Vector2(5, 5), Vector2(32, 32));
 	for (int i = 0; i < MAX_NAME_TEXT_COUNT_COMMAND; i++)
 	{
 		const Vector2 NAME_TEXT_COMMAND_POS = DEFAULT_COMMAND_POS + Vector2(30, 40) + Vector2(0, 32 * i);
-		enemyNameText[i] = new Text("fail.txt", NAME_TEXT_COMMAND_POS, Vector2(32, 32));
-		skillNameText[i] = new Text("fail.txt", NAME_TEXT_COMMAND_POS, Vector2(32, 32));
+		enemyNameText[i] = std::make_unique<Text>("fail.txt", NAME_TEXT_COMMAND_POS, Vector2(32, 32));
+		skillNameText[i] = std::make_unique<Text>("fail.txt", NAME_TEXT_COMMAND_POS, Vector2(32, 32));
 	}
 
-	defaultNumberTex = new Number(Vector2(TALK_LONG_TEXT_POS.x - 2, TALK_LONG_TEXT_POS.y + 4), Vector2(24, 24), 5);
-	costSPNumberTex = new Number(Vector2(TALK_SHORT_TEXT_POS.x + 34, TALK_SHORT_TEXT_POS.y - 58), Vector2(16, 16), 4);
-	pageNumberTex = new Number(Vector2(TALK_LONG_TEXT_POS.x - 2, TALK_LONG_TEXT_POS.y + 4), Vector2(24, 24), 2);
-	maxPageNumberTex = new Number(Vector2(TALK_LONG_TEXT_POS.x - 2, TALK_LONG_TEXT_POS.y + 4), Vector2(24, 24), 2);
+	defaultNumberTex = std::make_unique<Number>(Vector2(TALK_LONG_TEXT_POS.x - 2, TALK_LONG_TEXT_POS.y + 4), Vector2(24, 24), 5);
+	costSPNumberTex = std::make_unique<Number>(Vector2(TALK_SHORT_TEXT_POS.x + 34, TALK_SHORT_TEXT_POS.y - 58), Vector2(16, 16), 4);
+	pageNumberTex = std::make_unique<Number>(Vector2(TALK_LONG_TEXT_POS.x - 2, TALK_LONG_TEXT_POS.y + 4), Vector2(24, 24), 2);
+	maxPageNumberTex = std::make_unique<Number>(Vector2(TALK_LONG_TEXT_POS.x - 2, TALK_LONG_TEXT_POS.y + 4), Vector2(24, 24), 2);
 }
 
 KochaEngine::Battle::~Battle()
 {
-	delete defaultWakuTexture;
-	delete anotherWakuTexture;
-	delete defaultCommandTexture;
-	delete waitCommandTexture;
-	delete anotherCommandTexture;
-	delete pageCommandTexture;
-	delete spCommandTexture;
-	delete cursorTexture;
-	delete battleLongText;
-	delete battleShortText;
-	delete summaryText;
-	delete battleNameText;
-	delete commandTitleText;
-	for (int i = 0; i < MAX_NAME_TEXT_COUNT_COMMAND; i++)
-	{
-		delete enemyNameText[i];
-		delete skillNameText[i];
-	}
-	delete defaultNumberTex;
-	delete costSPNumberTex;
-	delete pageNumberTex;
-	delete maxPageNumberTex;
 }
 
 void KochaEngine::Battle::Initialize()
@@ -131,7 +94,6 @@ void KochaEngine::Battle::Initialize()
 	preSkillTabPageNum = skillTabPageNum;
 	costSP = 0;
 	preCommandNum = 0;
-
 }
 
 void KochaEngine::Battle::Update()
@@ -187,11 +149,11 @@ void KochaEngine::Battle::SpriteDraw()
 		}
 		else
 		{
-			defaultNumberTex->Draw(bManager->GetTotalMoney());
+			defaultNumberTex->Draw(bManager.lock()->GetTotalMoney());
 		}
 	}
 
-	bManager->SpriteDraw();
+	bManager.lock()->SpriteDraw();
 }
 
 void KochaEngine::Battle::ObjDraw()
@@ -200,7 +162,7 @@ void KochaEngine::Battle::ObjDraw()
 
 void KochaEngine::Battle::AlphaObjDraw()
 {
-	bManager->ObjDraw(camera, lightManager);
+	bManager.lock()->ObjDraw(camera.lock().get(), lightManager.lock().get());
 }
 
 void KochaEngine::Battle::DrawGUI()
@@ -220,7 +182,7 @@ void KochaEngine::Battle::BattleEndUpdate()
 	isCharacterDestroy = false;
 	isEnemyDestroy = false;
 	isResultOnce = false;
-	bManager->Clear();
+	bManager.lock()->Clear();
 }
 
 void KochaEngine::Battle::BattleInitialize()
@@ -236,10 +198,10 @@ void KochaEngine::Battle::BattleInitialize()
 	previousTab = currentTab;
 	preCommandNum = 0;
 
-	const Vector3 cameraPos = camera->GetEye();
+	const Vector3 cameraPos = camera.lock()->GetEye();
 
 	//戦闘開始時にカメラの初期位置をセットする
-	gManager->SetBattleCameraDefaultPos(cameraPos);
+	gManager.lock()->SetBattleCameraDefaultPos(cameraPos);
 
 	//ここにエネミーエミッタークラス的なの作って呼び出す
 	//EnemyDataと同様、jsonファイルから出現パターンを読み込めるようにする
@@ -248,26 +210,26 @@ void KochaEngine::Battle::BattleInitialize()
 		int randSpawn = Util::GetIntRand(0, 1);
 		if (randSpawn == 0)
 		{
-			bManager->AddObject(new Enemy(bManager, effectManager, n3DEmitter, cameraPos + SMALL_ENEMY_POS[0], EnemyData::GetEnemyParam("babydoragon")));
-			bManager->AddObject(new Enemy(bManager, effectManager, n3DEmitter, cameraPos + MEDIUM_ENEMY_POS[1], EnemyData::GetEnemyParam("nihuteriza")));
-			bManager->AddObject(new Enemy(bManager, effectManager, n3DEmitter, cameraPos + MEDIUM_ENEMY_POS[2], EnemyData::GetEnemyParam("nihuteriza")));
+			bManager.lock()->AddObject(new Enemy(bManager.lock().get(), effectManager.lock().get(), n3DEmitter.lock().get(), cameraPos + SMALL_ENEMY_POS[0], EnemyData::GetEnemyParam("babydoragon")));
+			bManager.lock()->AddObject(new Enemy(bManager.lock().get(), effectManager.lock().get(), n3DEmitter.lock().get(), cameraPos + MEDIUM_ENEMY_POS[1], EnemyData::GetEnemyParam("nihuteriza")));
+			bManager.lock()->AddObject(new Enemy(bManager.lock().get(), effectManager.lock().get(), n3DEmitter.lock().get(), cameraPos + MEDIUM_ENEMY_POS[2], EnemyData::GetEnemyParam("nihuteriza")));
 		}
 		else
 		{
-			bManager->AddObject(new Enemy(bManager, effectManager, n3DEmitter, cameraPos + MEDIUM_ENEMY_POS[0], EnemyData::GetEnemyParam("nihuteriza")));
-			bManager->AddObject(new Enemy(bManager, effectManager, n3DEmitter, cameraPos + MEDIUM_ENEMY_POS[1], EnemyData::GetEnemyParam("nihuteriza")));
+			bManager.lock()->AddObject(new Enemy(bManager.lock().get(), effectManager.lock().get(), n3DEmitter.lock().get(), cameraPos + MEDIUM_ENEMY_POS[0], EnemyData::GetEnemyParam("nihuteriza")));
+			bManager.lock()->AddObject(new Enemy(bManager.lock().get(), effectManager.lock().get(), n3DEmitter.lock().get(), cameraPos + MEDIUM_ENEMY_POS[1], EnemyData::GetEnemyParam("nihuteriza")));
 		}
 	}
 
 	//バトルキャラクターの追加処理
 	{
 		//キャラのパラメーターを持ってくる
-		auto playerParam = gManager->GetPlayer()->GetParam();
-		auto fighterParam = gManager->GetFighter()->GetParam();
+		auto playerParam = gManager.lock()->GetPlayer()->GetParam();
+		auto fighterParam = gManager.lock()->GetFighter()->GetParam();
 
 		//パラメーターをセットしてバトルキャラクター生成
-		bManager->AddObject(new BattleCharacter(effectManager, n3DEmitter, BATTLE_PLAYER, cameraPos + BATTLE_CHARACTOR_POS[0], playerParam));
-		bManager->AddObject(new BattleCharacter(effectManager, n3DEmitter, BATTLE_FIGHTER, cameraPos + BATTLE_CHARACTOR_POS[2], fighterParam));
+		bManager.lock()->AddObject(new BattleCharacter(effectManager.lock().get(), n3DEmitter.lock().get(), BATTLE_PLAYER, cameraPos + BATTLE_CHARACTOR_POS[0], playerParam));
+		bManager.lock()->AddObject(new BattleCharacter(effectManager.lock().get(), n3DEmitter.lock().get(), BATTLE_FIGHTER, cameraPos + BATTLE_CHARACTOR_POS[2], fighterParam));
 	}
 
 
@@ -292,7 +254,7 @@ void KochaEngine::Battle::BattleFlowUpdate()
 {
 	if (battleStartWait > 0) return;
 
-	bManager->TargetOff();
+	bManager.lock()->TargetOff();
 
 	//キャラ・エネミーの行動が終わったら更新
 	if (!isTurnUpdate)
@@ -313,7 +275,7 @@ void KochaEngine::Battle::BattleFlowUpdate()
 		{
 			//行動できるキャラ・エネミーが居なくなったので一巡が終了
 			//全キャラ・エネミーを行動可能状態にする
-			bManager->ActiveReset();
+			bManager.lock()->ActiveReset();
 			isTurnUpdate = false;
 			isEnemyTurn = true;
 		}
@@ -337,15 +299,15 @@ void KochaEngine::Battle::BattleEnd()
 	//ステータスを反映
 	BattleObject* character = nullptr;
 
-	character = bManager->GetCharacter(BattleObjectType::BATTLE_PLAYER);
+	character = bManager.lock()->GetCharacter(BattleObjectType::BATTLE_PLAYER);
 	if (character)
 	{
-		gManager->GetPlayer()->SetParam(character->GetBaseParam());
+		gManager.lock()->GetPlayer()->SetParam(character->GetBaseParam());
 	}
-	character = bManager->GetCharacter(BattleObjectType::BATTLE_FIGHTER);
+	character = bManager.lock()->GetCharacter(BattleObjectType::BATTLE_FIGHTER);
 	if (character)
 	{
-		gManager->GetFighter()->SetParam(character->GetBaseParam());
+		gManager.lock()->GetFighter()->SetParam(character->GetBaseParam());
 	}
 
 }
@@ -353,20 +315,20 @@ void KochaEngine::Battle::BattleEnd()
 void KochaEngine::Battle::TurnInitialize()
 {
 	//キャラクターが全滅したら
-	if (bManager->IsCharacterDestroy())
+	if (bManager.lock()->IsCharacterDestroy())
 	{
 		isCharacterDestroy = true;
 		return;
 	}
 	//エネミーが全滅したら
-	if (bManager->IsEnemyDestroy())
+	if (bManager.lock()->IsEnemyDestroy())
 	{
 		isEnemyDestroy = true;
 		return;
 	}
 
 	//現在行動中のキャラ・エネミーを持ってくる
-	currentActiveActor = bManager->GetCurrentActive();
+	currentActiveActor = bManager.lock()->GetCurrentActive();
 
 	//キャラ・エネミーを行動中状態にする
 	if (currentActiveActor)
@@ -401,7 +363,7 @@ void KochaEngine::Battle::TurnInitialize()
 	EnemyNameUpdate();
 
 	//カメラの位置をバトル開始時の初期位置に戻す
-	cameraManager->SetDefaultPosition();
+	cameraManager.lock()->SetDefaultPosition();
 }
 
 void KochaEngine::Battle::ActiveActorUpdate()
@@ -431,10 +393,11 @@ void KochaEngine::Battle::ActiveActorUpdate()
 			MoveCursor();
 
 			//カメラのフォーカス(奥行)を現在こうどう中のキャラに合わせる
-			float eyeZ = currentActiveActor->GetPosition().z + BATTLE_FOCUS_EYE_Z;
-			float targetZ = currentActiveActor->GetPosition().z + BATTLE_FOCUS_TARGET_Z;
-			cameraManager->SetBattleEyePositionZ(eyeZ);
-			cameraManager->SetBattleTargetPositionZ(targetZ);
+			Vector3 _currentActiveActorPos = currentActiveActor->GetPosition();
+			float eyeZ = _currentActiveActorPos.z + BATTLE_FOCUS_EYE_Z;
+			float targetZ = _currentActiveActorPos.z + BATTLE_FOCUS_TARGET_Z;
+			cameraManager.lock()->SetBattleEyePositionZ(eyeZ);
+			cameraManager.lock()->SetBattleTargetPositionZ(targetZ);
 		}
 
 
@@ -494,10 +457,10 @@ void KochaEngine::Battle::EnemyActionSelect()
 				switch (charaSelectRandom)
 				{
 				case 0:
-					character = bManager->GetCharacter(BattleObjectType::BATTLE_PLAYER);
+					character = bManager.lock()->GetCharacter(BattleObjectType::BATTLE_PLAYER);
 					break;
 				case 1:
-					character = bManager->GetCharacter(BattleObjectType::BATTLE_FIGHTER);
+					character = bManager.lock()->GetCharacter(BattleObjectType::BATTLE_FIGHTER);
 					break;
 				case 2:
 
@@ -526,10 +489,11 @@ void KochaEngine::Battle::EnemyActionSelect()
 	battleLongText->SetSound("Resources/Sound/text1.wav");
 
 	//カメラのフォーカス(奥行)を現在こうどう中のエネミーに合わせる
-	float eyeZ = currentActiveActor->GetPosition().z + BATTLE_FOCUS_EYE_Z;
-	float targetZ = currentActiveActor->GetPosition().z + BATTLE_FOCUS_TARGET_Z;
-	cameraManager->SetBattleEyePositionZ(eyeZ);
-	cameraManager->SetBattleTargetPositionZ(targetZ);
+	Vector3 _currentActiveActorPos = currentActiveActor->GetPosition();
+	float eyeZ = _currentActiveActorPos.z + BATTLE_FOCUS_EYE_Z;
+	float targetZ = _currentActiveActorPos.z + BATTLE_FOCUS_TARGET_Z;
+	cameraManager.lock()->SetBattleEyePositionZ(eyeZ);
+	cameraManager.lock()->SetBattleTargetPositionZ(targetZ);
 }
 
 void KochaEngine::Battle::ActiveMotionUpdate()
@@ -546,19 +510,19 @@ void KochaEngine::Battle::ActiveMotionUpdate()
 		//カメラのフォーカス(奥行)をターゲットに合わせる
 		float eyeZ = targetActor->GetPosition().z + BATTLE_FOCUS_EYE_Z;
 		float targetZ = targetActor->GetPosition().z + BATTLE_FOCUS_TARGET_Z;
-		cameraManager->SetBattleEyePositionZ(eyeZ);
-		cameraManager->SetBattleTargetPositionZ(targetZ);
+		cameraManager.lock()->SetBattleEyePositionZ(eyeZ);
+		cameraManager.lock()->SetBattleTargetPositionZ(targetZ);
 
 		//カメラのフォーカス(左右)をターゲットに寄せる
 		if (currentActiveActor->GetType() == BattleObjectType::BATTLE_ENEMY)
 		{
-			cameraManager->MoveBattleEyePositionX(ATTACK_FOCUS_X);
-			cameraManager->MoveBattleTargetPositionX(ATTACK_FOCUS_X);
+			cameraManager.lock()->MoveBattleEyePositionX(ATTACK_FOCUS_X);
+			cameraManager.lock()->MoveBattleTargetPositionX(ATTACK_FOCUS_X);
 		}
 		else
 		{
-			cameraManager->MoveBattleEyePositionX(-ATTACK_FOCUS_X);
-			cameraManager->MoveBattleTargetPositionX(-ATTACK_FOCUS_X);
+			cameraManager.lock()->MoveBattleEyePositionX(-ATTACK_FOCUS_X);
+			cameraManager.lock()->MoveBattleTargetPositionX(-ATTACK_FOCUS_X);
 		}
 	}
 	else if (motionTime == ACTIVE_MOTION_TIME) //行動する
@@ -576,7 +540,7 @@ void KochaEngine::Battle::ActiveMotionUpdate()
 		//ダメージ受けた時のカメラ揺れ
 		if (targetActor->GetType() != BattleObjectType::BATTLE_ENEMY)
 		{
-			cameraManager->SetCameraShake(5.0f);
+			cameraManager.lock()->SetCameraShake(5.0f);
 		}
 
 	}
@@ -605,7 +569,7 @@ void KochaEngine::Battle::ResultUpdate()
 		isResultOnce = true;
 		resultFlowWait = RESULT_INPUT_WAIT;
 		//カメラの位置をバトル開始時の初期位置に戻す
-		cameraManager->SetDefaultPosition();
+		cameraManager.lock()->SetDefaultPosition();
 	}
 
 	if (resultFlowWait <= 0)
@@ -675,7 +639,7 @@ void KochaEngine::Battle::ResultUpdate()
 				//まものをすべてたおした！
 				battleLongText->SetText("Talk/Battle/EnemyDestroy_0.txt");
 				battleLongText->SetSound("Resources/Sound/text1.wav");
-				bManager->Reward();
+				bManager.lock()->Reward();
 				break;
 			case 1:
 				//○○のけいけんちをかくとく！
@@ -713,12 +677,12 @@ void KochaEngine::Battle::RewardCalc()
 	//経験値レート = 基礎倍率1.0倍 / 参加キャラ数(1人の時等倍)
 	const float EXP_RATE = 1.0f / (float)battleCharaCount;
 	//一人当たり獲得経験値 = 総獲得経験値 × 経験値レート
-	getExp = (float)bManager->GetTotalExp() * EXP_RATE;
+	getExp = (float)bManager.lock()->GetTotalExp() * EXP_RATE;
 
 	//経験値がマイナスにならないように補正
 	if (getExp < 0) getExp = 0;
 
-	character = bManager->GetCharacter(BattleObjectType::BATTLE_PLAYER);
+	character = bManager.lock()->GetCharacter(BattleObjectType::BATTLE_PLAYER);
 	if (character)
 	{
 		//棺桶状態だと経験値が入らない
@@ -727,9 +691,9 @@ void KochaEngine::Battle::RewardCalc()
 			character->AddExp(getExp);
 		}
 		//プレイヤーのみ、お金を追加
-		character->AddMoney(bManager->GetTotalMoney());
+		character->AddMoney(bManager.lock()->GetTotalMoney());
 	}
-	character = bManager->GetCharacter(BattleObjectType::BATTLE_FIGHTER);
+	character = bManager.lock()->GetCharacter(BattleObjectType::BATTLE_FIGHTER);
 	if (character)
 	{
 		//棺桶状態だと経験値が入らない
@@ -745,7 +709,7 @@ void KochaEngine::Battle::EnemyNameUpdate()
 	//こうげきコマンドに表示される敵の名前の更新
 	for (int i = 0; i < MAX_NAME_TEXT_COUNT_COMMAND; i++)
 	{
-		auto enemy = bManager->GetEnemy(i + 1);
+		auto enemy = bManager.lock()->GetEnemy(i + 1);
 		if (!enemy)
 		{
 			//エネミーがいない場合、「なし」を描画
@@ -959,7 +923,7 @@ void KochaEngine::Battle::MoveCursor()
 
 	if (currentTab == Battle::TARGET_SELECT_TAB)
 	{
-		auto enemy = bManager->GetEnemy(commandNum + 1);
+		auto enemy = bManager.lock()->GetEnemy(commandNum + 1);
 		if (enemy)
 		{
 			enemy->TargetOn();
@@ -1037,7 +1001,7 @@ void KochaEngine::Battle::TargetSelectTab()
 {
 	//敵か味方か判断してから選択
 
-	auto enemy = bManager->GetEnemy(commandNum + 1);
+	auto enemy = bManager.lock()->GetEnemy(commandNum + 1);
 	if (enemy)
 	{
 		isActiveMotion = true;

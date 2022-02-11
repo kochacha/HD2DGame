@@ -93,6 +93,8 @@ namespace KochaEngine
 		void MeraMera();
 		void EngineLogo();
 		void EnvironmentUpdate();
+		void SetEnvironment(const float arg_dofScale, const float arg_vignetteScale, 
+			const Vector4& arg_rgb_r, const Vector4& arg_gbCdown_Cup);
 		bool UpdateFPS();
 
 	public:

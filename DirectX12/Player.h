@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "ActorParam.h"
 #include <map>
+#include <memory>
 
 namespace KochaEngine
 {
@@ -21,7 +22,7 @@ namespace KochaEngine
 		};
 
 	private:
-		GameObjectManager* gManager;
+		std::weak_ptr<GameObjectManager> gManager;
 
 		ActorParam param;
 		std::map<int, std::string> skillNames;
@@ -32,6 +33,7 @@ namespace KochaEngine
 		bool isEncount;
 		bool isBattle;
 		bool isSkillUpdate;
+		bool isNextFieldScene;
 
 		int encountCount;
 		int animationNum;
@@ -42,6 +44,7 @@ namespace KochaEngine
 
 		float fakeAlpha;
 
+		void SceneChangeCheck();
 		void InputMove();
 		void MoveX();
 		void MoveZ();
@@ -52,7 +55,7 @@ namespace KochaEngine
 		void Animation();
 
 	public:
-		Player(Camera* arg_camera, GameObjectManager* arg_gManager, const Vector3& arg_position);
+		Player(std::weak_ptr<GameObjectManager> arg_gManager, const Vector3& arg_position);
 		~Player() override;
 
 		void Initialize() override;
@@ -68,5 +71,6 @@ namespace KochaEngine
 
 		const ActorParam GetParam() { return param; }
 		inline const bool IsEncount() { return isEncount; }
+		inline const bool IsNextFieldScene() { return isNextFieldScene; }
 	};
 }

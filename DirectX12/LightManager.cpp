@@ -162,8 +162,7 @@ void KochaEngine::LightManager::SetPointLightAtten(const int arg_index, const Ve
 	isDirty = true;
 }
 
-void KochaEngine::LightManager::SetLightCamera(Camera* arg_lightCamera)
+void KochaEngine::LightManager::SetLightCamera(std::weak_ptr<Camera> arg_lightCamera)
 {
-	if (!arg_lightCamera)return;
 	lightCamera = arg_lightCamera;
 }

@@ -2,11 +2,8 @@
 #include "JsonLoader.h"
 #include "SkillData.h"
 
-KochaEngine::Fighter::Fighter(Camera* arg_camera, const Vector3& arg_position)
+KochaEngine::Fighter::Fighter(const Vector3& arg_position)
 {
-	if (arg_camera == nullptr) return;
-	camera = arg_camera;
-
 	position = position;
 
 	Initialize();

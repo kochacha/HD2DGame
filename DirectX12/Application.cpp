@@ -557,49 +557,27 @@ void KochaEngine::Application::EnvironmentUpdate()
 	{
 	case 1: //環境設定:森林
 
-		//フォグ
-		peraDof->SetValue(0.2f);
-
-		//ビネット効果の設定
-		vignetteScale = 0.25f;
-		peraEffect->SetColor(Vector4(1.0f, 1.0f, 1.0f, 0.0f));
-		peraEffect->SetSpare(Vector4(0.01f, 0.05f, 0.9f, 0.0f));
-		peraEffect->SetValue(vignetteScale);
+		SetEnvironment(0.2f, 0.25f, Vector4(1.0f, 1.0f, 1.0f, 0.0f), Vector4(0.01f, 0.05f, 0.9f, 0.0f));
 
 		break;
 	case 2: //環境設定:砂漠
 
-		//フォグ
-		peraDof->SetValue(0.15f);
-
-		//ビネット効果の設定
-		vignetteScale = 0.3f;
-		peraEffect->SetColor(Vector4(1.0f, 1.2f, 1.8f, 0.0f));
-		peraEffect->SetSpare(Vector4(0.02f, 0.08f, 0.95f, 0.0f));
-		peraEffect->SetValue(vignetteScale);
+		SetEnvironment(0.15f, 0.3f, Vector4(1.0f, 1.2f, 1.8f, 0.0f), Vector4(0.02f, 0.08f, 0.95f, 0.0f));
 
 		break;
 	case 3: //環境設定:雪原
 
-		//フォグ
-		peraDof->SetValue(0.0f);
-
-		//ビネット効果の設定
-		vignetteScale = 0.4f;
-		peraEffect->SetColor(Vector4(1.05f, 1.05f, 1.0f, 0.25f));
-		peraEffect->SetSpare(Vector4(0.2f, 0.0f, 1.0f, 0.0f));
-		peraEffect->SetValue(vignetteScale);
+		SetEnvironment(0.0f, 0.4f, Vector4(1.05f, 1.05f, 1.0f, 0.25f), Vector4(0.2f, 0.0f, 1.0f, 0.0f));
 
 		break;
 	case 4: //環境設定:洞窟
-		//フォグ
-		peraDof->SetValue(0.6f);
 
-		//ビネット効果の設定
-		vignetteScale = 0.5f;
-		peraEffect->SetColor(Vector4(1.0f, 1.0f, 1.0f, 0.0f));
-		peraEffect->SetSpare(Vector4(0.01f, 0.05f, 0.9f, 0.0f));
-		peraEffect->SetValue(vignetteScale);
+		SetEnvironment(0.6f, 0.5f, Vector4(1.0f, 1.0f, 1.0f, 0.0f), Vector4(0.01f, 0.05f, 0.9f, 0.0f));
+
+		break;
+	case 5: //環境設定:洞窟
+
+		SetEnvironment(0.6f, 0.5f, Vector4(1.0f, 1.0f, 1.0f, 0.0f), Vector4(0.01f, 0.05f, 0.9f, 0.0f));
 
 		break;
 
@@ -607,6 +585,18 @@ void KochaEngine::Application::EnvironmentUpdate()
 		break;
 	}
 
+}
+
+void KochaEngine::Application::SetEnvironment(const float arg_dofScale, const float arg_vignetteScale, const Vector4& arg_rgb_r, const Vector4& arg_gbCdown_Cup)
+{
+	//フォグ
+	peraDof->SetValue(arg_dofScale);
+
+	//ビネット効果の設定
+	vignetteScale = arg_vignetteScale;
+	peraEffect->SetColor(arg_rgb_r); //rgb:ビネットカラー, r:全体カラー(赤成分)
+	peraEffect->SetSpare(arg_gbCdown_Cup); //gb:全体カラー(緑青成分), Cdown:コントラストを下げる, Cup:コントラストを上げる
+	peraEffect->SetValue(vignetteScale);
 }
 
 bool KochaEngine::Application::UpdateFPS()

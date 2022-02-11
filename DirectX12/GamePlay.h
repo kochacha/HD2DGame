@@ -6,6 +6,7 @@
 #include "ParticleEmitter.h"
 #include "ParticleManager.h"
 #include "GameSetting.h"
+#include <memory>
 
 namespace KochaEngine
 {
@@ -29,25 +30,27 @@ namespace KochaEngine
 	private:
 		Dx12_Wrapper& dx12;
 
-		Map* map;
-		Camera* camera;
-		CameraManager* cameraManager;
-		GameObjectManager* gManager;
-		BattleObjectManager* bManager;
-		ParticleManager* pManager;
-		ParticleEmitter* pEmitter;
-		EffectManager* effectManager;
-		Number3DManager* n3DManager;
-		Number3DEmitter* n3DEmitter;
-		LightManager* lightManager;
+		//所有(共有する)
+		std::shared_ptr<Camera> camera;
+		std::shared_ptr<CameraManager> cameraManager;
+		std::shared_ptr<GameObjectManager> gManager;
+		std::shared_ptr<BattleObjectManager> bManager;
+		std::shared_ptr<ParticleManager> pManager;
+		std::shared_ptr<ParticleEmitter> pEmitter;
+		std::shared_ptr<EffectManager> effectManager;
+		std::shared_ptr<Number3DManager> n3DManager;
+		std::shared_ptr<Number3DEmitter> n3DEmitter;
+		std::shared_ptr<LightManager> lightManager;
 
-		Battle* battleScene;
+		//所有(共有しない)
+		std::unique_ptr<Map> map;
+		std::unique_ptr<Battle> battleScene;
+		std::unique_ptr<Object> floor;
+		std::unique_ptr<Object> skyObj;
+		std::unique_ptr<Texture2D> fadeTexture;
+
+		//もらってくる
 		Player* fieldPlayer;
-
-		Object* floor;
-		Object* skyObj;
-
-		Texture2D* fadeTexture;
 
 		//フェードアウトするかどうか
 		bool fadeFlag;

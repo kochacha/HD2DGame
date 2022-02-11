@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector3.h"
+#include <memory>
 
 namespace KochaEngine
 {
@@ -16,7 +17,7 @@ namespace KochaEngine
 	class CameraManager
 	{
 	private:
-		Camera& camera;
+		std::weak_ptr<Camera> camera;
 		CameraState cameraState;
 
 		Player* player;
@@ -36,7 +37,7 @@ namespace KochaEngine
 		void BattleCameraUpdate();
 
 	public:
-		CameraManager(Camera& arg_camera);
+		CameraManager(std::weak_ptr<Camera> arg_camera);
 		~CameraManager();
 
 		void Initialize();

@@ -4,6 +4,7 @@
 #include "GameObjectManager.h"
 #include "BattleObjectManager.h"
 #include "GameSetting.h"
+#include <memory>
 
 namespace KochaEngine
 {
@@ -30,42 +31,44 @@ namespace KochaEngine
 		};
 
 	private:
-		Camera* camera; //カメラ
-		CameraManager* cameraManager; //カメラの管理クラス
-		GameObjectManager* gManager;
-		BattleObjectManager* bManager; //バトル時キャラ・エネミーを管理クラス
-		EffectManager* effectManager; //エフェクト関連の管理クラス
-		Number3DEmitter* n3DEmitter; //3D空間上に数字を生成するクラス
-		LightManager* lightManager; //ライトの管理クラス
+
+		//所有者はGamePlayクラス
+		std::weak_ptr<Camera> camera; //カメラ
+		std::weak_ptr<CameraManager> cameraManager; //カメラの管理クラス
+		std::weak_ptr<GameObjectManager> gManager;
+		std::weak_ptr<BattleObjectManager> bManager; //バトル時キャラ・エネミーを管理クラス
+		std::weak_ptr<EffectManager> effectManager; //エフェクト関連の管理クラス
+		std::weak_ptr<Number3DEmitter> n3DEmitter; //3D空間上に数字を生成するクラス
+		std::weak_ptr<LightManager> lightManager; //ライトの管理クラス
 
 		//ターゲットや現在行動中のキャラを格納しておくための箱
 		BattleObject* currentActiveActor;
 		BattleObject* targetActor;
 
 		//バトル時に描画されるUI関連
-		Texture2D* defaultWakuTexture;
-		Texture2D* anotherWakuTexture;
-		Texture2D* defaultCommandTexture;
-		Texture2D* waitCommandTexture;
-		Texture2D* anotherCommandTexture;
-		Texture2D* pageCommandTexture;
-		Texture2D* spCommandTexture;
-		Texture2D* cursorTexture;
+		std::unique_ptr<Texture2D> defaultWakuTexture;
+		std::unique_ptr<Texture2D> anotherWakuTexture;
+		std::unique_ptr<Texture2D> defaultCommandTexture;
+		std::unique_ptr<Texture2D> waitCommandTexture;
+		std::unique_ptr<Texture2D> anotherCommandTexture;
+		std::unique_ptr<Texture2D> pageCommandTexture;
+		std::unique_ptr<Texture2D> spCommandTexture;
+		std::unique_ptr<Texture2D> cursorTexture;
 
 		//バトル時に描画されるテキスト関連
-		Text* battleLongText;
-		Text* battleShortText;
-		Text* summaryText;
-		Text* battleNameText;
-		Text* commandTitleText;
-		Text* enemyNameText[MAX_NAME_TEXT_COUNT_COMMAND];
-		Text* skillNameText[MAX_NAME_TEXT_COUNT_COMMAND];
+		std::unique_ptr<Text> battleLongText;
+		std::unique_ptr<Text> battleShortText;
+		std::unique_ptr<Text> summaryText;
+		std::unique_ptr<Text> battleNameText;
+		std::unique_ptr<Text> commandTitleText;
+		std::unique_ptr<Text> enemyNameText[MAX_NAME_TEXT_COUNT_COMMAND];
+		std::unique_ptr<Text> skillNameText[MAX_NAME_TEXT_COUNT_COMMAND];
 
 		//UIとして表示される数字
-		Number* defaultNumberTex;
-		Number* costSPNumberTex;
-		Number* pageNumberTex;
-		Number* maxPageNumberTex;
+		std::unique_ptr<Number> defaultNumberTex;
+		std::unique_ptr<Number> costSPNumberTex;
+		std::unique_ptr<Number> pageNumberTex;
+		std::unique_ptr<Number> maxPageNumberTex;
 
 		//現在のコマンドタブ
 		CommandTab currentTab;
@@ -157,9 +160,10 @@ namespace KochaEngine
 
 	public:
 
-		Battle(Camera* arg_camera, CameraManager* arg_cameraManager, GameObjectManager* arg_gManager,
-			BattleObjectManager* arg_bManager, EffectManager* arg_effectManager, 
-			Number3DEmitter* arg_n3DEmitter, LightManager* arg_lightManager);
+		Battle(std::weak_ptr<Camera> arg_camera, std::weak_ptr<CameraManager> arg_cameraManager, 
+			std::weak_ptr<GameObjectManager> arg_gManager, std::weak_ptr<BattleObjectManager> arg_bManager, 
+			std::weak_ptr<EffectManager> arg_effectManager, std::weak_ptr<Number3DEmitter> arg_n3DEmitter,
+			std::weak_ptr<LightManager> arg_lightManager);
 		~Battle();
 		void Initialize();
 		void Update();
