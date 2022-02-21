@@ -1,5 +1,7 @@
 #include "GamePlay.h"
 
+#include "Battle.h"
+
 #include "Map.h"
 #include "LightManager.h"
 #include "Number3DEmitter.h"
@@ -7,16 +9,13 @@
 #include "EffectManager.h"
 #include "CameraManager.h"
 
-#include "Battle.h"
-
+#include "Enemy.h"
 #include "Player.h"
 #include "Fighter.h"
 #include "BattleCharacter.h"
 #include "EnemyData.h"
 #include "SkillData.h"
-#include "Enemy.h"
 
-#include "Text.h"
 #include "Audio.h"
 #include "Number.h"
 #include "Number3D.h"

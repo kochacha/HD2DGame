@@ -195,17 +195,8 @@
     <ClCompile Include="FBXObject.cpp">
       <Filter>Source\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Vector3.cpp">
-      <Filter>Source\Util</Filter>
-    </ClCompile>
     <ClCompile Include="PostEffect.cpp">
       <Filter>Source\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Vector2.cpp">
-      <Filter>Source\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="Vector4.cpp">
-      <Filter>Source\Util</Filter>
     </ClCompile>
     <ClCompile Include="CustomGui.cpp">
       <Filter>Source\UI</Filter>

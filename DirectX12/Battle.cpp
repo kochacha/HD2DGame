@@ -496,6 +496,7 @@ void KochaEngine::Battle::EnemyActionSelect()
 	cameraManager.lock()->SetBattleTargetPositionZ(targetZ);
 }
 
+//行動モーション中の処理
 void KochaEngine::Battle::ActiveMotionUpdate()
 {
 	if (!isActiveMotion) return;
@@ -503,8 +504,30 @@ void KochaEngine::Battle::ActiveMotionUpdate()
 	{
 		motionTime--;
 	}
-	if (motionTime == FOCUS_MOTION_TIME) //構える
+	if (motionTime == ATTACK_MOTION_TIME - 1) //モーションに入った瞬間
 	{
+		//std::string activeSkillName = currentActiveActor->GetSkillName(selectSkillIndex);
+		//auto activeSkill = SkillData::GetSkillParam(activeSkillName);
+		//if (activeSkill.isMagic) //じゅもんだった時
+		//{
+		//	lightManager.lock()->SetDirectionalLightDirection(0, Vector3(0, -1, 1));
+		//	lightManager.lock()->SetDirectionalLightColor(0, Vector3(0, 0, 0));
+		//}
+	}
+	else if (motionTime == FOCUS_MOTION_TIME) //構える
+	{
+		//std::string activeSkillName = currentActiveActor->GetSkillName(selectSkillIndex);
+		//auto activeSkill = SkillData::GetSkillParam(activeSkillName);
+		//if (activeSkill.isMagic) //じゅもんだった時
+		//{
+		//	auto pointLightPos = currentActiveActor->GetPosition();
+		//	pointLightPos = Vector3(pointLightPos.x, pointLightPos.y, pointLightPos.z - 2);
+		//	lightManager.lock()->SetPointLightIsActive(0, true);
+		//	lightManager.lock()->SetPointLightPos(0, pointLightPos);
+		//	lightManager.lock()->SetPointLightColor(0, Vector3(0.1f, 0.5f, 0.5f));
+		//	lightManager.lock()->SetPointLightAtten(0, Vector3(1.000f, 0.005f, 0.0001f));
+		//}
+
 		currentActiveActor->SetAttackTextureIndex(0);
 
 		//カメラのフォーカス(奥行)をターゲットに合わせる
@@ -553,6 +576,11 @@ void KochaEngine::Battle::ActiveMotionUpdate()
 		currentActiveActor->CurrentActiveReset();
 
 		currentActiveActor->SetDefaultWaitTexture();
+
+		////ライトの向きを戻す
+		//lightManager.lock()->SetDirectionalLightDirection(0, Vector3(0, 1, -1));
+		//lightManager.lock()->SetDirectionalLightColor(0, Vector3(1, 1, 1));
+		//lightManager.lock()->SetPointLightIsActive(0, false);
 	}
 }
 
@@ -675,7 +703,7 @@ void KochaEngine::Battle::RewardCalc()
 
 	//バトル参加キャラ数に応じて1キャラあたりの獲得経験値が変動する
 	//経験値レート = 基礎倍率1.0倍 / 参加キャラ数(1人の時等倍)
-	const float EXP_RATE = 1.0f / (float)battleCharaCount;
+	const float EXP_RATE = 1.0f/* / (float)battleCharaCount*/;
 	//一人当たり獲得経験値 = 総獲得経験値 × 経験値レート
 	getExp = (float)bManager.lock()->GetTotalExp() * EXP_RATE;
 

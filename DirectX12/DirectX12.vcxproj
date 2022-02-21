@@ -237,9 +237,6 @@
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Util.cpp" />
-    <ClCompile Include="Vector2.cpp" />
-    <ClCompile Include="Vector3.cpp" />
-    <ClCompile Include="Vector4.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Wizard.cpp" />
   </ItemGroup>

@@ -88,7 +88,7 @@ void KochaEngine::Player::Update()
 	//キーボード&コントローラー入力時処理
 	InputMove();
 
-	if (isBattle || isEncount)
+	if (isBattle || isEncount || isNextFieldScene)
 	{
 		velocity.Zero();
 	}
@@ -200,7 +200,7 @@ void KochaEngine::Player::InputMove()
 	//speed = 1.5f;
 	//animationRate = DEFAULT_ANIMATION_RATE;
 
-	if (isBattle || isEncount) return;
+	if (isBattle || isEncount || isNextFieldScene) return;
 
 	bool isDash = false;
 
